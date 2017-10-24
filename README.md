@@ -3,7 +3,7 @@ https://facebook.github.io/react-native/docs/getting-started.html
 
 After cloning the repository
 
-yarn install
+yarn install  
 react-native link
 
 And run the application,
