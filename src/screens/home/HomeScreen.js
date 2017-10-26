@@ -23,18 +23,58 @@ import {getCount} from '../../modules/tracking/selectors';
 
 
 class HomeScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      latitude: null,
+      longitude: null,
+      error: null,
+    };
+    this.getLocation = this.getLocation.bind(this);
+    this.nullLocation = this.nullLocation.bind(this);
+  }
+
+  getLocation() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          error: null,
+        });
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+    );
+  }
+
+  nullLocation() {
+    this.setState({
+      latitude: null,
+      longitude: null,
+      error: null,
+    });
+  }
+
   render() {
     const {add, remove, currentCount} = this.props;
     return (
       <Container style={styles.centerContent}>
         <Text style={[styles.textPrimary]}>
-          Current count: {currentCount}
+          Current location
         </Text>
-      <Button style={[styles.buttonRounded, styles.verticalMargin, styles.centerHorizontal, {width: 200, height: 200}]} onPress={add}>
+        <Text style={[styles.textPrimary]}>
+          Latitude: {this.state.latitude}
+        </Text>
+        <Text style={[styles.textPrimary]}>
+          Longitude: {this.state.longitude}
+        </Text>
+      <Button style={[styles.buttonRounded, styles.verticalMargin, styles.centerHorizontal, {width: 200, height: 200}]} onPress={this.getLocation}>
         <Text>Add</Text>
       </Button>
 
-      <Button style={[styles.verticalMargin, styles.centerHorizontal]} onPress={remove}>
+      <Button style={[styles.verticalMargin, styles.centerHorizontal]} onPress={this.nullLocation}>
         <Text>Remove</Text>
       </Button>
       </Container >
