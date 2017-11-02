@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import {Icon, Button} from 'native-base';
 import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
 
-import MainScreen from '../screens/main/main-screen';
-import SummaryScreen from '../screens/summary/summary-screen';
-import TestScreen from '../screens/test/test';
+import MainScreen from '../screens/main-screen';
+import SummaryScreen from '../screens/summary-screen';
+import TestScreen from '../screens/test';
 
 // const headerLeft = navigation => (
 //   <Button transparent onPress={_ => navigation.navigate('DrawerOpen')}>

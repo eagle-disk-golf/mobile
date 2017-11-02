@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text} from 'native-base';
-import Container from '../../components/container';
+import Container from '../components/container';
 
 export default class Test extends Component {
   render() {

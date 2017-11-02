@@ -4,9 +4,9 @@ import {
 } from 'react-native';
 
 import {Button, Text} from 'native-base';
-import Container from '../../components/container';
+import Container from '../components/container';
 
-import {styles} from '../../res/styles/index';
+import {styles} from '../res/styles/index';
 
 // const instructions = Platform.select({
 //   ios: 'Press Cmd+R to reload,\n' +
