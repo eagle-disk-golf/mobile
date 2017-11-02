@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import {Icon, Button} from 'native-base';
-import {DrawerNavigator, StackNavigator} from 'react-navigation';
+import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
 
-import HomeScreen from '../screens/home/HomeScreen';
+import MainScreen from '../screens/main/main-screen';
+import SummaryScreen from '../screens/summary/summary-screen';
 import TestScreen from '../screens/test/test';
 
 // const headerLeft = navigation => (
@@ -17,17 +18,28 @@ const contentOptions = {
 
 };
 
+const MainNavigator = TabNavigator({
+  Main: {
+    screen: MainScreen
+  },
+  Summary: {
+    screen: SummaryScreen
+  }
+}, {
+  swipeEnabled: true,
+  tabBarPosition: 'top'
+  });
 
 export const RootNavigator = DrawerNavigator({
-    Home: {
-      screen: HomeScreen,
-      navigationOptions: {
-        headerLeft: <Icon ios="ios-menu" android="md-menu" style={{color: '#fff'}} />
-      }
-    },
-    Test: {
-      screen: TestScreen
+  Home: {
+    screen: MainNavigator,
+    navigationOptions: {
+      headerLeft: <Icon ios="ios-menu" android="md-menu" style={{color: '#fff'}} />
     }
   },
+  Test: {
+    screen: TestScreen
+  }
+},
   contentOptions
 );
