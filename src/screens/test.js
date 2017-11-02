@@ -4,6 +4,7 @@ import Container from '../components/container';
 
 export default class Test extends Component {
   render() {
+    console.log(this.props.navigation, 'test');
     return (
       <Container style={{marginTop: 20}}>
         <Text>
