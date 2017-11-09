@@ -5,6 +5,7 @@ import {
 
 import {Button, Text} from 'native-base';
 import Container from '../components/container';
+import Main from '../components/main'
 
 import {styles} from '../res/styles/index';
 
@@ -19,9 +20,9 @@ import {styles} from '../res/styles/index';
 export default class MainScreen extends Component {
     render() {
     return (
-      <Container style={styles.centerContent}>
-        <Text>Mainscreen</Text>
-      </Container >
+      <Container>
+        <Main />
+      </Container>
     );
   }
 }
