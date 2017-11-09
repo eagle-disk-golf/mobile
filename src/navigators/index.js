@@ -3,6 +3,7 @@ import {Button, Icon} from 'native-base';
 import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
 
 import MainScreen from '../screens/main-screen';
+import TrackingScreen from '../screens/tracking-screen';
 import SummaryScreen from '../screens/summary-screen';
 import TestScreen from '../screens/test';
 
@@ -26,6 +27,9 @@ const MainNavigator = TabNavigator({
     navigationOptions: {
       tabBarIcon: <Icon name="basket" />
     }
+  },
+  Tracking: {
+    screen: TrackingScreen
   },
   Summary: {
     screen: SummaryScreen,

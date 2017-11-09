@@ -5,6 +5,7 @@ import {
 
 import {Button, Text} from 'native-base';
 import Container from '../components/container';
+import Tracking from '../components/tracking';
 
 import {styles} from '../res/styles/index';
 
@@ -16,11 +17,11 @@ import {styles} from '../res/styles/index';
 // });
 
 
-export default class MainScreen extends Component {
+export default class TrackingScreen extends Component {
     render() {
     return (
       <Container style={styles.centerContent}>
-        <Text>Mainscreen</Text>
+        <Tracking navigation={this.props.navigation} />
       </Container >
     );
   }
