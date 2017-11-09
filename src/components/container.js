@@ -10,7 +10,7 @@ export default class ContainerComponent extends Component {
     const otherStyles = stylesToArray(style);
 
     return(
-      <Container style={[styles.container, ...otherStyles]}>{this.props.children}</Container>
+      <Container style={[styles.bgDefault, ...otherStyles]}>{this.props.children}</Container>
     )
   }
 }

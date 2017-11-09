@@ -1,14 +1,14 @@
 // TODO: define color palette
 export const COLORS = {
-  primary: 'blue',
-  success: 'green',
-  info: 'orange',
-  warning: 'yellow',
-  danger: 'red'
+  default: '#F8FDFF',
+  primary: '#43A6B5',
+  success: '#7F1B4B',
+  textDark: '#003337',
+  warning: '#FCB922'
 };
 
 export const MARGINS = {
-  
+
   marginXs: 10,
   marginSm: 20,
   marginMd: 30,

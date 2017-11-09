@@ -1,30 +1,36 @@
 import {StyleSheet} from 'react-native';
-import {COLORS, MARGINS} from './constants'; 
+import {COLORS, MARGINS} from './constants';
 
 
 
 
 // text styling
 const text = StyleSheet.create({
+  textDefault: {
+    color: COLORS.default
+  },
   textPrimary: {
-    color: COLORS.primary
+    color: COLORS.textDark
   },
   textSuccess: {
     color: COLORS.success
   },
   textInfo: {
-    color: COLORS.info
+    // color: COLORS.info
   },
   textWarning: {
     color: COLORS.warning
   },
   textDanger: {
-    color: COLORS.warning
+    // color: COLORS.warning
   }
 });
 
 // background
 const background = StyleSheet.create({
+  bgDefault: {
+    backgroundColor: COLORS.default
+  },
   bgPrimary: {
     backgroundColor: COLORS.primary
   },
@@ -32,13 +38,13 @@ const background = StyleSheet.create({
     backgroundColor: COLORS.success
   },
   bgInfo: {
-    backgroundColor: COLORS.info
+    // backgroundColor: COLORS.info
   },
   bgWarning: {
     backgroundColor: COLORS.warning
   },
   bgDanger: {
-    backgroundColor: COLORS.warning
+    // backgroundColor: COLORS.warning
   }
 })
 
@@ -47,8 +53,8 @@ const background = StyleSheet.create({
 const helpers = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   centerContent: {
     justifyContent: 'center',

@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
-import {Text, Button, Toast, Content, Header} from 'native-base';
-import Container from './container';
+import {StyleSheet} from 'react-native';
+import {Container, Text, Button, Toast, Content, Header, Icon} from 'native-base';
+// import Container from './container';
 import {styles} from '../res/styles'
 
 import geolocation from '../services/geolocation';
 
 import {hole, round} from '../constants/tracking';
 
-import { NavigationActions } from 'react-navigation'
+import {NavigationActions} from 'react-navigation'
 
 
 
@@ -87,7 +88,6 @@ export default class Tracking extends Component {
           throws: [location],
           total_throws: initialHole.total_throws + 1,
           start_point: location,
-          start_time: position.timestamp
         }
       })
     }).catch((error) => {
@@ -100,32 +100,31 @@ export default class Tracking extends Component {
   handleEndHole() {
     // dont end if no throws
     if (this.state.hole.throws.length) {
-    // hole is started
-    geolocation.getCurrentPosition.then((position) => {
-      const previousHole = this.state.hole;
-      const location = {
-        ...position.coords,
-        timestamp: position.timestamp
-      }
-      const completedHole = {
-        ...previousHole,
-        // add location to array
-        throws: [...previousHole.throws, location],
-        total_throws: previousHole.total_throws + 1,
-        end_point: location,
-        end_time: position.timestamp,
-        completed: true
-      }
-
-      // initialize empty hole, add completed hole to the round
-      this.setState({
-        hole: hole,
-        round: {
-          ...this.state.round,
-          holes: [...this.state.round.holes, completedHole]
+      // hole is started
+      geolocation.getCurrentPosition.then((position) => {
+        const previousHole = this.state.hole;
+        const location = {
+          ...position.coords,
+          timestamp: position.timestamp
+        }
+        const completedHole = {
+          ...previousHole,
+          // add location to array
+          throws: [...previousHole.throws, location],
+          total_throws: previousHole.total_throws + 1,
+          end_point: location,
+          completed: true
         }
 
-      })
+        // initialize empty hole, add completed hole to the round
+        this.setState({
+          hole: hole,
+          round: {
+            ...this.state.round,
+            holes: [...this.state.round.holes, completedHole]
+          }
+
+        })
       }).catch((error) => {
         console.warn(error);
         this.setState({error: error.message});
@@ -137,28 +136,49 @@ export default class Tracking extends Component {
     });
   }
   render() {
-    console.log(this.props, 'this state');
+    console.log(this.state, 'this state', this.props, 'props');
     const {hole, round} = this.state;
     return (
-      <Container style={styles.centerContent}>
-        <Text style={[styles.textPrimary]}>
-          Hole number: {round.holes.length}
-        </Text>
-        <Text style={[styles.textPrimary]}>
-          Current hole throw count: {hole.total_throws}
-        </Text>
-        <Text style={[styles.textPrimary]}>
-          Par: {hole.total_throws - hole.par}
-        </Text>
-        <Button style={[styles.buttonRounded, styles.verticalMargin, styles.centerHorizontal, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
-          <Text>Add</Text>
-        </Button>
+        <Content contentContainerStyle={[styles.centerContent, {alignItems: 'center', flex: 1, flexDirection: 'column'}]}>
+          <Text style={[styles.textPrimary]}>
+            Hole number: {round.holes.length}
+          </Text>
+          <Text style={[styles.textPrimary]}>
+            Current hole throw count: {hole.total_throws}
+          </Text>
+          <Text style={[styles.textPrimary]}>
+            Par: {hole.total_throws - hole.par}
+          </Text>
+          <Button style={[styles.buttonRounded, styles.verticalMargin, styles.centerHorizontal, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
+            <Text style={[styles.textPrimary, ]}>Add</Text>
+          </Button>
+
+          <Button style={[styles.buttonRounded, styles.centerHorizontal, stylesLocal.errorButton]} onPress={this.handleEndHole}>
+            <Icon style={[styles.textDefault]} name="warning" />
+          </Button>
 
 
-        <Button style={[styles.verticalMargin, styles.centerHorizontal]} onPress={this.handleEndHole}>
-          <Text>End hole</Text>
-        </Button>
-      </Container>
+          <Button style={[styles.buttonRounded, stylesLocal.stopButton]} onPress={this.handleEndHole}>
+            <Icon name="basket" />
+          </Button>
+      </Content>
     );
   }
 }
+
+
+const stylesLocal = StyleSheet.create({
+  stopButton: {
+    width: 60,
+    height: 60,
+    position: 'absolute',
+    bottom: 20,
+    right: 20
+  },
+  errorButton: {
+    backgroundColor: 'red',
+    marginTop: 15,
+    width: 50,
+    height: 50
+  }
+});
