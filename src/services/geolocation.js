@@ -1,3 +1,4 @@
+// if physical device, set => gps location mode: battery saving
 const options = {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000};
 
 const getCurrentPosition = new Promise((resolve, reject) => {

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
 import {Container, Text, Button, Toast, Content, Header, Icon} from 'native-base';
 // import Container from './container';
 import {styles} from '../res/styles'
@@ -88,6 +88,7 @@ export default class Tracking extends Component {
           throws: [location],
           total_throws: initialHole.total_throws + 1,
           start_point: location,
+          isActive: true
         }
       })
     }).catch((error) => {
@@ -113,6 +114,7 @@ export default class Tracking extends Component {
           throws: [...previousHole.throws, location],
           total_throws: previousHole.total_throws + 1,
           end_point: location,
+          isActive: false,
           completed: true
         }
 
@@ -138,6 +140,7 @@ export default class Tracking extends Component {
   render() {
     console.log(this.state, 'this state', this.props, 'props');
     const {hole, round} = this.state;
+    const isHoleActive = hole.isActive;
     return (
         <Content contentContainerStyle={[styles.centerContent, {alignItems: 'center', flex: 1, flexDirection: 'column'}]}>
           <Text style={[styles.textPrimary]}>
@@ -149,17 +152,21 @@ export default class Tracking extends Component {
           <Text style={[styles.textPrimary]}>
             Par: {hole.total_throws - hole.par}
           </Text>
-          <Button style={[styles.buttonRounded, styles.verticalMargin, styles.centerHorizontal, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
-            <Text style={[styles.textPrimary, ]}>Add</Text>
+          <Button style={[styles.buttonRounded, styles.bgPrimary, styles.verticalMargin, styles.centerHorizontal, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
+            <Text style={[styles.textPrimary, ]}>Throw</Text>
           </Button>
 
-          <Button style={[styles.buttonRounded, styles.centerHorizontal, stylesLocal.errorButton]} onPress={this.handleEndHole}>
-            <Icon style={[styles.textDefault]} name="warning" />
+          <Button style={[styles.buttonRounded, styles.centerHorizontal, styles.bgSuccess, stylesLocal.errorButton]} onPress={this.handleEndHole}>
+            <Icon style={[styles.textDefault]} name="alert" />
           </Button>
 
+          {/* <FadeInView style={{width: 250, height: 50, backgroundColor: 'powderblue'}}>
+          <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
+        </FadeInView> */}
 
-          <Button style={[styles.buttonRounded, stylesLocal.stopButton]} onPress={this.handleEndHole}>
-            <Icon name="basket" />
+          <Button style={[styles.buttonRounded, styles.bgSuccess, stylesLocal.stopButton]} onPress={this.handleEndHole}>
+            {isHoleActive && <FadeInView><Icon style={[]} name="basket" /></FadeInView>}
+            {!isHoleActive && <FadeInView><Icon style={{fontSize: 30}} name="close" /></FadeInView>}
           </Button>
       </Content>
     );
@@ -176,9 +183,47 @@ const stylesLocal = StyleSheet.create({
     right: 20
   },
   errorButton: {
-    backgroundColor: 'red',
     marginTop: 15,
     width: 50,
-    height: 50
+    height: 50,
+    padding: 20
+  },
+  icon: {
+    // fontSize: 30,
+    transform: [{rotateX: '60deg'}]
   }
 });
+
+import {Animated} from 'react-native';
+class FadeInView extends React.Component {
+  state = {
+    fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
+  }
+
+  componentDidMount() {
+    Animated.timing(                  // Animate over time
+      this.state.fadeAnim,            // The animated value to drive
+      {
+        toValue: '90deg',                   // Animate to opacity: 1 (opaque)
+        duration: 500,              // Make it take a while
+      }
+    ).start();                        // Starts the animation
+  }
+
+  render() {
+    let { fadeAnim } = this.state;
+
+    return (
+      <Animated.View                 // Special animatable View
+        style={{
+          ...this.props.style,
+          opacity: fadeAnim,         // Bind opacity to animated value
+          transform: [{ rotate: this.state.fadeAnim.interpolate({inputRange: [0, 360], outputRange: ['0deg', '360deg']}), }],
+        }}
+      >
+        {this.props.children}
+      </Animated.View>
+    );
+  }
+}
+

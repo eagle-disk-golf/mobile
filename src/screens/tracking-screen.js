@@ -20,7 +20,7 @@ import {styles} from '../res/styles/index';
 export default class TrackingScreen extends Component {
     render() {
     return (
-      <Container style={styles.centerContent}>
+      <Container>
         <Tracking navigation={this.props.navigation} />
       </Container >
     );

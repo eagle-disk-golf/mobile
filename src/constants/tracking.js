@@ -6,6 +6,7 @@ export const hole = {
   start_point: {},
   end_point: {},
   duration: null,
+  isActive: false,
   completed: false
 }
 
