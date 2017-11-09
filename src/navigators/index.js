@@ -15,39 +15,39 @@ import TestScreen from '../screens/test';
 // );
 
 const contentOptions = {
-	initialRouteName: 'Home',
-	drawerPosition: 'left'
+  initialRouteName: 'Home',
+  drawerPosition: 'left'
 
 };
 
 const MainNavigator = TabNavigator({
-	Main: {
-		screen: MainScreen,
-		navigationOptions: {
-			tabBarIcon: <Icon name="basket" />
-		}
-	},
-	Summary: {
-		screen: SummaryScreen,
-		navigationOptions: {
-			tabBarIcon: <Icon name="analytics" />
-		}
-	}
+  Main: {
+    screen: MainScreen,
+    navigationOptions: {
+      tabBarIcon: <Icon name="basket" />
+    }
+  },
+  Summary: {
+    screen: SummaryScreen,
+    navigationOptions: {
+      tabBarIcon: <Icon name="analytics" />
+    }
+  }
 }, {
-		swipeEnabled: true,
-		tabBarPosition: 'top'
-	});
+    swipeEnabled: true,
+    tabBarPosition: 'top'
+  });
 
 export const RootNavigator = DrawerNavigator({
-	Home: {
-		screen: MainNavigator,
-		navigationOptions: {
-			drawerIcon: <Icon name="menu" style={{color: '#fff'}} />
-		}
-	},
-	Test: {
-		screen: TestScreen
-	}
+  Home: {
+    screen: MainNavigator,
+    navigationOptions: {
+      drawerIcon: <Icon name="menu" style={{color: '#fff'}} />
+    }
+  },
+  Test: {
+    screen: TestScreen
+  }
 },
-	contentOptions
+  contentOptions
 );
