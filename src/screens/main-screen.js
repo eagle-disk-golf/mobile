@@ -3,8 +3,7 @@ import {
   StyleSheet
 } from 'react-native';
 
-import {Button, Text} from 'native-base';
-import Container from '../components/container';
+import {Container, Button, Text, Content} from 'native-base';
 import Main from '../components/main'
 
 import {styles} from '../res/styles/index';
@@ -21,7 +20,9 @@ export default class MainScreen extends Component {
     render() {
     return (
       <Container>
-        <Main navigation={this.props.navigation} />
+        <Content>
+          <Main navigation={this.props.navigation} />
+        </Content>
       </Container>
     );
   }
