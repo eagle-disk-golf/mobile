@@ -16,7 +16,7 @@ export default class CardImageExample extends Component {
               </Left>
             </CardItem>
             <CardItem cardBody>
-              <Image source={{uri: 'http://student.labranet.jamk.fi/~H3041/kide/newgame.PNG'}} style={{height: 200, width: null, flex: 1}} />
+              <Image source={{uri: '../res/images/newgame_card.png'}} style={{height: 200, width: null, flex: 1}} />
             </CardItem>
           </Card>
           <Card>
@@ -29,7 +29,7 @@ export default class CardImageExample extends Component {
               </Left>
             </CardItem>
             <CardItem cardBody>
-              <Image source={{uri: 'http://student.labranet.jamk.fi/~H3041/kide/highscores.png'}} style={{height: 200, width: null, flex: 1}} />
+              <Image source={{uri: '../res/images/newgame_card.png'}} style={{height: 200, width: null, flex: 1}} />
             </CardItem>
           </Card>
         </Content>
