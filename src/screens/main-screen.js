@@ -21,7 +21,7 @@ export default class MainScreen extends Component {
     render() {
     return (
       <Container>
-        <Main />
+        <Main navigation={this.props.navigation} />
       </Container>
     );
   }
