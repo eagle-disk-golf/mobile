@@ -7,9 +7,10 @@ import {View, StyleSheet, Dimensions, Animated} from 'react-native';
 import {Container, Text, Button, Toast, Content, Header, Icon} from 'native-base';
 import {globalStyles} from '../res/styles'
 
+import firebase from '../services/firebase';
 import geolocation from '../services/geolocation';
 
-import {hole, round} from '../constants/tracking';
+import {lane, round, session} from '../constants/tracking';
 
 
 
@@ -19,50 +20,53 @@ export default class Tracking extends Component {
     super(props);
 
     this.state = {
-      hole,
+      lane,
       round,
+      session,
       error: null,
     };
 
     this.handleTrackThrow = this.handleTrackThrow.bind(this);
-    this.handleEndHole = this.handleEndHole.bind(this);
+    this.handleEndLane = this.handleEndLane.bind(this);
   }
 
   componentDidMount() {
     // TEST: this will send these params to the summary screen
     const setParamsAction = NavigationActions.setParams({
-      params: {hole: this.state.hole, round: this.state.round},
+      params: {lane: this.state.lane, round: this.state.round},
       key: 'Summary',
     });
     const setParamsActionForParent = NavigationActions.setParams({
-      params: {hole: this.state.hole, round: this.state.round},
+      params: {lane: this.state.lane, round: this.state.round},
       key: 'Test',
     });
     this.props.navigation.dispatch(setParamsAction);
     this.props.navigation.dispatch(setParamsActionForParent);
+
+    firebase.database().ref('test').set({id: '1', message: 'mooro'});
   }
 
   handleTrackThrow() {
-    if (this.state.hole.holeId) {
-      this.continueHole();
-    } else this.startNewHole();
+    if (this.state.lane.laneId) {
+      this.continueLane();
+    } else this.startNewLane();
   }
 
-  continueHole() {
+  continueLane() {
     // hole is started
     geolocation.getCurrentPosition.then((position) => {
-      const previousHole = this.state.hole;
+      const previousLane = this.state.lane;
       const location = {
         ...position.coords,
         timestamp: position.timestamp
       }
 
       this.setState({
-        hole: {
-          ...previousHole,
+        lane: {
+          ...previousLane,
           // add location to array
-          throws: [...previousHole.throws, location],
-          total_throws: previousHole.total_throws + 1,
+          throws: [...previousLane.throws, location],
+          total_throws: previousLane.total_throws + 1,
         }
       })
     }).catch((error) => {
@@ -71,10 +75,10 @@ export default class Tracking extends Component {
     })
   }
 
-  startNewHole() {
+  startNewLane() {
     // hole is not started
     geolocation.getCurrentPosition.then((position) => {
-      const initialHole = this.state.hole;
+      const initialLane = this.state.lane;
       // create location object
       const location = {
         ...position.coords,
@@ -82,17 +86,19 @@ export default class Tracking extends Component {
       }
 
       this.setState({
-        hole: {
-          ...initialHole,
+        lane: {
+          ...initialLane,
           //hard coded id
-          holeId: 1,
+          laneId: 1,
           // add location to array
           throws: [location],
-          total_throws: initialHole.total_throws + 1,
+          total_throws: initialLane.total_throws + 1,
           start_point: location,
           isActive: true
         }
       })
+
+
     }).catch((error) => {
       console.warn(error);
       this.setState({error: error.message});
@@ -100,21 +106,21 @@ export default class Tracking extends Component {
   }
 
   // when ending round, is the user at the basket or not??
-  handleEndHole() {
+  handleEndLane() {
     // dont end if no throws
-    if (this.state.hole.throws.length) {
+    if (this.state.lane.throws.length) {
       // hole is started
       geolocation.getCurrentPosition.then((position) => {
-        const previousHole = this.state.hole;
+        const previousLane = this.state.lane;
         const location = {
           ...position.coords,
           timestamp: position.timestamp
         }
-        const completedHole = {
-          ...previousHole,
+        const completedLane = {
+          ...previousLane,
           // add location to array
-          throws: [...previousHole.throws, location],
-          total_throws: previousHole.total_throws + 1,
+          throws: [...previousLane.throws, location],
+          total_throws: previousLane.total_throws + 1,
           end_point: location,
           isActive: false,
           completed: true
@@ -122,10 +128,10 @@ export default class Tracking extends Component {
 
         // initialize empty hole, add completed hole to the round
         this.setState({
-          hole: hole,
+          lane: lane,
           round: {
             ...this.state.round,
-            holes: [...this.state.round.holes, completedHole]
+            lanes: [...this.state.round.lanes, completedLane]
           }
 
         })
@@ -141,35 +147,34 @@ export default class Tracking extends Component {
   }
   render() {
     console.log(this.state, 'this state', this.props, 'props');
-    const {hole, round} = this.state;
-    const isHoleActive = hole.isActive;
+    const {lane, round} = this.state;
+    const isLaneActive = lane.isActive;
     return (
         <View style={[globalStyles.centerContent, {alignItems: 'center', flex: 1, flexDirection: 'column'}]}>
           <Text style={[globalStyles.textPrimary]}>
-            Hole number: {round.holes.length}
+            Hole number: {round.lanes.length}
           </Text>
           <Text style={[globalStyles.textPrimary]}>
-            Current hole throw count: {hole.total_throws}
+            Current hole throw count: {lane.total_throws}
           </Text>
           <Text style={[globalStyles.textPrimary]}>
-            Par: {hole.total_throws - hole.par}
+            Par: {lane.total_throws - lane.par}
           </Text>
           <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
             <Text style={[globalStyles.textPrimary, ]}>Throw</Text>
           </Button>
 
-          <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handleEndHole}>
+          <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handleEndLane}>
             <Icon style={[globalStyles.textDefault]} name="alert" />
           </Button>
 
-      <Button style={[styles.stopButton]}></Button>
           {/* <FadeInView style={{width: 250, height: 50, backgroundColor: 'powderblue'}}>
           <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
         </FadeInView> */}
 
-          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={this.handleEndHole}>
-            {isHoleActive && <FadeInView><Icon style={[]} name="basket" /></FadeInView>}
-            {!isHoleActive && <FadeInView><Icon style={{fontSize: 30}} name="close" /></FadeInView>}
+          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={this.handleEndLane}>
+            {isLaneActive && <FadeInView><Icon style={[]} name="basket" /></FadeInView>}
+            {!isLaneActive && <FadeInView><Icon style={{fontSize: 30}} name="close" /></FadeInView>}
           </Button>
       </View>
     );

@@ -1,5 +1,5 @@
-export const hole = {
-  holeId: null,
+export const lane = {
+  laneId: null,
   throws: [],
   par: 3,
   total_throws: 0,
@@ -11,6 +11,11 @@ export const hole = {
 }
 
 export const round = {
-  holes: [],
+  lanes: [],
+  completed: false
+}
+
+export const session = {
+  rounds: [],
   completed: false
 }
