@@ -40,11 +40,25 @@ const MainNavigator = TabNavigator({
 }, {
     swipeEnabled: true,
     tabBarPosition: 'top'
-  });
+  })
+;
+//Nesting tabnavigator inside of stacknavi to make the header appear
+const MainNavigatorContainer = StackNavigator({
+    Home: { screen: MainNavigator, 
+        navigationOptions: {
+           title: "jee"
+          }  
+        }
+    
+    
+
+
+});
 
 export const RootNavigator = DrawerNavigator({
+    
   Home: {
-    screen: MainNavigator,
+    screen: MainNavigatorContainer,
     navigationOptions: {
       drawerIcon: <Icon name="menu" style={{color: '#fff'}} />
     }
