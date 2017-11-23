@@ -3,7 +3,7 @@
 */
 import React, {Component} from 'react';
 import {NavigationActions} from 'react-navigation'
-import {View, StyleSheet, Dimensions, Animated} from 'react-native';
+import {View, StyleSheet, Dimensions, Animated, Alert} from 'react-native';
 import {Container, Text, Button, Toast, Content, Header, Icon} from 'native-base';
 import {globalStyles} from '../res/styles'
 
@@ -50,6 +50,7 @@ export default class Tracking extends Component {
       lane,
       round,
       session,
+      isRoundEnded: false,
       error: null,
     };
 
@@ -145,16 +146,22 @@ export default class Tracking extends Component {
           isActive: true
         };
 
+        // update round, add new reference to the lane into the lanes array
         const previousLanes = !!initialRound.lanes ? initialRound.lanes : [];
-        // const previousLanes = initialRound.lanes;
         const round = {
           ...initialRound,
           lanes: [...previousLanes, {laneId: lane.laneId}]
         }
 
+        // update session, IF ROUND WAS ENDED PREVIOUSLY
+        //add new reference to the round into the rounds array
+        const {isRoundEnded} = this.state;
+        // if this is the first session, (first click) initialSession rounds will be empty, so create reference to the currently started round
+        const previousRounds =  !!initialSession.rounds ? initialSession.rounds : [{roundId: initialRound.roundId}];
+        const rounds = isRoundEnded ? [...previousRounds, {roundId: initialRound.roundId}] : [...previousRounds];
         const session = {
           ...initialSession,
-          rounds: [{roundId: initialRound.roundId}]
+          rounds
         }
 
         // set this lane to state and push to firebase
@@ -164,7 +171,7 @@ export default class Tracking extends Component {
         updates[DB_NAMES.sessions + session.sessionId] = session;
 
         firebase.database().ref().update(updates);
-        this.setState({lane, round, session});
+        this.setState({lane, round, session, isRoundEnded: false});
       // })
     }).catch((error) => {
       console.warn(error);
@@ -219,8 +226,16 @@ export default class Tracking extends Component {
   }
 
   handleEndRound() {
+    // confirm ending
+    Alert.alert(
+      'End round?',
+      'Are you sure you want to end the current round?',
+      [
+        {text: 'Yes, end round', onPress: () => this.setState({round: round})},
+        {text: 'Cancel', onPress: () => console.log('cancel')}
+      ]);
     // end round, initialize round so when tracking next throw firebase will create automatically new round
-    this.setState({round: round});
+    this.setState({round: round, isRoundEnded: true});
   }
 
   render() {
