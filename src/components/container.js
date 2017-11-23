@@ -1,16 +1,16 @@
 import React, {Component} from 'react';
 import {Container} from 'native-base';
-import {styles} from '../res/styles/index';
+import {globalStyles} from '../res/styles';
 
 import {stylesToArray} from '../helpers/components';
 
 export default class ContainerComponent extends Component {
   render() {
     const {style} = this.props;
-    const otherStyles = stylesToArray(style);
+    const styles = stylesToArray(style);
 
     return(
-      <Container style={[styles.bgDefault, ...otherStyles]}>{this.props.children}</Container>
+      <Container style={[globalStyles.bgDefault, ...styles]}>{this.props.children}</Container>
     )
   }
 }

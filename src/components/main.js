@@ -1,11 +1,25 @@
 import React, {Component} from 'react';
 import {Image, TouchableOpacity, StyleSheet, ImageBackground, View} from 'react-native';
-import {Container, Header, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right} from 'native-base';
+import {
+  Container,
+  Header,
+  Card,
+  CardItem,
+  Thumbnail,
+  Text,
+  Button,
+  Icon,
+  Left,
+  Body,
+  Right} from 'native-base';
 import {Col, Row, Grid} from "react-native-easy-grid";
-import {styles} from '../res/styles';
+import {globalStyles} from '../res/styles';
+
+// Other way to import components/variables/etc
+// import styles from '../res/styles'
 
 
-export default class CardImageExample extends Component {
+export default class MainButton extends Component {
   render() {
     return (
       <View style={[{height: '100%'}]}>
@@ -14,18 +28,10 @@ export default class CardImageExample extends Component {
               <Row>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Tracking')}>
                   <Card>
-                    {/* <CardItem>
-                      <Left>
-                        <Body>
-                          <Text>New Game</Text>
-                          <Text note>Start a new game</Text>
-                        </Body>
-                      </Left>
-                    </CardItem> */}
                     <CardItem cardBody>
-                      <ImageBackground source={require('../res/images/newgame_card.png')} style={[localStyle.image, styles.centerContent]}>
-                          <Text style={[styles.bgTransparent]}>New Game</Text>
-                          <Text style={[styles.bgTransparent]} note>Start a new game</Text>
+                      <ImageBackground source={require('../res/images/newgame_card.png')} style={[style.image, globalStyles.centerContent]}>
+                          <Text style={[globalStyles.bgTransparent]}>New Game</Text>
+                          <Text style={[globalStyles.bgTransparent]} note>Start a new game</Text>
                       </ImageBackground>
                     </CardItem>
                   </Card>
@@ -34,17 +40,9 @@ export default class CardImageExample extends Component {
               <Row>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Summary')}>
                   <Card>
-                    {/* <CardItem>
-                      <Left>
-                        <Body>
-                          <Text>High scores</Text>
-                          <Text note>Local high scores</Text>
-                        </Body>
-                      </Left>
-                    </CardItem> */}
                     <CardItem cardBody>
-                      <ImageBackground source={require('../res/images/highscores_card.png')} style={[localStyle.image, styles.centerContent]}>
-                        <Text style={[styles.bgTransparent, styles.textDefault]}>hello</Text>
+                      <ImageBackground source={require('../res/images/highscores_card.png')} style={[style.image, globalStyles.centerContent]}>
+                        <Text style={[globalStyles.bgTransparent, globalStyles.textDefault]}>hello</Text>
                       </ImageBackground>
                     </CardItem>
                   </Card>
@@ -56,18 +54,10 @@ export default class CardImageExample extends Component {
               <Row>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Summary')}>
                   <Card>
-                    {/* <CardItem>
-                      <Left>
-                        <Body>
-                          <Text>High scores</Text>
-                          <Text note>Local high scores</Text>
-                        </Body>
-                      </Left>
-                    </CardItem> */}
                     <CardItem cardBody>
-                      <ImageBackground source={require('../res/images/highscores_card.png')} style={[localStyle.image, styles.centerContent]}>
-                          <Text style={[styles.bgTransparent]}>High scores</Text>
-                          <Text style={[styles.bgTransparent]} note>Local high scores</Text>
+                      <ImageBackground source={require('../res/images/highscores_card.png')} style={[style.image, globalStyles.centerContent]}>
+                          <Text style={[globalStyles.bgTransparent]}>High scores</Text>
+                          <Text style={[globalStyles.bgTransparent]} note>Local high scores</Text>
                       </ImageBackground>
                     </CardItem>
                   </Card>
@@ -76,18 +66,10 @@ export default class CardImageExample extends Component {
               <Row>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('Tracking')}>
                   <Card>
-                    {/* <CardItem>
-                      <Left>
-                        <Body>
-                          <Text>New Game</Text>
-                          <Text note>Start a new game</Text>
-                        </Body>
-                      </Left>
-                    </CardItem> */}
                     <CardItem cardBody>
-                      <ImageBackground source={require('../res/images/newgame_card.png')} style={[localStyle.image, styles.centerContent]}>
-                          <Text style={[styles.bgTransparent]} >New Game</Text>
-                          <Text style={[styles.bgTransparent]} note>Start a new game</Text>
+                      <ImageBackground source={require('../res/images/newgame_card.png')} style={[style.image, globalStyles.centerContent]}>
+                          <Text style={[globalStyles.bgTransparent]} >New Game</Text>
+                          <Text style={[globalStyles.bgTransparent]} note>Start a new game</Text>
                       </ImageBackground>
                     </CardItem>
                   </Card>
@@ -95,12 +77,16 @@ export default class CardImageExample extends Component {
               </Row>
             </Col>
           </Grid>
+
+          {/* <Button style={[styles.buttonPrimary]}>
+            <Text>natibve base nappi</Text>
+          </Button> */}
       </View>
     );
   }
 }
 
-const localStyle = StyleSheet.create({
+const style = StyleSheet.create({
   image: {
     // resizeMode: 'cover'
     width: '100%',

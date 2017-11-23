@@ -7,7 +7,6 @@ import {Button, Text, Container, Content} from 'native-base';
 // import Container from '../components/container';
 import Tracking from '../components/tracking';
 
-import {styles} from '../res/styles/index';
 
 // const instructions = Platform.select({
 //   ios: 'Press Cmd+R to reload,\n' +

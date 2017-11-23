@@ -5,7 +5,7 @@ import React, {Component} from 'react';
 import {NavigationActions} from 'react-navigation'
 import {View, StyleSheet, Dimensions, Animated} from 'react-native';
 import {Container, Text, Button, Toast, Content, Header, Icon} from 'native-base';
-import {styles} from '../res/styles'
+import {globalStyles} from '../res/styles'
 
 import geolocation from '../services/geolocation';
 
@@ -144,29 +144,30 @@ export default class Tracking extends Component {
     const {hole, round} = this.state;
     const isHoleActive = hole.isActive;
     return (
-        <View style={[styles.centerContent, {alignItems: 'center', flex: 1, flexDirection: 'column'}]}>
-          <Text style={[styles.textPrimary]}>
+        <View style={[globalStyles.centerContent, {alignItems: 'center', flex: 1, flexDirection: 'column'}]}>
+          <Text style={[globalStyles.textPrimary]}>
             Hole number: {round.holes.length}
           </Text>
-          <Text style={[styles.textPrimary]}>
+          <Text style={[globalStyles.textPrimary]}>
             Current hole throw count: {hole.total_throws}
           </Text>
-          <Text style={[styles.textPrimary]}>
+          <Text style={[globalStyles.textPrimary]}>
             Par: {hole.total_throws - hole.par}
           </Text>
-          <Button style={[styles.buttonRounded, styles.bgPrimary, styles.verticalMargin, styles.centerHorizontal, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
-            <Text style={[styles.textPrimary, ]}>Throw</Text>
+          <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
+            <Text style={[globalStyles.textPrimary, ]}>Throw</Text>
           </Button>
 
-          <Button style={[styles.buttonRounded, styles.centerHorizontal, styles.bgSuccess, stylesLocal.errorButton]} onPress={this.handleEndHole}>
-            <Icon style={[styles.textDefault]} name="alert" />
+          <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handleEndHole}>
+            <Icon style={[globalStyles.textDefault]} name="alert" />
           </Button>
 
+      <Button style={[styles.stopButton]}></Button>
           {/* <FadeInView style={{width: 250, height: 50, backgroundColor: 'powderblue'}}>
           <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
         </FadeInView> */}
 
-          <Button style={[styles.buttonRounded, styles.bgSuccess, stylesLocal.stopButton]} onPress={this.handleEndHole}>
+          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={this.handleEndHole}>
             {isHoleActive && <FadeInView><Icon style={[]} name="basket" /></FadeInView>}
             {!isHoleActive && <FadeInView><Icon style={{fontSize: 30}} name="close" /></FadeInView>}
           </Button>
@@ -176,13 +177,13 @@ export default class Tracking extends Component {
 }
 
 
-const stylesLocal = StyleSheet.create({
+const styles = StyleSheet.create({
   stopButton: {
     width: 60,
     height: 60,
     position: 'absolute',
     bottom: 20,
-    right: 20
+    right: 20,
   },
   errorButton: {
     marginTop: 15,

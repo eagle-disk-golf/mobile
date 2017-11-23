@@ -88,16 +88,19 @@ const layout = StyleSheet.create({
 });
 
 const buttons = StyleSheet.create({
+  buttonPrimary: {
+    backgroundColor: COLORS.primary
+  },
   buttonRounded: {
     borderRadius: 100,
     width: 100,
     height: 100,
     justifyContent: 'center'
-  }
+  },
 });
 
 
-export const styles = {
+export const globalStyles = {
   ...helpers,
   ...text,
   ...background,

@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet
-} from 'react-native';
-
-import {Container, Button, Text, Content} from 'native-base';
+import {StyleSheet} from 'react-native';
+import {Container, Content} from 'native-base';
 import Main from '../components/main'
-
-import {styles} from '../res/styles/index';
 
 // const instructions = Platform.select({
 //   ios: 'Press Cmd+R to reload,\n' +
