@@ -3,8 +3,8 @@ import {
   StyleSheet
 } from 'react-native';
 
-import {Button, Text} from 'native-base';
-import Container from '../components/container';
+import {Button, Text, Container, Content} from 'native-base';
+// import Container from '../components/container';
 import Tracking from '../components/tracking';
 
 import {styles} from '../res/styles/index';
@@ -21,7 +21,9 @@ export default class TrackingScreen extends Component {
     render() {
     return (
       <Container>
-        <Tracking navigation={this.props.navigation} />
+        <Content>
+          <Tracking navigation={this.props.navigation} />
+        </Content>
       </Container >
     );
   }

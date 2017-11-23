@@ -45,6 +45,9 @@ const background = StyleSheet.create({
   },
   bgDanger: {
     // backgroundColor: COLORS.warning
+  },
+  bgTransparent: {
+    backgroundColor: 'transparent'
   }
 })
 

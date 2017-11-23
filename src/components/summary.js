@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
-import {Text} from 'native-base';
-import Container from './container';
+import {View} from 'react-native';
+import {Text, Container} from 'native-base';
 
 export default class Summary extends Component {
   render() {
     console.log(this.props, 'summary');
     return (
-      <Container>
+      <View>
         <Text>summary</Text>
-      </Container>
-    ); 
+      </View>
+    );
   }
 }

@@ -1,14 +1,16 @@
+/*
+
+*/
 import React, {Component} from 'react';
-import {StyleSheet, Dimensions} from 'react-native';
+import {NavigationActions} from 'react-navigation'
+import {View, StyleSheet, Dimensions, Animated} from 'react-native';
 import {Container, Text, Button, Toast, Content, Header, Icon} from 'native-base';
-// import Container from './container';
 import {styles} from '../res/styles'
 
 import geolocation from '../services/geolocation';
 
 import {hole, round} from '../constants/tracking';
 
-import {NavigationActions} from 'react-navigation'
 
 
 
@@ -142,7 +144,7 @@ export default class Tracking extends Component {
     const {hole, round} = this.state;
     const isHoleActive = hole.isActive;
     return (
-        <Content contentContainerStyle={[styles.centerContent, {alignItems: 'center', flex: 1, flexDirection: 'column'}]}>
+        <View style={[styles.centerContent, {alignItems: 'center', flex: 1, flexDirection: 'column'}]}>
           <Text style={[styles.textPrimary]}>
             Hole number: {round.holes.length}
           </Text>
@@ -168,7 +170,7 @@ export default class Tracking extends Component {
             {isHoleActive && <FadeInView><Icon style={[]} name="basket" /></FadeInView>}
             {!isHoleActive && <FadeInView><Icon style={{fontSize: 30}} name="close" /></FadeInView>}
           </Button>
-      </Content>
+      </View>
     );
   }
 }
@@ -194,7 +196,6 @@ const stylesLocal = StyleSheet.create({
   }
 });
 
-import {Animated} from 'react-native';
 class FadeInView extends React.Component {
   state = {
     fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
