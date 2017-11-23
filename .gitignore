@@ -52,4 +52,5 @@ buck-out/
 */fastlane/Preview.html
 */fastlane/screenshots
 
+./env.js
 env.js
