@@ -23,7 +23,9 @@ const text = StyleSheet.create({
   },
   textDanger: {
     // color: COLORS.warning
-  }
+  },
+  fontDefault: {
+   fontFamily:'Roboto'}
 });
 
 // background

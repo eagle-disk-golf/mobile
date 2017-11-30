@@ -6,6 +6,11 @@
 		"start": "node node_modules/react-native/local-cli/cli.js start",
 		"test": "jest"
 	},
+  "rnpm": {
+    "assets": [
+      "./src/res/fonts"
+    ]
+  },
 	"dependencies": {
 		"axios": "^0.16.2",
 		"firebase": "^4.6.2",

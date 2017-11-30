@@ -172,6 +172,9 @@ export default class Tracking extends Component {
           <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
         </FadeInView> */}
 
+        <Text style={styles.font}> Hablahbala </Text>
+        <Text> Hablahbala </Text>
+
           <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={this.handleEndLane}>
             {isLaneActive && <FadeInView><Icon style={[]} name="basket" /></FadeInView>}
             {!isLaneActive && <FadeInView><Icon style={{fontSize: 30}} name="close" /></FadeInView>}
@@ -199,7 +202,11 @@ const styles = StyleSheet.create({
   icon: {
     // fontSize: 30,
     transform: [{rotateX: '60deg'}]
-  }
+  },
+  font: {
+      fontFamily:"Roboto",
+      fontSize:20
+    }
 });
 
 class FadeInView extends React.Component {
