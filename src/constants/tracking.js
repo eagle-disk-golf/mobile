@@ -1,4 +1,6 @@
 export const lane = {
+  sessionId: null,
+  roundId: null,
   laneId: null,
   throws: [],
   par: 3,
@@ -12,10 +14,14 @@ export const lane = {
 
 export const round = {
   lanes: [],
-  completed: false
+  completed: false,
+  roundId: null,
+  sessionId: null
 }
 
 export const session = {
   rounds: [],
-  completed: false
+  completed: false,
+  sessionId: null,
+  name: null
 }
