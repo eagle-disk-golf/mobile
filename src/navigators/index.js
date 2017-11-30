@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
-import {Button, Icon} from 'native-base';
+import {Button, Icon, Text, Thumbnail, Item} from 'native-base';
+import {View, TouchableOpacity} from 'react-native';
 import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
 
 import MainScreen from '../screens/main-screen';
 import TrackingScreen from '../screens/tracking-screen';
 import SummaryScreen from '../screens/summary-screen';
 import TestScreen from '../screens/test';
+import HeaderLeft from '../components/header/header-left'; 
+import HeaderRight from '../components/header/header-right';
 
 
 
@@ -42,11 +45,19 @@ const MainNavigator = TabNavigator({
     tabBarPosition: 'top'
   })
 ;
-//Nesting tabnavigator inside of stacknavi to make the header appear
+//Nesting tabnavigator inside of stacknavigator to make the header appear
 const MainNavigatorContainer = StackNavigator({
     Home: { screen: MainNavigator, 
         navigationOptions: {
-           title: "jee"
+           /*title: "Eagle Disc Golf"*/
+            
+            headerStyle: { backgroundColor: 'red' },
+            headerTitleStyle: { color: 'green' },
+            headerTintColor: { },
+            headerLeft:  <HeaderLeft />,
+                                              
+            headerRight: <HeaderRight/>
+   
           }  
         }
     
