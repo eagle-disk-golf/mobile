@@ -27,10 +27,10 @@ const getNodeFromFirebase = (node, idField, table) => {
     } else if (!node[idField]) {
       // session is not yet created, create new node to the database and retreive the key
       const nodeId = firebase.database().ref(table).push().key;
-      let node = {...node};
-      node[idField] = nodeId;
+      let newNode = {...node};
+      newNode[idField] = nodeId;
       // const node = {...node, attribute: };
-      resolve(node);
+      resolve(newNode);
     } else {
       // send out error object
       reject({message: `Cannot get ${idField}`});
@@ -50,7 +50,9 @@ export default class Tracking extends Component {
       lane,
       round,
       session,
-      isRoundEnded: false,
+      isRoundActive: false,
+      isSessionActive: false,
+      isLaneActive: false,
       error: null,
     };
 
@@ -74,7 +76,8 @@ export default class Tracking extends Component {
   }
 
   handleTrackThrow() {
-    if (this.state.lane.laneId) {
+    const {isLaneActive} = this.state;
+    if (isLaneActive) {
       this.continueLane();
     } else this.startNewLane();
   }
@@ -82,9 +85,7 @@ export default class Tracking extends Component {
   continueLane() {
     // hole is started
     const resolvedPromises = [getSession(this.state.session), getRound(this.state.round), getLane(this.state.lane), geolocation.getCurrentPosition];
-
     Promise.all(resolvedPromises).then(resolvedValues => {
-    // geolocation.getCurrentPosition.then((position) => {
       // const previousLane = this.state.lane;
       const currentLane = resolvedValues[2];
       const geolocation = resolvedValues[3];
@@ -93,8 +94,10 @@ export default class Tracking extends Component {
         timestamp: geolocation.timestamp
       }
 
+      // update the currentLane by adding current throw into the throws array
       const lane = {
           ...currentLane,
+          par: 3,
           // add location to array
           throws: [...currentLane.throws, location],
           total_throws: currentLane.total_throws + 1,
@@ -113,15 +116,16 @@ export default class Tracking extends Component {
 
   startNewLane() {
       // use javascript Promise the handle all the async functions
-      const resolvedPromises = [getSession(this.state.session), getRound(this.state.round), geolocation.getCurrentPosition];
-
+      const resolvedPromises = [getSession(this.state.session), getRound(this.state.round), getLane(this.state.lane), geolocation.getCurrentPosition];
       // after we have received all our values
       Promise.all(resolvedPromises).then(resolvedValues => {
 
-        const initialLane = this.state.lane;
+        // const initialLane = this.state.lane;
         const initialSession = resolvedValues[0];
         const initialRound = resolvedValues[1];
-        const geoLocation = resolvedValues[2];
+        const initialLane = resolvedValues[2];
+        const geoLocation = resolvedValues[3];
+        console.log(initialLane, 'initail lane:[');
 
         // create location object (flatten the data)
         const location = {
@@ -130,12 +134,12 @@ export default class Tracking extends Component {
         }
 
         // create new lane
-        const laneId = firebase.database().ref(DB_NAMES.lane).push().key;
+        // const laneId = firebase.database().ref(DB_NAMES.lane).push().key;
         // create lane
         const lane = {
           ...initialLane,
           // id from firebase
-          laneId,
+          // laneId,
           roundId: initialRound.roundId,
           sessionId: initialSession.sessionId,
           // add location to array
@@ -155,10 +159,12 @@ export default class Tracking extends Component {
 
         // update session, IF ROUND WAS ENDED PREVIOUSLY
         //add new reference to the round into the rounds array
-        const {isRoundEnded} = this.state;
+        const {isRoundActive, isSessionActive} = this.state;
         // if this is the first session, (first click) initialSession rounds will be empty, so create reference to the currently started round
-        const previousRounds =  !!initialSession.rounds ? initialSession.rounds : [{roundId: initialRound.roundId}];
-        const rounds = isRoundEnded ? [...previousRounds, {roundId: initialRound.roundId}] : [...previousRounds];
+        // const previousRounds =  isSessionActive ? initialSession.rounds : [{roundId: initialRound.roundId}];
+        const previousRounds =  isSessionActive ? initialSession.rounds : [];
+        // if round is active do not create new round
+        const rounds = isRoundActive ? [...previousRounds] : [...previousRounds, {roundId: initialRound.roundId}];
         const session = {
           ...initialSession,
           rounds
@@ -171,7 +177,7 @@ export default class Tracking extends Component {
         updates[DB_NAMES.sessions + session.sessionId] = session;
 
         firebase.database().ref().update(updates);
-        this.setState({lane, round, session, isRoundEnded: false});
+        this.setState({lane, round, session, isRoundActive: true, isSessionActive: true, isLaneActive: true});
       // })
     }).catch((error) => {
       console.warn(error);
@@ -209,6 +215,7 @@ export default class Tracking extends Component {
         this.setState({
           // initializing empty lane
           lane: lane,
+          isLaneActive: false
         })
 
         let updates = {};
@@ -231,11 +238,14 @@ export default class Tracking extends Component {
       'End round?',
       'Are you sure you want to end the current round?',
       [
-        {text: 'Yes, end round', onPress: () => this.setState({round: round})},
+        {text: 'Yes, end round', onPress: () => {
+          this.setState({round: round, isRoundActive: false})
+        }
+        },
         {text: 'Cancel', onPress: () => console.log('cancel')}
       ]);
     // end round, initialize round so when tracking next throw firebase will create automatically new round
-    this.setState({round: round, isRoundEnded: true});
+    // this.setState({round: round, isRoundActive: false});
   }
 
   render() {
@@ -265,6 +275,7 @@ export default class Tracking extends Component {
           <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
         </FadeInView> */}
 
+
         <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
           {isLaneActive && <FadeInView><Icon style={[]} name="basket" /></FadeInView>}
           {!isLaneActive && <FadeInView><Icon style={{fontSize: 30}} name="close" /></FadeInView>}
@@ -292,7 +303,11 @@ const styles = StyleSheet.create({
   icon: {
     // fontSize: 30,
     transform: [{rotateX: '60deg'}]
-  }
+  },
+  font: {
+      fontFamily:"Roboto",
+      fontSize:20
+    }
 });
 
 class FadeInView extends React.Component {
