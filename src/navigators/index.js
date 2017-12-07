@@ -6,9 +6,10 @@
 */
 
 import React, {Component} from 'react';
-import {Button, Icon, Text, Thumbnail, Item} from 'native-base';
+import {Button, Text, Thumbnail, Item} from 'native-base';
 import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 //App colors
 import {COLORS} from '../res/styles/constants';
@@ -49,19 +50,19 @@ const MainNavigator = TabNavigator({
   Main: {
     screen: MainScreen,
     navigationOptions: {
-      tabBarIcon: <Icon name="home" />
+      tabBarIcon: <Icon name="ios-home" />
     }
   },
   Tracking: {
     screen: TrackingScreen,
     navigationOptions: {
-      tabBarIcon: <Icon name="basket" />
+      tabBarIcon: <Icon name="ios-basket" />
     }
   },
   Summary: {
     screen: SummaryNavigator,
     navigationOptions: {
-      tabBarIcon: <Icon name="analytics" />
+      tabBarIcon: <Icon name="ios-analytics" />
     }
   },
 }, {
@@ -76,6 +77,7 @@ const MainNavigatorContainer = StackNavigator({
            /*title: "Eagle Disc Golf"*/
 
             headerStyle: {
+
                 backgroundColor: COLORS.primary,
                 height: 80,
                 paddingLeft: 20,
@@ -93,7 +95,7 @@ export const RootNavigator = DrawerNavigator({
   Home: {
     screen: MainNavigatorContainer,
     navigationOptions: {
-      drawerIcon: <Icon name="menu" style={{color: '#fff'}} />
+      drawerIcon: <Icon name="ios-menu" style={{color: '#fff'}} />
     }
   },
   Test: {

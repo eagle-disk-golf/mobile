@@ -4,7 +4,8 @@
 import React, {Component} from 'react';
 import {NavigationActions} from 'react-navigation'
 import {View, StyleSheet, Dimensions, Animated, Alert} from 'react-native';
-import {Container, Text, Button, Toast, Content, Header, Icon, Fab} from 'native-base';
+import {Container, Text, Button, Toast, Content, Header, Fab} from 'native-base';
+import Icon from 'react-native-vector-icons/Ionicons';
 import {globalStyles} from '../res/styles'
 
 import firebase, {DB_NAMES} from '../services/firebase';
@@ -268,8 +269,9 @@ export default class Tracking extends Component {
           </Button>
 
           <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.centerVertical, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handle}>
-            <Icon style={[globalStyles.textDefault]} name="alert" />
+            <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-alert"  />
           </Button>
+
 
           {/* <FadeInView style={{width: 250, height: 50, backgroundColor: 'powderblue'}}>
             <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
@@ -277,8 +279,8 @@ export default class Tracking extends Component {
 
 
           <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
-            {isLaneActive && <FadeInView><Icon style={[]} name="basket" /></FadeInView>}
-            {!isLaneActive && <FadeInView><Icon style={{fontSize: 30}} name="close" /></FadeInView>}
+            {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-basket" />}
+            {!isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-close" />}
           </Button>
       </View>
     );
@@ -298,7 +300,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     width: 50,
     height: 50,
-    padding: 20
+
   },
   icon: {
     // fontSize: 30,
