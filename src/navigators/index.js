@@ -7,8 +7,11 @@
 
 import React, {Component} from 'react';
 import {Button, Icon, Text, Thumbnail, Item} from 'native-base';
-import {View, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity, StyleSheet} from 'react-native';
 import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
+
+//App colors
+import {COLORS} from '../res/styles/constants';
 
 import MainScreen from '../screens/main-screen';
 import TrackingScreen from '../screens/tracking-screen';
@@ -69,11 +72,13 @@ const MainNavigatorContainer = StackNavigator({
         navigationOptions: {
            /*title: "Eagle Disc Golf"*/
             
-            headerStyle: { backgroundColor: 'red' },
-            headerTitleStyle: { color: 'green' },
-            headerTintColor: { },
-            headerLeft:  <HeaderLeft />,
-                                              
+            headerStyle: { 
+                backgroundColor: COLORS.primary,
+                height: 80,
+                paddingLeft: 20,
+                paddingRight: 20,
+            },
+            headerLeft:  <HeaderLeft />,                              
             headerRight: <HeaderRight/>
    
           }  
