@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {
-  StyleSheet
+  StyleSheet,
+  View
 } from 'react-native';
 
 import {Button, Text, Container, Content} from 'native-base';
-// import Container from '../components/container';
 import Tracking from '../components/tracking';
 
 
@@ -19,11 +19,12 @@ import Tracking from '../components/tracking';
 export default class TrackingScreen extends Component {
     render() {
     return (
-      <Container>
-        <Content>
+      <View style={{flex: 1}}>
+
+        {/* <Content style={[{height: '100%', backgroundColor: 'black'}]}> */}
           <Tracking navigation={this.props.navigation} />
-        </Content>
-      </Container >
+        {/* </Content> */}
+      </View>
     );
   }
 }

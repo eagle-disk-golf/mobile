@@ -4,7 +4,7 @@
 import React, {Component} from 'react';
 import {NavigationActions} from 'react-navigation'
 import {View, StyleSheet, Dimensions, Animated, Alert} from 'react-native';
-import {Container, Text, Button, Toast, Content, Header, Icon} from 'native-base';
+import {Container, Text, Button, Toast, Content, Header, Icon, Fab} from 'native-base';
 import {globalStyles} from '../res/styles'
 
 import firebase, {DB_NAMES} from '../services/firebase';
@@ -250,36 +250,36 @@ export default class Tracking extends Component {
 
   render() {
     console.log(this.state, 'this state', this.props, 'props');
-    const {lane, round} = this.state;
-    const isLaneActive = lane.isActive;
+    const {lane, round, isLaneActive} = this.state;
+    // const isLaneActive = lane.isActive;
     return (
-      <View style={[globalStyles.centerContent, {alignItems: 'center', flex: 1, flexDirection: 'column'}]}>
-        <Text style={[globalStyles.textPrimary]}>
-          Hole number: {round.lanes.length}
-        </Text>
-        <Text style={[globalStyles.textPrimary]}>
-          Current hole throw count: {lane.total_throws}
-        </Text>
-        <Text style={[globalStyles.textPrimary]}>
-          Par: {lane.total_throws - lane.par}
-        </Text>
-        <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
-          <Text style={[globalStyles.textPrimary,]}>Throw</Text>
-        </Button>
+      <View style={[globalStyles.container]}>
+          <Text style={[globalStyles.textPrimary]}>
+            Hole number: {round.lanes.length}
+          </Text>
+          <Text style={[globalStyles.textPrimary]}>
+            Current hole throw count: {lane.total_throws}
+          </Text>
+          <Text style={[globalStyles.textPrimary]}>
+            Par: {lane.total_throws - lane.par}
+          </Text>
+          <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal,  {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
+            <Text style={[globalStyles.textPrimary,]}>Throw</Text>
+          </Button>
 
-        <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handleEndLane}>
-          <Icon style={[globalStyles.textDefault]} name="alert" />
-        </Button>
+          <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.centerVertical, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handle}>
+            <Icon style={[globalStyles.textDefault]} name="alert" />
+          </Button>
 
-        {/* <FadeInView style={{width: 250, height: 50, backgroundColor: 'powderblue'}}>
-          <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
-        </FadeInView> */}
+          {/* <FadeInView style={{width: 250, height: 50, backgroundColor: 'powderblue'}}>
+            <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
+          </FadeInView> */}
 
 
-        <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
-          {isLaneActive && <FadeInView><Icon style={[]} name="basket" /></FadeInView>}
-          {!isLaneActive && <FadeInView><Icon style={{fontSize: 30}} name="close" /></FadeInView>}
-        </Button>
+          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
+            {isLaneActive && <FadeInView><Icon style={[]} name="basket" /></FadeInView>}
+            {!isLaneActive && <FadeInView><Icon style={{fontSize: 30}} name="close" /></FadeInView>}
+          </Button>
       </View>
     );
   }
