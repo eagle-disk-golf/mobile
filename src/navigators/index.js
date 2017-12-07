@@ -18,7 +18,7 @@ import TrackingScreen from '../screens/tracking-screen';
 import SummaryScreen from '../screens/summary-screen';
 import TestScreen from '../screens/test';
 
-import HeaderLeft from '../components/header/header-left'; 
+import HeaderLeft from '../components/header/header-left';
 import HeaderRight from '../components/header/header-right';
 
 import SummaryDetailScreen from '../screens/summarydetail-screen';
@@ -49,11 +49,14 @@ const MainNavigator = TabNavigator({
   Main: {
     screen: MainScreen,
     navigationOptions: {
-      tabBarIcon: <Icon name="basket" />
+      tabBarIcon: <Icon name="home" />
     }
   },
   Tracking: {
-    screen: TrackingScreen
+    screen: TrackingScreen,
+    navigationOptions: {
+      tabBarIcon: <Icon name="basket" />
+    }
   },
   Summary: {
     screen: SummaryNavigator,
@@ -68,25 +71,25 @@ const MainNavigator = TabNavigator({
 // Nesting tabnavigator inside of stacknavi to make the header appear
 
 const MainNavigatorContainer = StackNavigator({
-    Home: { screen: MainNavigator, 
+    Home: { screen: MainNavigator,
         navigationOptions: {
            /*title: "Eagle Disc Golf"*/
-            
-            headerStyle: { 
+
+            headerStyle: {
                 backgroundColor: COLORS.primary,
                 height: 80,
                 paddingLeft: 20,
                 paddingRight: 20,
             },
-            headerLeft:  <HeaderLeft />,                              
+            headerLeft:  <HeaderLeft />,
             headerRight: <HeaderRight/>
-   
-          }  
+
+          }
         }
 });
 
 export const RootNavigator = DrawerNavigator({
-    
+
   Home: {
     screen: MainNavigatorContainer,
     navigationOptions: {
