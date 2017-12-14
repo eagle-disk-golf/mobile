@@ -8,7 +8,7 @@
 
 import React, {Component} from 'react';
 import {Button, Text, Thumbnail, Item} from 'native-base';
-import {View, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, TouchableOpacity, StyleSheet, Platform} from 'react-native';
 import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
 import Icon from '../components/icon';
 
@@ -26,8 +26,9 @@ import HeaderRight from '../components/header/header-right';
 import SummaryDetailScreen from '../screens/summarydetail-screen';
 import SummaryDetail from '../components/summary-detail';
 
-const TabIcon = (props) => {
-  return <Icon size={20} {...props} />;
+const TabIcon = ({name, isFocused}) => {
+  const iconColor = isFocused ? null : 'lightgray';
+  return <Icon size={20} name={name} style={{color: iconColor}} />;
 }
 
 const contentOptions = {
@@ -42,30 +43,52 @@ const SummaryNavigator = StackNavigator({
   SummaryDetail: {screen: SummaryDetailScreen}
 });
 
+const TabBarOptions = {
+  showIcon: true,
+  activeTintColor: COLORS.primary,
+  inactiveTintColor: 'lightgray',
+  style: {
+    backgroundColor: '#fff'
+  },
+  labelStyle: {
+    margin: 0,
+    padding: 0
+  },
+  indicatorStyle: {
+    backgroundColor: 'transparent'
+  }
+}
+
 const MainNavigator = TabNavigator({
   Main: {
     screen: MainScreen,
     navigationOptions: {
-      tabBarIcon: <TabIcon name="ios-home" />
+      tabBarIcon: ({focused}) => {
+        return <TabIcon isFocused={focused} name="ios-home" />
+      }
     }
   },
   Tracking: {
     screen: TrackingScreen,
     navigationOptions: {
-      tabBarIcon: <TabIcon name="ios-basket" />
+      tabBarIcon: ({focused}) => <TabIcon isFocused={focused} name="ios-basket" />
     }
   },
   Summary: {
     screen: SummaryNavigator,
     navigationOptions: {
-      tabBarIcon: <TabIcon name="ios-analytics" />
+      tabBarIcon: ({focused}) => <TabIcon isFocused={focused} name="ios-analytics" />
     }
   },
 }, {
     swipeEnabled: true,
-    tabBarPosition: 'top'
+    tabBarPosition: 'top',
+    tabBarOptions: TabBarOptions,
   });
 // Nesting tabnavigator inside of stacknavi to make the header appear
+
+// higher header on ios
+const getHeaderHeight = () => Platform.OS === 'ios' ? 90 : 85;
 
 const MainNavigatorContainer = StackNavigator({
   Home: {
@@ -73,7 +96,7 @@ const MainNavigatorContainer = StackNavigator({
     navigationOptions: {
       headerStyle: {
         backgroundColor: COLORS.primary,
-        height: 80,
+        height: getHeaderHeight(),
         paddingLeft: 20,
         paddingRight: 20,
       },

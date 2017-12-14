@@ -25,7 +25,12 @@ export default class HeaderLeft extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    borderBottomColor: 'transparent'
+    flex: 1,
+    borderBottomColor: 'transparent',
+    // marginBottom: 5
+    // height: 30,
+    // marginTop: 10,
+    // marginBottom: 50
   },
   header: {
     backgroundColor: 'pink',
@@ -35,7 +40,7 @@ const styles = StyleSheet.create({
     width: 60,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 20,
   },
