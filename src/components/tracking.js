@@ -5,7 +5,8 @@ import React, {Component} from 'react';
 import {NavigationActions} from 'react-navigation'
 import {View, StyleSheet, Dimensions, Animated, Alert} from 'react-native';
 import {Container, Text, Button, Toast, Content, Header, Fab} from 'native-base';
-import Icon from 'react-native-vector-icons/Ionicons';
+// import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from './icon';
 import {globalStyles} from '../res/styles'
 
 import firebase, {DB_NAMES} from '../services/firebase';
@@ -269,7 +270,7 @@ export default class Tracking extends Component {
           </Button>
 
           <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.centerVertical, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handle}>
-            <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-alert"  />
+            <Icon style={[globalStyles.textDefault, globalStyles.bgTransparent, styles.errorIcon]} name="ios-alert"  />
           </Button>
 
 
@@ -279,8 +280,8 @@ export default class Tracking extends Component {
 
 
           <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
-            {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-basket" />}
-            {!isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-close" />}
+            {isLaneActive && <Icon style={[globalStyles.textDefault, globalStyles.bgPrimary, {fontSize: 40}]} name="ios-basket" />}
+            {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name="ios-close" />}
           </Button>
       </View>
     );
@@ -297,10 +298,16 @@ const styles = StyleSheet.create({
     right: 20,
   },
   errorButton: {
-    marginTop: 15,
+    // marginTop: 15,
     width: 50,
     height: 50,
 
+  },
+  errorIcon: {
+    fontSize: 40,
+   	margin: 0,
+    paddingTop: 3,
+    // paddingBottom: 5
   },
   icon: {
     // fontSize: 30,
@@ -343,4 +350,3 @@ class FadeInView extends React.Component {
     );
   }
 }
-

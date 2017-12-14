@@ -8,7 +8,6 @@ import {
   Thumbnail,
   Text,
   Button,
-  Icon,
   Left,
   Body,
   Right} from 'native-base';
