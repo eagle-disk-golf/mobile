@@ -270,7 +270,7 @@ export default class Tracking extends Component {
           </Button>
 
           <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.centerVertical, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handle}>
-            <Icon style={[globalStyles.textDefault, globalStyles.bgTransparent, styles.errorIcon]} name="ios-alert"  />
+            <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent]} name="ios-alert"  />
           </Button>
 
 
@@ -302,12 +302,6 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
 
-  },
-  errorIcon: {
-    fontSize: 40,
-   	margin: 0,
-    paddingTop: 3,
-    // paddingBottom: 5
   },
   icon: {
     // fontSize: 30,
