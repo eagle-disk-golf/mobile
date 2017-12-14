@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
+import {StyleSheet, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {stylesToArray} from '../helpers/components';
-import {StyleSheet} from 'react-native';
 
 export default class CustomIcon extends Component {
   render() {
@@ -16,6 +16,6 @@ export default class CustomIcon extends Component {
 
 const styleHelper = StyleSheet.create({
   icon: {
-    paddingTop: 3
+    paddingTop: Platform.OS === 'ios' ? 3 : 0
   }
 });
