@@ -96,6 +96,7 @@ const MainNavigatorContainer = StackNavigator({
     navigationOptions: {
       headerStyle: {
         backgroundColor: COLORS.primary,
+        borderBottomColor: 'transparent',
         height: getHeaderHeight(),
         paddingLeft: 20,
         paddingRight: 20,

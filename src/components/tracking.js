@@ -280,7 +280,7 @@ export default class Tracking extends Component {
 
 
           <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
-            {isLaneActive && <Icon style={[globalStyles.textDefault, globalStyles.bgPrimary, {fontSize: 40}]} name="ios-basket" />}
+            {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-basket" />}
             {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name="ios-close" />}
           </Button>
       </View>
