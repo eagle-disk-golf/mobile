@@ -56,6 +56,9 @@ export default class Tracking extends Component {
       isSessionActive: false,
       isLaneActive: false,
       error: null,
+        activeStop: 'true',
+        activeError: false
+     
     };
 
     this.handleTrackThrow = this.handleTrackThrow.bind(this);
@@ -266,6 +269,7 @@ export default class Tracking extends Component {
       });
   }
 
+
   render() {
     console.log(this.state, 'this state', this.props, 'props');
     const {lane, round, isLaneActive} = this.state;
@@ -281,24 +285,53 @@ export default class Tracking extends Component {
           <Text style={[globalStyles.textPrimary]}>
             Par: {lane.total_throws - lane.par}
           </Text>
+        
+        <Fab
+            active={this.state.activeError}
+            direction="right"
+            containerStyle={{ }}
+            style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.errorButton]} 
+            position="bottomLeft"
+            onPress={() => this.setState({ activeError: !this.state.activeError })}>
+            <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent]} name="ios-alert"  />
+            <Button style={{ backgroundColor: '#34A34F' }}>
+              <Icon name="logo-whatsapp" />
+            </Button>
+            <Button style={{ backgroundColor: '#3B5998' }}>
+              <Icon name="logo-facebook" />
+            </Button>
+          </Fab>
+
           <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal,  {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
             <Text style={[globalStyles.textPrimary,]}>Throw</Text>
           </Button>
 
-          <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.centerVertical, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handle}>
+     {  /*   <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.centerVertical, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handle}>
             <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent]} name="ios-alert"  />
-          </Button>
+          </Button> */ }
 
 
           {/* <FadeInView style={{width: 250, height: 50, backgroundColor: 'powderblue'}}>
             <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
           </FadeInView> */}
 
-
-          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
+       <Fab
+            active={this.state.activeStop}
+            direction="left"
+            containerStyle={{ }}
+            style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.errorButton]}
+            position="bottomRight"
+            onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
             {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-basket" />}
             {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name="ios-close" />}
-          </Button>
+
+          </Fab> 
+                  
+                         
+   {/*  <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
+            {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-basket" />}
+            {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name="ios-close" />}
+          </Button>   */}
       </View>
     );
   }
