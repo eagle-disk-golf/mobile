@@ -1,4 +1,4 @@
-export const lane = {
+export const LANE = {
   sessionId: null,
   roundId: null,
   laneId: null,
@@ -12,15 +12,15 @@ export const lane = {
   completed: false
 }
 
-export const round = {
-  lanes: [],
+export const ROUND = {
+  lanes: {},
   completed: false,
   roundId: null,
   sessionId: null
 }
 
-export const session = {
-  rounds: [],
+export const SESSION = {
+  rounds: {},
   completed: false,
   sessionId: null,
   name: null

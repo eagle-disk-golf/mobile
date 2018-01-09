@@ -12,7 +12,7 @@ import {globalStyles} from '../res/styles'
 import firebase, {DB_NAMES} from '../services/firebase';
 import geolocation from '../services/geolocation';
 
-import {lane, round, session} from '../constants/tracking';
+import {LANE, ROUND, SESSION} from '../constants/tracking';
 
 
 /*
@@ -49,9 +49,9 @@ export default class Tracking extends Component {
     super(props);
 
     this.state = {
-      lane,
-      round,
-      session,
+      lane: LANE,
+      round: ROUND,
+      session: SESSION,
       isRoundActive: false,
       isSessionActive: false,
       isLaneActive: false,
@@ -61,6 +61,7 @@ export default class Tracking extends Component {
     this.handleTrackThrow = this.handleTrackThrow.bind(this);
     this.handleEndLane = this.handleEndLane.bind(this);
     this.handleEndRound = this.handleEndRound.bind(this);
+    this.endRound = this.endRound.bind(this);
   }
 
   componentDidMount() {
@@ -86,11 +87,11 @@ export default class Tracking extends Component {
 
   continueLane() {
     // hole is started
-    const resolvedPromises = [getSession(this.state.session), getRound(this.state.round), getLane(this.state.lane), geolocation.getCurrentPosition];
-    Promise.all(resolvedPromises).then(resolvedValues => {
+    const promises = [getSession(this.state.session), getRound(this.state.round), getLane(this.state.lane), geolocation.getCurrentPosition];
+    Promise.all(promises).then(values => {
       // const previousLane = this.state.lane;
-      const currentLane = resolvedValues[2];
-      const geolocation = resolvedValues[3];
+      const currentLane = values[2];
+      const geolocation = values[3];
       const location = {
         ...geolocation.coords,
         timestamp: geolocation.timestamp
@@ -118,15 +119,14 @@ export default class Tracking extends Component {
 
   startNewLane() {
       // use javascript Promise the handle all the async functions
-      const resolvedPromises = [getSession(this.state.session), getRound(this.state.round), getLane(this.state.lane), geolocation.getCurrentPosition];
+      const promises = [getSession(this.state.session), getRound(this.state.round), getLane(this.state.lane), geolocation.getCurrentPosition];
       // after we have received all our values
-      Promise.all(resolvedPromises).then(resolvedValues => {
+      Promise.all(promises).then(values => {
 
-        // const initialLane = this.state.lane;
-        const initialSession = resolvedValues[0];
-        const initialRound = resolvedValues[1];
-        const initialLane = resolvedValues[2];
-        const geoLocation = resolvedValues[3];
+        const initialSession = values[0];
+        const initialRound = values[1];
+        const initialLane = values[2];
+        const geoLocation = values[3];
         console.log(initialLane, 'initail lane:[');
 
         // create location object (flatten the data)
@@ -136,8 +136,6 @@ export default class Tracking extends Component {
         }
 
         // create new lane
-        // const laneId = firebase.database().ref(DB_NAMES.lane).push().key;
-        // create lane
         const lane = {
           ...initialLane,
           // id from firebase
@@ -153,23 +151,26 @@ export default class Tracking extends Component {
         };
 
         // update round, add new reference to the lane into the lanes array
-        const previousLanes = !!initialRound.lanes ? initialRound.lanes : [];
+        let lanesById = initialRound.lanes ? initialRound.lanes : {};
+        lanesById[lane.laneId] = true;
         const round = {
           ...initialRound,
-          lanes: [...previousLanes, {laneId: lane.laneId}]
+          sessionId: initialSession.sessionId,
+          lanes: lanesById,
         }
 
-        // update session, IF ROUND WAS ENDED PREVIOUSLY
-        //add new reference to the round into the rounds array
         const {isRoundActive, isSessionActive} = this.state;
-        // if this is the first session, (first click) initialSession rounds will be empty, so create reference to the currently started round
-        // const previousRounds =  isSessionActive ? initialSession.rounds : [{roundId: initialRound.roundId}];
-        const previousRounds =  isSessionActive ? initialSession.rounds : [];
+
         // if round is active do not create new round
-        const rounds = isRoundActive ? [...previousRounds] : [...previousRounds, {roundId: initialRound.roundId}];
+        // create reference to the individual rounds
+        let roundsById = isSessionActive ? initialSession.rounds : {};
+        // add new round
+        if (!isRoundActive) {
+          roundsById[round.roundId] = true;
+        }
         const session = {
           ...initialSession,
-          rounds
+          rounds: roundsById
         }
 
         // set this lane to state and push to firebase
@@ -192,13 +193,11 @@ export default class Tracking extends Component {
   handleEndLane() {
     // dont end if no throws
     if (this.state.lane.throws.length) {
-      const resolvedPromises = [getSession(this.state.session), getRound(this.state.round), getLane(this.state.lane), geolocation.getCurrentPosition];
+      const promises = [getLane(this.state.lane), geolocation.getCurrentPosition];
       // hole is started
-      Promise.all(resolvedPromises).then(resolvedValues => {
-        // geolocation.getCurrentPosition.then((position) => {
-        const previousRound = resolvedValues[1];
-        const currentLane = resolvedValues[2];
-        const geolocation = resolvedValues[3];
+      Promise.all(promises).then(values => {
+        const currentLane = values[0];
+        const geolocation = values[1];
 
         const location = {
           ...geolocation.coords,
@@ -216,7 +215,7 @@ export default class Tracking extends Component {
 
         this.setState({
           // initializing empty lane
-          lane: lane,
+          lane: LANE,
           isLaneActive: false
         })
 
@@ -236,24 +235,41 @@ export default class Tracking extends Component {
 
   handleEndRound() {
     // confirm ending
+    const self = this;
     Alert.alert(
       'End round?',
       'Are you sure you want to end the current round?',
       [
-        {text: 'Yes, end round', onPress: () => {
-          this.setState({round: round, isRoundActive: false})
-        }
-        },
+        {text: 'Yes, end round', onPress: () => self.endRound()},
         {text: 'Cancel', onPress: () => console.log('cancel')}
       ]);
-    // end round, initialize round so when tracking next throw firebase will create automatically new round
-    // this.setState({round: round, isRoundActive: false});
+  }
+
+  endRound() {
+   const promises = [getRound(this.state.round), geolocation.getCurrentPosition];
+      // hole is started
+      Promise.all(promises).then(values => {
+        const currentRound = values[0];
+
+        const updatedRound = {
+          ...currentRound,
+          completed: true
+        }
+
+        let updates = {};
+        updates[DB_NAMES.rounds + currentRound.roundId] = updatedRound;
+
+        firebase.database().ref().update(updates);
+        // reset round to initial values
+        this.setState({round: ROUND, isRoundActive: false})
+
+      });
   }
 
   render() {
     console.log(this.state, 'this state', this.props, 'props');
     const {lane, round, isLaneActive} = this.state;
-    // const isLaneActive = lane.isActive;
+
     return (
       <View style={[globalStyles.container]}>
           <Text style={[globalStyles.textPrimary]}>
@@ -313,34 +329,34 @@ const styles = StyleSheet.create({
     }
 });
 
-class FadeInView extends React.Component {
-  state = {
-    fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
-  }
+// class FadeInView extends React.Component {
+//   state = {
+//     fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
+//   }
 
-  componentDidMount() {
-    Animated.timing(                  // Animate over time
-      this.state.fadeAnim,            // The animated value to drive
-      {
-        toValue: '90deg',                   // Animate to opacity: 1 (opaque)
-        duration: 500,              // Make it take a while
-      }
-    ).start();                        // Starts the animation
-  }
+//   componentDidMount() {
+//     Animated.timing(                  // Animate over time
+//       this.state.fadeAnim,            // The animated value to drive
+//       {
+//         toValue: '90deg',                   // Animate to opacity: 1 (opaque)
+//         duration: 500,              // Make it take a while
+//       }
+//     ).start();                        // Starts the animation
+//   }
 
-  render() {
-    let {fadeAnim} = this.state;
+//   render() {
+//     let {fadeAnim} = this.state;
 
-    return (
-      <Animated.View                 // Special animatable View
-        style={{
-          ...this.props.style,
-          opacity: fadeAnim,         // Bind opacity to animated value
-          transform: [{rotate: this.state.fadeAnim.interpolate({inputRange: [0, 360], outputRange: ['0deg', '360deg']}), }],
-        }}
-      >
-        {this.props.children}
-      </Animated.View>
-    );
-  }
-}
+//     return (
+//       <Animated.View                 // Special animatable View
+//         style={{
+//           ...this.props.style,
+//           opacity: fadeAnim,         // Bind opacity to animated value
+//           transform: [{rotate: this.state.fadeAnim.interpolate({inputRange: [0, 360], outputRange: ['0deg', '360deg']}), }],
+//         }}
+//       >
+//         {this.props.children}
+//       </Animated.View>
+//     );
+//   }
+// }
