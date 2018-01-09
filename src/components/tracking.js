@@ -4,16 +4,26 @@
 import React, {Component} from 'react';
 import {NavigationActions} from 'react-navigation'
 import {View, StyleSheet, Dimensions, Animated, Alert} from 'react-native';
-import {Container, Text, Button, Toast, Content, Header, Fab} from 'native-base';
+import {Container, Text, Button, Toast, Content, Header, Fab, ActionSheet} from 'native-base';
 // import Icon from 'react-native-vector-icons/Ionicons';
 import Icon from './icon';
-import {globalStyles} from '../res/styles'
+import {globalStyles} from '../res/styles';
+import {COLORS} from '../res/styles/constants';
 
 import firebase, {DB_NAMES} from '../services/firebase';
 import geolocation from '../services/geolocation';
 
 import {LANE, ROUND, SESSION} from '../constants/tracking';
 
+var BUTTONS = [
+  { text: "Over bound", icon: "remove-circle", iconColor: COLORS.success },
+  { text: "Lost", icon: "eye-off", iconColor: COLORS.primary },
+  { text: "Mando", icon: "redo", iconColor: COLORS.warningrr },
+ // { text: "Delete", icon: "trash", iconColor: "#fa213b" },
+  { text: "Cancel", icon: "close", iconColor: "#25de5b" }
+];
+var DESTRUCTIVE_INDEX = 4;
+var CANCEL_INDEX = 4;
 
 /*
   return the node param (session, round or lane) if it is already referenced in firebase.
@@ -56,7 +66,6 @@ export default class Tracking extends Component {
       isSessionActive: false,
       isLaneActive: false,
       error: null,
-        activeStop: 'true',
         activeError: false
      
     };
@@ -292,13 +301,25 @@ export default class Tracking extends Component {
             containerStyle={{ }}
             style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.errorButton]} 
             position="bottomLeft"
-            onPress={() => this.setState({ activeError: !this.state.activeError })}>
+            onPress={() => ActionSheet.show(
+              {
+                options: BUTTONS,
+                cancelButtonIndex: CANCEL_INDEX,
+                destructiveButtonIndex: DESTRUCTIVE_INDEX,
+                title: "Select right option"
+              },
+              buttonIndex => {
+                this.setState({ clicked: BUTTONS[buttonIndex] });
+              }
+            )}
+          >
             <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent]} name="ios-alert"  />
             <Button style={{ backgroundColor: '#34A34F' }}>
               <Icon name="logo-whatsapp" />
             </Button>
             <Button style={{ backgroundColor: '#3B5998' }}>
-              <Icon name="logo-facebook" />
+              <Icon name="logo-whatsapp" />
+                  
             </Button>
           </Fab>
 
