@@ -8,6 +8,8 @@
   },
   "plugins": ["react", "babel"],
   "rules": {
+    "no-unused-vars": 1,
+    "no-var": 1,
     "arrow-parens": 0,
 
     "block-scoped-var": 1,

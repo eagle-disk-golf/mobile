@@ -2,9 +2,9 @@
 
 */
 import React, {Component} from 'react';
-import {NavigationActions} from 'react-navigation'
-import {View, StyleSheet, Dimensions, Animated, Alert} from 'react-native';
-import {Container, Text, Button, Toast, Content, Header, Fab, ActionSheet} from 'native-base';
+import {NavigationActions} from 'react-navigation';
+import {View, StyleSheet, Alert} from 'react-native';
+import {Text, Button, Toast, Fab, ActionSheet} from 'native-base';
 // import Icon from 'react-native-vector-icons/Ionicons';
 import Icon from './icon';
 import {globalStyles} from '../res/styles';
@@ -15,15 +15,15 @@ import geolocation from '../services/geolocation';
 
 import {LANE, ROUND, SESSION} from '../constants/tracking';
 
-var BUTTONS = [
-  { text: "Over bound", icon: "remove-circle", iconColor: COLORS.success },
-  { text: "Lost", icon: "eye-off", iconColor: COLORS.primary },
-  { text: "Mando", icon: "redo", iconColor: COLORS.warningrr },
- // { text: "Delete", icon: "trash", iconColor: "#fa213b" },
-  { text: "Cancel", icon: "close", iconColor: "#25de5b" }
+const BUTTONS = [
+  {text: 'Over bound', icon: 'remove-circle', iconColor: COLORS.success},
+  {text: 'Lost', icon: 'eye-off', iconColor: COLORS.primary},
+  {text: 'Mando', icon: 'redo', iconColor: COLORS.warningrr},
+ // { text: 'Delete', icon: 'trash', iconColor: '#fa213b' },
+  {text: 'Cancel', icon: 'close', iconColor: '#25de5b'}
 ];
-var DESTRUCTIVE_INDEX = 4;
-var CANCEL_INDEX = 4;
+const DESTRUCTIVE_INDEX = 4;
+const CANCEL_INDEX = 4;
 
 /*
   return the node param (session, round or lane) if it is already referenced in firebase.
@@ -99,7 +99,12 @@ export default class Tracking extends Component {
 
   continueLane() {
     // hole is started
-    const promises = [getSession(this.state.session), getRound(this.state.round), getLane(this.state.lane), geolocation.getCurrentPosition];
+    const promises = [
+      getSession(this.state.session),
+      getRound(this.state.round),
+      getLane(this.state.lane), geolocation.getCurrentPosition
+    ];
+
     Promise.all(promises).then(values => {
       // const previousLane = this.state.lane;
       const currentLane = values[2];
@@ -107,7 +112,7 @@ export default class Tracking extends Component {
       const location = {
         ...geolocation.coords,
         timestamp: geolocation.timestamp
-      }
+      };
 
       // update the currentLane by adding current throw into the throws array
       const lane = {
@@ -116,7 +121,7 @@ export default class Tracking extends Component {
           // add location to array
           throws: [...currentLane.throws, location],
           total_throws: currentLane.total_throws + 1,
-        }
+        };
 
       this.setState({lane});
 
@@ -126,15 +131,18 @@ export default class Tracking extends Component {
     }).catch((error) => {
       console.warn(error);
       this.setState({error: error.message});
-    })
+    });
   }
 
   startNewLane() {
       // use javascript Promise the handle all the async functions
-      const promises = [getSession(this.state.session), getRound(this.state.round), getLane(this.state.lane), geolocation.getCurrentPosition];
+      const promises = [
+        getSession(this.state.session),
+        getRound(this.state.round),
+        getLane(this.state.lane), geolocation.getCurrentPosition
+      ];
       // after we have received all our values
       Promise.all(promises).then(values => {
-
         const initialSession = values[0];
         const initialRound = values[1];
         const initialLane = values[2];
@@ -145,7 +153,7 @@ export default class Tracking extends Component {
         const location = {
           ...geoLocation.coords,
           timestamp: geoLocation.timestamp
-        }
+        };
 
         // create new lane
         const lane = {
@@ -169,7 +177,7 @@ export default class Tracking extends Component {
           ...initialRound,
           sessionId: initialSession.sessionId,
           lanes: lanesById,
-        }
+        };
 
         const {isRoundActive, isSessionActive} = this.state;
 
@@ -183,7 +191,7 @@ export default class Tracking extends Component {
         const session = {
           ...initialSession,
           rounds: roundsById
-        }
+        };
 
         // set this lane to state and push to firebase
         let updates = {};
@@ -198,7 +206,7 @@ export default class Tracking extends Component {
       console.warn(error);
       Toast.show({text: error.message});
       this.setState({error: error.message});
-    })
+    });
   }
 
   // when ending round, is the user at the basket or not??
@@ -214,7 +222,7 @@ export default class Tracking extends Component {
         const location = {
           ...geolocation.coords,
           timestamp: geolocation.timestamp
-        }
+        };
         const completedLane = {
           ...currentLane,
           // add location to array
@@ -223,13 +231,13 @@ export default class Tracking extends Component {
           end_point: location,
           isActive: false,
           completed: true
-        }
+        };
 
         this.setState({
           // initializing empty lane
           lane: LANE,
           isLaneActive: false
-        })
+        });
 
         let updates = {};
         updates[DB_NAMES.lanes + completedLane.laneId] = completedLane;
@@ -237,12 +245,14 @@ export default class Tracking extends Component {
       }).catch((error) => {
         console.warn(error);
         this.setState({error: error.message});
-      })
-    } else Toast.show({
-      text: "You haven't even started yet!",
-      position: 'bottom',
-      buttonText: 'Okay!'
-    });
+      });
+    } else {
+      Toast.show({
+        text: 'You haven\'t even started yet!',
+        position: 'bottom',
+        buttonText: 'Okay!'
+      });
+    }
   }
 
   handleEndRound() {
@@ -266,15 +276,14 @@ export default class Tracking extends Component {
         const updatedRound = {
           ...currentRound,
           completed: true
-        }
+        };
 
         let updates = {};
         updates[DB_NAMES.rounds + currentRound.roundId] = updatedRound;
 
         firebase.database().ref().update(updates);
         // reset round to initial values
-        this.setState({round: ROUND, isRoundActive: false})
-
+        this.setState({round: ROUND, isRoundActive: false});
       });
   }
 
@@ -297,31 +306,31 @@ export default class Tracking extends Component {
 
         <Fab
             active={this.state.activeError}
-            direction="right"
+            direction='right'
             containerStyle={{ }}
             style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.errorButton]}
-            position="bottomLeft"
+            position='bottomLeft'
             onPress={() => ActionSheet.show(
               {
                 options: BUTTONS,
                 cancelButtonIndex: CANCEL_INDEX,
                 destructiveButtonIndex: DESTRUCTIVE_INDEX,
-                title: "Select right option"
+                title: 'Select right option'
               },
               buttonIndex => {
-                this.setState({ clicked: BUTTONS[buttonIndex] });
+                this.setState({clicked: BUTTONS[buttonIndex]});
               }
             )}
           >
-            <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent]} name="ios-alert"  />
+            <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent]} name='ios-alert'  />
           </Fab>
 
           <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal,  {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
-            <Text style={[globalStyles.textPrimary,]}>Throw</Text>
+            <Text style={[globalStyles.textPrimary]}>Throw</Text>
           </Button>
 
      {  /*   <Button style={[globalStyles.buttonRounded, globalStyles.centerHorizontal, globalStyles.centerVertical, globalStyles.bgSuccess, styles.errorButton]} onPress={this.handle}>
-            <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent]} name="ios-alert"  />
+            <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent]} name='ios-alert'  />
           </Button> */ }
 
 
@@ -331,20 +340,20 @@ export default class Tracking extends Component {
 
        <Fab
             active={this.state.activeStop}
-            direction="left"
+            direction='left'
             containerStyle={{ }}
             style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.errorButton]}
-            position="bottomRight"
+            position='bottomRight'
             onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
-            {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-basket" />}
-            {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name="ios-close" />}
+            {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name='ios-basket' />}
+            {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />}
 
           </Fab>
 
 
    {/*  <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
-            {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-basket" />}
-            {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name="ios-close" />}
+            {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name='ios-basket' />}
+            {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />}
           </Button>   */}
       </View>
     );
@@ -371,39 +380,7 @@ const styles = StyleSheet.create({
     transform: [{rotateX: '60deg'}]
   },
   font: {
-      fontFamily:"Roboto",
-      fontSize:20
+      fontFamily: 'Roboto',
+      fontSize: 20
     }
 });
-
-// class FadeInView extends React.Component {
-//   state = {
-//     fadeAnim: new Animated.Value(0),  // Initial value for opacity: 0
-//   }
-
-//   componentDidMount() {
-//     Animated.timing(                  // Animate over time
-//       this.state.fadeAnim,            // The animated value to drive
-//       {
-//         toValue: '90deg',                   // Animate to opacity: 1 (opaque)
-//         duration: 500,              // Make it take a while
-//       }
-//     ).start();                        // Starts the animation
-//   }
-
-//   render() {
-//     let {fadeAnim} = this.state;
-
-//     return (
-//       <Animated.View                 // Special animatable View
-//         style={{
-//           ...this.props.style,
-//           opacity: fadeAnim,         // Bind opacity to animated value
-//           transform: [{rotate: this.state.fadeAnim.interpolate({inputRange: [0, 360], outputRange: ['0deg', '360deg']}), }],
-//         }}
-//       >
-//         {this.props.children}
-//       </Animated.View>
-//     );
-//   }
-// }
