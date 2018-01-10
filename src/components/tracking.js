@@ -67,7 +67,7 @@ export default class Tracking extends Component {
       isLaneActive: false,
       error: null,
         activeError: false
-     
+
     };
 
     this.handleTrackThrow = this.handleTrackThrow.bind(this);
@@ -294,12 +294,12 @@ export default class Tracking extends Component {
           <Text style={[globalStyles.textPrimary]}>
             Par: {lane.total_throws - lane.par}
           </Text>
-        
+
         <Fab
             active={this.state.activeError}
             direction="right"
             containerStyle={{ }}
-            style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.errorButton]} 
+            style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.errorButton]}
             position="bottomLeft"
             onPress={() => ActionSheet.show(
               {
@@ -314,13 +314,6 @@ export default class Tracking extends Component {
             )}
           >
             <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent]} name="ios-alert"  />
-            <Button style={{ backgroundColor: '#34A34F' }}>
-              <Icon name="logo-whatsapp" />
-            </Button>
-            <Button style={{ backgroundColor: '#3B5998' }}>
-              <Icon name="logo-whatsapp" />
-                  
-            </Button>
           </Fab>
 
           <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal,  {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
@@ -346,9 +339,9 @@ export default class Tracking extends Component {
             {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-basket" />}
             {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name="ios-close" />}
 
-          </Fab> 
-                  
-                         
+          </Fab>
+
+
    {/*  <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.stopButton]} onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
             {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name="ios-basket" />}
             {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name="ios-close" />}
