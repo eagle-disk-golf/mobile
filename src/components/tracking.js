@@ -322,6 +322,7 @@ export default class Tracking extends Component {
   render() {
     console.log(this.state, 'this state');
     const {lane, course, isLaneActive, isCourseActive, loading} = this.state;
+    console.log('=====', 'islane ativel=', isLaneActive, '=====');
     const laneNumber = Object.keys(course.lanes).length;
 
     return (
@@ -347,12 +348,20 @@ export default class Tracking extends Component {
           {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
         </Button>
 
-        <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={isCourseActive}>
-          <Button style={[globalStyles.buttonRounded, styles.smallButtons, {backgroundColor: isLaneActive ? 'green' : COLORS.success}]}  onPress={isLaneActive ? this.handleEndLane : this.handleEndCourse}>
-            {isLaneActive && <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />}
-            {!isLaneActive && <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />}
+
+        {isLaneActive && <FadeInView fadeOutDuration={100} style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
+          <Button style={[globalStyles.buttonRounded, styles.smallButtons, {backgroundColor: 'green'}]}  onPress={this.handleEndLane}>
+            <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />
           </Button>
-        </FadeInView>
+        </FadeInView>}
+
+        {isCourseActive && !isLaneActive && <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
+          <Button style={[globalStyles.buttonRounded, styles.smallButtons, globalStyles.bgSuccess]}  onPress={this.handleEndCourse}>
+            {/* {isLaneActive && <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />} */}
+            {/* {!isLaneActive && <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />} */}
+            <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />
+          </Button>
+        </FadeInView>}
       </View>
     );
   }

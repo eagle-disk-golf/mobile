@@ -28,19 +28,23 @@ export default class FadeInView extends Component {
   }
 
   fadeIn() {
+    const {fadeInDuration = 300} = this.props;
+
     Animated.timing(
       this.state.opacity, {
         toValue: 1,
-        duration: 300
+        duration: fadeInDuration
       }
     ).start();
   }
 
   fadeOut() {
+    const {fadeOutDuration = 300} = this.props;
+
     Animated.timing(
       this.state.opacity, {
         toValue: 0,
-        duration: 300
+        duration: fadeOutDuration
       }
     ).start();
   }
