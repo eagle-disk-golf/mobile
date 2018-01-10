@@ -10,9 +10,9 @@ const firebaseConfig = {
 };
 
 export const DB_NAMES = {
-  sessions: 'sessions/',
-  rounds: 'rounds/',
-  lanes: 'lanes/'
+  lanes: 'lanes/',
+  courses: 'courses/'
 };
 
 export default firebaseApp = firebase.initializeApp(firebaseConfig);
+

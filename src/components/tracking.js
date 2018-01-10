@@ -2,7 +2,6 @@
 
 */
 import React, {Component} from 'react';
-import {NavigationActions} from 'react-navigation';
 import {View, StyleSheet, Alert} from 'react-native';
 import {Text, Button, Toast, Fab, ActionSheet} from 'native-base';
 // import Icon from 'react-native-vector-icons/Ionicons';
@@ -13,7 +12,10 @@ import {COLORS} from '../res/styles/constants';
 import firebase, {DB_NAMES} from '../services/firebase';
 import geolocation from '../services/geolocation';
 
-import {LANE, ROUND, SESSION} from '../constants/tracking';
+import {LANE, COURSE} from '../constants/tracking';
+
+const newEmptyCourse = _ => { return {...COURSE, lanes: {}};};
+const newEmptyLane = _ => { return {...LANE};};
 
 const BUTTONS = [
   {text: 'Over bound', icon: 'remove-circle', iconColor: COLORS.success},
@@ -51,8 +53,10 @@ const getNodeFromFirebase = (node, idField, table) => {
   });
 };
 
-const getSession = (node) => getNodeFromFirebase(node, 'sessionId', DB_NAMES.sessions);
-const getRound = (node) => getNodeFromFirebase(node, 'roundId', DB_NAMES.rounds);
+// const getSession = (node) => getNodeFromFirebase(node, 'sessionId', DB_NAMES.sessions);
+// const getRound = (node) => getNodeFromFirebase(node, 'roundId', DB_NAMES.rounds);
+
+const getCourse = (node) => getNodeFromFirebase(node, 'courseId', DB_NAMES.courses);
 const getLane = (node) => getNodeFromFirebase(node, 'laneId', DB_NAMES.lanes);
 
 export default class Tracking extends Component {
@@ -60,35 +64,42 @@ export default class Tracking extends Component {
     super(props);
 
     this.state = {
-      lane: LANE,
-      round: ROUND,
-      session: SESSION,
-      isRoundActive: false,
-      isSessionActive: false,
+      lane: newEmptyLane(),
+      course: newEmptyCourse(),
+      isCourseActive: false,
       isLaneActive: false,
       error: null,
-        activeError: false
-
+      activeError: false
     };
 
     this.handleTrackThrow = this.handleTrackThrow.bind(this);
     this.handleEndLane = this.handleEndLane.bind(this);
-    this.handleEndRound = this.handleEndRound.bind(this);
-    this.endRound = this.endRound.bind(this);
+    this.handleEndCourse = this.handleEndCourse.bind(this);
+    this.endCourse = this.endCourse.bind(this);
   }
 
   componentDidMount() {
     // TEST: this will send these params to the summary screen
-    const setParamsAction = NavigationActions.setParams({
-      params: {lane: this.state.lane, round: this.state.round},
-      key: 'Summary',
-    });
-    const setParamsActionForParent = NavigationActions.setParams({
-      params: {lane: this.state.lane, round: this.state.round},
-      key: 'Test',
-    });
-    this.props.navigation.dispatch(setParamsAction);
-    this.props.navigation.dispatch(setParamsActionForParent);
+    // const setParamsAction = NavigationActions.setParams({
+    //   params: {lane: this.state.lane, round: this.state.round},
+    //   key: 'Summary',
+    // });
+    // const setParamsActionForParent = NavigationActions.setParams({
+    //   params: {lane: this.state.lane, round: this.state.round},
+    //   key: 'Test',
+    // });
+    // this.props.navigation.dispatch(setParamsAction);
+    // this.props.navigation.dispatch(setParamsActionForParent);
+  }
+
+  displayError(error) {
+    Alert.alert(
+      'Whoops',
+      error.message,
+      [
+        {text: 'Okay'},
+        // {text: 'Cancel', onPress: () => console.log('cancel')}
+      ]);
   }
 
   handleTrackThrow() {
@@ -99,17 +110,12 @@ export default class Tracking extends Component {
   }
 
   continueLane() {
-    // hole is started
-    const promises = [
-      getSession(this.state.session),
-      getRound(this.state.round),
-      getLane(this.state.lane), geolocation.getCurrentPosition
-    ];
-
+    // lane is started
+    const promises = [getLane(this.state.lane), geolocation.getCurrentPosition()];
     Promise.all(promises).then(values => {
       // const previousLane = this.state.lane;
-      const currentLane = values[2];
-      const geolocation = values[3];
+      const currentLane = values[0];
+      const geolocation = values[1];
       const location = {
         ...geolocation.coords,
         timestamp: geolocation.timestamp
@@ -130,25 +136,20 @@ export default class Tracking extends Component {
       updates[DB_NAMES.lanes + lane.laneId] = lane;
       firebase.database().ref().update(updates);
     }).catch((error) => {
-      console.warn(error);
-      this.setState({error: error.message});
+      this.displayError(error);
+      // console.warn(error);
     });
   }
 
   startNewLane() {
       // use javascript Promise the handle all the async functions
-      const promises = [
-        getSession(this.state.session),
-        getRound(this.state.round),
-        getLane(this.state.lane), geolocation.getCurrentPosition
-      ];
+      const promises = [getCourse(this.state.course), getLane(this.state.lane), geolocation.getCurrentPosition()];
       // after we have received all our values
       Promise.all(promises).then(values => {
-        const initialSession = values[0];
-        const initialRound = values[1];
-        const initialLane = values[2];
-        const geoLocation = values[3];
-        console.log(initialLane, 'initail lane:[');
+        const initialCourse = values[0];
+        const initialLane = values[1];
+        const geoLocation = values[2];
+        console.log('=====', 'geolocaion', geoLocation, '=====');
 
         // create location object (flatten the data)
         const location = {
@@ -161,8 +162,7 @@ export default class Tracking extends Component {
           ...initialLane,
           // id from firebase
           // laneId,
-          roundId: initialRound.roundId,
-          sessionId: initialSession.sessionId,
+          courseId: initialCourse.courseId,
           // add location to array
           throws: [location],
           // this is the first throw
@@ -171,42 +171,24 @@ export default class Tracking extends Component {
           isActive: true
         };
 
-        // update round, add new reference to the lane into the lanes array
-        let lanesById = initialRound.lanes ? initialRound.lanes : {};
+        let lanesById = initialCourse.lanes ? initialCourse.lanes : {};
         lanesById[lane.laneId] = true;
-        const round = {
-          ...initialRound,
-          sessionId: initialSession.sessionId,
+        const course = {
+          ...initialCourse,
           lanes: lanesById,
-        };
-
-        const {isRoundActive, isSessionActive} = this.state;
-
-        // if round is active do not create new round
-        // create reference to the individual rounds
-        let roundsById = isSessionActive ? initialSession.rounds : {};
-        // add new round
-        if (!isRoundActive) {
-          roundsById[round.roundId] = true;
-        }
-        const session = {
-          ...initialSession,
-          rounds: roundsById
         };
 
         // set this lane to state and push to firebase
         let updates = {};
         updates[DB_NAMES.lanes + lane.laneId] = lane;
-        updates[DB_NAMES.rounds + round.roundId] = round;
-        updates[DB_NAMES.sessions + session.sessionId] = session;
+        updates[DB_NAMES.courses + course.courseId] = course;
 
         firebase.database().ref().update(updates);
-        this.setState({lane, round, session, isRoundActive: true, isSessionActive: true, isLaneActive: true});
+        this.setState({lane, course, isCourseActive: true, isLaneActive: true});
       // })
     }).catch((error) => {
-      console.warn(error);
-      Toast.show({text: error.message});
-      this.setState({error: error.message});
+      this.displayError(error);
+      // console.warn(error);
     });
   }
 
@@ -214,7 +196,7 @@ export default class Tracking extends Component {
   handleEndLane() {
     // dont end if no throws
     if (this.state.lane.throws.length) {
-      const promises = [getLane(this.state.lane), geolocation.getCurrentPosition];
+      const promises = [getLane(this.state.lane), geolocation.getCurrentPosition()];
       // hole is started
       Promise.all(promises).then(values => {
         const currentLane = values[0];
@@ -236,7 +218,7 @@ export default class Tracking extends Component {
 
         this.setState({
           // initializing empty lane
-          lane: LANE,
+          lane: newEmptyLane(),
           isLaneActive: false
         });
 
@@ -256,47 +238,56 @@ export default class Tracking extends Component {
     }
   }
 
-  handleEndRound() {
+  handleEndCourse() {
     // confirm ending
-    const self = this;
+    const {isCourseActive} = this.state;
+    if (isCourseActive) {
     Alert.alert(
       'End round?',
-      'Are you sure you want to end the current round?',
+      'Are you sure you want to end the current game?',
       [
-        {text: 'Yes, end round', onPress: () => self.endRound()},
+        {text: 'Yes, end round', onPress: () => this.endCourse()},
         {text: 'Cancel', onPress: () => console.log('cancel')}
       ]);
+    } else {
+      Toast.show({
+        text: '',
+        position: 'bottom',
+        buttonText: 'Okay!'
+      });
+    }
   }
 
-  endRound() {
-   const promises = [getRound(this.state.round), geolocation.getCurrentPosition];
-      // hole is started
-      Promise.all(promises).then(values => {
-        const currentRound = values[0];
+  endCourse() {
+    const promises = [getCourse(this.state.course), geolocation.getCurrentPosition()];
+    // hole is started
+    Promise.all(promises).then(values => {
+      const currentCourse = values[0];
 
-        const updatedRound = {
-          ...currentRound,
-          completed: true
-        };
+      const updatedCourse = {
+        ...currentCourse,
+        completed: true
+      };
 
-        let updates = {};
-        updates[DB_NAMES.rounds + currentRound.roundId] = updatedRound;
+      this.setState({course: newEmptyCourse(), isCourseActive: false});
+      let updates = {};
+      updates[DB_NAMES.courses + currentCourse.courseId] = updatedCourse;
 
-        firebase.database().ref().update(updates);
-        // reset round to initial values
-        this.setState({round: ROUND, isRoundActive: false});
-      });
+      firebase.database().ref().update(updates);
+    }).catch((error) => {
+      this.displayError(error);
+    });
   }
 
 
   render() {
-    console.log(this.state, 'this state', this.props, 'props');
-    const {lane, round, isLaneActive} = this.state;
+    console.log(this.state, 'this state');
+    const {lane, course, isLaneActive} = this.state;
 
     return (
       <View style={[globalStyles.container]}>
           <Text style={[globalStyles.textPrimary]}>
-            Hole number: {round.lanes.length}
+            Hole number: {course.lanes.length}
           </Text>
           <Text style={[globalStyles.textPrimary]}>
             Current hole throw count: {lane.total_throws}
@@ -345,7 +336,7 @@ export default class Tracking extends Component {
             containerStyle={{ }}
             style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.errorButton]}
             position='bottomRight'
-            onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
+            onPress={isLaneActive ? this.handleEndLane : this.handleEndCourse}>
             {isLaneActive && <Icon name='ios-basket' />}
             {!isLaneActive && <Icon name='ios-close' />}
 

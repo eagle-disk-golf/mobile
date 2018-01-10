@@ -1,6 +1,11 @@
+export const COURSE = {
+  lanes: {},
+  completed: false,
+  courseId: null,
+};
+
 export const LANE = {
-  sessionId: null,
-  roundId: null,
+  courseId: null,
   laneId: null,
   throws: [],
   par: 3,
@@ -10,18 +15,4 @@ export const LANE = {
   duration: null,
   isActive: false,
   completed: false
-};
-
-export const ROUND = {
-  lanes: {},
-  completed: false,
-  roundId: null,
-  sessionId: null
-};
-
-export const SESSION = {
-  rounds: {},
-  completed: false,
-  sessionId: null,
-  name: null
 };
