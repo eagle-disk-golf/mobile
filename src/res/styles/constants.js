@@ -8,9 +8,8 @@ export const COLORS = {
 };
 
 export const MARGINS = {
-
   marginXs: 10,
   marginSm: 20,
   marginMd: 30,
   marginLg: 40
-}
+};

@@ -31,7 +31,7 @@ export default class FadeInView extends Component {
     Animated.timing(
       this.state.opacity, {
         toValue: 1,
-        duration: 1000
+        duration: 300
       }
     ).start();
   }
@@ -40,7 +40,7 @@ export default class FadeInView extends Component {
     Animated.timing(
       this.state.opacity, {
         toValue: 0,
-        duration: 1000
+        duration: 300
       }
     ).start();
   }

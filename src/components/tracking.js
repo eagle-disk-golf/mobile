@@ -3,7 +3,7 @@
 */
 import React, {Component} from 'react';
 import {View, StyleSheet, Alert, Animated} from 'react-native';
-import {Text, Button, Toast, Fab, ActionSheet} from 'native-base';
+import {Text, Button, Toast, Fab, ActionSheet, Spinner} from 'native-base';
 // import Icon from 'react-native-vector-icons/Ionicons';
 import Icon from './icon';
 import FadeInView from './fade-in-view';
@@ -70,13 +70,15 @@ export default class Tracking extends Component {
       isCourseActive: false,
       isLaneActive: false,
       error: null,
-      activeError: false
+      activeError: false,
+      loading: false
     };
 
     this.handleTrackThrow = this.handleTrackThrow.bind(this);
     this.handleEndLane = this.handleEndLane.bind(this);
     this.handleEndCourse = this.handleEndCourse.bind(this);
     this.endCourse = this.endCourse.bind(this);
+    this.handleSelectErroredThrow = this.handleSelectErroredThrow.bind(this);
   }
 
   componentDidMount() {
@@ -91,6 +93,13 @@ export default class Tracking extends Component {
     // });
     // this.props.navigation.dispatch(setParamsAction);
     // this.props.navigation.dispatch(setParamsActionForParent);
+  }
+
+  showLoader() {
+    this.setState({loading: true});
+  }
+  hideLoader() {
+    this.setState({loading: false});
   }
 
   displayError(error) {
@@ -112,6 +121,7 @@ export default class Tracking extends Component {
 
   continueLane() {
     // lane is started
+    this.showLoader();
     const promises = [getLane(this.state.lane), geolocation.getCurrentPosition()];
     Promise.all(promises).then(values => {
       // const previousLane = this.state.lane;
@@ -136,14 +146,17 @@ export default class Tracking extends Component {
       let updates = {};
       updates[DB_NAMES.lanes + lane.laneId] = lane;
       firebase.database().ref().update(updates);
+      this.hideLoader();
     }).catch((error) => {
       this.displayError(error);
+      this.hideLoader();
       // console.warn(error);
     });
   }
 
   startNewLane() {
     // use javascript Promise the handle all the async functions
+    this.showLoader();
     const promises = [getCourse(this.state.course), getLane(this.state.lane), geolocation.getCurrentPosition()];
     // after we have received all our values
     Promise.all(promises).then(values => {
@@ -184,11 +197,13 @@ export default class Tracking extends Component {
       updates[DB_NAMES.lanes + lane.laneId] = lane;
       updates[DB_NAMES.courses + course.courseId] = course;
 
-      firebase.database().ref().update(updates);
       this.setState({lane, course, isCourseActive: true, isLaneActive: true});
+      firebase.database().ref().update(updates);
+      this.hideLoader();
       // })
     }).catch((error) => {
       this.displayError(error);
+      this.hideLoader();
       // console.warn(error);
     });
   }
@@ -197,6 +212,7 @@ export default class Tracking extends Component {
   handleEndLane() {
     // dont end if no throws
     if (this.state.lane.throws.length) {
+      this.showLoader();
       const promises = [getLane(this.state.lane), geolocation.getCurrentPosition()];
       // hole is started
       Promise.all(promises).then(values => {
@@ -226,9 +242,11 @@ export default class Tracking extends Component {
         let updates = {};
         updates[DB_NAMES.lanes + completedLane.laneId] = completedLane;
         firebase.database().ref().update(updates);
+        this.hideLoader();
       }).catch((error) => {
         console.warn(error);
         this.setState({error: error.message});
+        this.hideLoader();
       });
     } else {
       Toast.show({
@@ -260,6 +278,7 @@ export default class Tracking extends Component {
   }
 
   endCourse() {
+    this.showLoader();
     const promises = [getCourse(this.state.course), geolocation.getCurrentPosition()];
     // hole is started
     Promise.all(promises).then(values => {
@@ -275,50 +294,61 @@ export default class Tracking extends Component {
       updates[DB_NAMES.courses + currentCourse.courseId] = updatedCourse;
 
       firebase.database().ref().update(updates);
+      this.hideLoader();
     }).catch((error) => {
+      this.hideLoader();
       this.displayError(error);
     });
+  }
+
+  handleSelectErroredThrow() {
+    const {isCourseActive, isLaneActive} = this.state;
+
+    if (isCourseActive && isLaneActive) {
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: CANCEL_INDEX,
+        destructiveButtonIndex: DESTRUCTIVE_INDEX,
+        title: 'Select right option'
+      },
+      buttonIndex => {
+        this.setState({clicked: BUTTONS[buttonIndex]});
+      });
+    }
   }
 
 
   render() {
     console.log(this.state, 'this state');
-    const {lane, course, isLaneActive, isCourseActive} = this.state;
+    const {lane, course, isLaneActive, isCourseActive, loading} = this.state;
+    const laneNumber = Object.keys(course.lanes).length;
 
     return (
       <View style={[globalStyles.container]}>
         <Text style={[globalStyles.textPrimary]}>
-          Hole number: {course.lanes.length}
+          Lane number: {laneNumber}
         </Text>
         <Text style={[globalStyles.textPrimary]}>
-          Current hole throw count: {lane.total_throws}
+          Current lane throw count: {lane.total_throws}
         </Text>
         <Text style={[globalStyles.textPrimary]}>
           Par: {lane.total_throws - lane.par}
         </Text>
 
         <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, left: 20}]} visible={isCourseActive}>
-          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons]}  onPress={() => ActionSheet.show(
-            {
-              options: BUTTONS,
-              cancelButtonIndex: CANCEL_INDEX,
-              destructiveButtonIndex: DESTRUCTIVE_INDEX,
-              title: 'Select right option'
-            },
-            buttonIndex => {
-              this.setState({clicked: BUTTONS[buttonIndex]});
-            }
-          )}>
+          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons]}  onPress={this.handleSelectErroredThrow}>
           <Icon size={30} style={[globalStyles.textDefault]} name='ios-alert' />
           </Button>
         </FadeInView>
 
         <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
-          <Text style={[globalStyles.textPrimary]}>Throw</Text>
+          {!loading && <Text style={[globalStyles.textPrimary]}>Throw</Text>}
+          {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
         </Button>
 
         <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={isCourseActive}>
-          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons]}  onPress={isLaneActive ? this.handleEndLane : this.handleEndCourse}>
+          <Button style={[globalStyles.buttonRounded, styles.smallButtons, {backgroundColor: isLaneActive ? 'green' : COLORS.success}]}  onPress={isLaneActive ? this.handleEndLane : this.handleEndCourse}>
             {isLaneActive && <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />}
             {!isLaneActive && <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />}
           </Button>
