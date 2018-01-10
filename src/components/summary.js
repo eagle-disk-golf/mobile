@@ -10,9 +10,9 @@
 
 import React, {Component} from 'react';
 import {View} from 'react-native';
-import {Text, Container, Content, List, ListItem, Body, Right, Center} from 'native-base';
+import {Text, List, ListItem, Body, Right} from 'native-base';
 import Icon from './icon';
-import {globalStyles} from '../res/styles'
+import {globalStyles} from '../res/styles';
 
 export default class Summary extends Component {
   render() {
@@ -56,5 +56,5 @@ export default class Summary extends Component {
   }
 }
 
-const ArrowForwardIcon = () => <Icon size={20} name="ios-arrow-forward" />
+const ArrowForwardIcon = () => <Icon size={20} name="ios-arrow-forward" />;
 

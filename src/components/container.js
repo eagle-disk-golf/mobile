@@ -9,8 +9,8 @@ export default class ContainerComponent extends Component {
     const {style} = this.props;
     const styles = stylesToArray(style);
 
-    return(
+    return (
       <Container style={[globalStyles.bgDefault, ...styles]}>{this.props.children}</Container>
-    )
+    );
   }
 }

@@ -30,6 +30,7 @@ const CANCEL_INDEX = 4;
   if the node param is only initialized (missing id's) it will create new reference to the firebase database
   and return that node
 */
+
 const getNodeFromFirebase = (node, idField, table) => {
   // check if session exists
   return new Promise((resolve, reject) => {

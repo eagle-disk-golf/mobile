@@ -6,9 +6,9 @@
   History: Riku - 12.12.2017 - Use custom icon, formatting
 */
 
-import React, {Component} from 'react';
-import {Button, Text, Thumbnail, Item} from 'native-base';
-import {View, TouchableOpacity, StyleSheet, Platform} from 'react-native';
+import React, {} from 'react';
+import {} from 'native-base';
+import {Platform} from 'react-native';
 import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
 import Icon from '../components/icon';
 
@@ -29,7 +29,7 @@ import SummaryDetail from '../components/summary-detail';
 const TabIcon = ({name, isFocused}) => {
   const iconColor = isFocused ? null : 'lightgray';
   return <Icon size={20} name={name} style={{color: iconColor}} />;
-}
+};
 
 const contentOptions = {
   initialRouteName: 'Home',
@@ -57,14 +57,14 @@ const TabBarOptions = {
   indicatorStyle: {
     backgroundColor: 'transparent'
   }
-}
+};
 
 const MainNavigator = TabNavigator({
   Main: {
     screen: MainScreen,
     navigationOptions: {
       tabBarIcon: ({focused}) => {
-        return <TabIcon isFocused={focused} name="ios-home" />
+        return <TabIcon isFocused={focused} name='ios-home' />;
       }
     }
   },

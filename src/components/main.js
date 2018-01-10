@@ -1,17 +1,10 @@
 import React, {Component} from 'react';
-import {Image, TouchableOpacity, StyleSheet, ImageBackground, View} from 'react-native';
+import {TouchableOpacity, StyleSheet, ImageBackground, View} from 'react-native';
 import {
-  Container,
-  Header,
   Card,
   CardItem,
-  Thumbnail,
-  Text,
-  Button,
-  Left,
-  Body,
-  Right} from 'native-base';
-import {Col, Row, Grid} from "react-native-easy-grid";
+  Text} from 'native-base';
+import {Col, Row, Grid} from 'react-native-easy-grid';
 import {globalStyles} from '../res/styles';
 
 // Other way to import components/variables/etc
@@ -92,4 +85,4 @@ const style = StyleSheet.create({
     height: 200
     // height: '100%'
   }
-})
+});
