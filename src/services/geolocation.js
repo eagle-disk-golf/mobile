@@ -1,7 +1,7 @@
 // if physical device, set => gps location mode: battery saving
-const options = {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000};
+const options = {enableHighAccuracy: true, timeout: 2000, maximumAge: 1000};
 
-const getCurrentPosition = new Promise((resolve, reject) => {
+const getCurrentPosition = _ => new Promise((resolve, reject) => {
   navigator.geolocation.getCurrentPosition(
     (position) => {
       resolve(position);
@@ -10,7 +10,7 @@ const getCurrentPosition = new Promise((resolve, reject) => {
       reject(error);
     },
     options
-  )
+  );
 });
 
 export default geolocation = {
