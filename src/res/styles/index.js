@@ -92,8 +92,6 @@ const buttons = StyleSheet.create({
   },
   buttonRounded: {
     borderRadius: 100,
-    width: 75,
-    height: 75,
     justifyContent: 'center'
   },
 });
