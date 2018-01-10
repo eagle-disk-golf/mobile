@@ -323,7 +323,7 @@ export default class Tracking extends Component {
               }
             )}
           >
-            <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent]} name='ios-alert'  />
+            <Icon size={40} name='ios-alert'  />
           </Fab>
 
           <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal,  {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
@@ -346,8 +346,8 @@ export default class Tracking extends Component {
             style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.errorButton]}
             position='bottomRight'
             onPress={isLaneActive ? this.handleEndLane : this.handleEndRound}>
-            {isLaneActive && <Icon style={[globalStyles.textDefault, {fontSize: 40}]} name='ios-basket' />}
-            {!isLaneActive && <Icon size={40} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />}
+            {isLaneActive && <Icon name='ios-basket' />}
+            {!isLaneActive && <Icon name='ios-close' />}
 
           </Fab>
 

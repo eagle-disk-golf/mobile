@@ -10,18 +10,18 @@ export const LANE = {
   duration: null,
   isActive: false,
   completed: false
-}
+};
 
 export const ROUND = {
   lanes: {},
   completed: false,
   roundId: null,
   sessionId: null
-}
+};
 
 export const SESSION = {
   rounds: {},
   completed: false,
   sessionId: null,
   name: null
-}
+};
