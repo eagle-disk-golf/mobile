@@ -1,5 +1,5 @@
 /*
-
+ eslint max-len: 0
 */
 import React, {Component} from 'react';
 import {View, StyleSheet, Alert, Animated} from 'react-native';
@@ -163,7 +163,6 @@ export default class Tracking extends Component {
       const initialCourse = values[0];
       const initialLane = values[1];
       const geoLocation = values[2];
-      console.log('=====', 'geolocaion', geoLocation, '=====');
 
       // create location object (flatten the data)
       const location = {
@@ -262,18 +261,12 @@ export default class Tracking extends Component {
     const {isCourseActive} = this.state;
     if (isCourseActive) {
       Alert.alert(
-        'End round?',
+        'End game?',
         'Are you sure you want to end the current game?',
         [
           {text: 'Yes, end round', onPress: () => this.endCourse()},
           {text: 'Cancel', onPress: () => console.log('cancel')}
         ]);
-    } else {
-      Toast.show({
-        text: '',
-        position: 'bottom',
-        buttonText: 'Okay!'
-      });
     }
   }
 
@@ -322,7 +315,6 @@ export default class Tracking extends Component {
   render() {
     console.log(this.state, 'this state');
     const {lane, course, isLaneActive, isCourseActive, loading} = this.state;
-    console.log('=====', 'islane ativel=', isLaneActive, '=====');
     const laneNumber = Object.keys(course.lanes).length;
 
     return (
@@ -333,11 +325,13 @@ export default class Tracking extends Component {
         <Text style={[globalStyles.textPrimary]}>
           Current lane throw count: {lane.total_throws}
         </Text>
-        <Text style={[globalStyles.textPrimary]}>
+        {
+          /* <Text style={[globalStyles.textPrimary]}>
           Par: {lane.total_throws - lane.par}
-        </Text>
+        </Text> */
+        }
 
-        <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, left: 20}]} visible={isCourseActive}>
+        <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, left: 20}]} visible={isCourseActive && isLaneActive}>
           <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons]}  onPress={this.handleSelectErroredThrow}>
           <Icon size={30} style={[globalStyles.textDefault]} name='ios-alert' />
           </Button>
@@ -348,8 +342,7 @@ export default class Tracking extends Component {
           {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
         </Button>
 
-
-        {isLaneActive && <FadeInView fadeOutDuration={100} style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
+        {isCourseActive && isLaneActive && <FadeInView fadeOutDuration={100} style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
           <Button style={[globalStyles.buttonRounded, styles.smallButtons, {backgroundColor: 'green'}]}  onPress={this.handleEndLane}>
             <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />
           </Button>
@@ -357,8 +350,6 @@ export default class Tracking extends Component {
 
         {isCourseActive && !isLaneActive && <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
           <Button style={[globalStyles.buttonRounded, styles.smallButtons, globalStyles.bgSuccess]}  onPress={this.handleEndCourse}>
-            {/* {isLaneActive && <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />} */}
-            {/* {!isLaneActive && <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />} */}
             <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />
           </Button>
         </FadeInView>}
