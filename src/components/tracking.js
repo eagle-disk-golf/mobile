@@ -25,7 +25,7 @@ const newEmptyLane = _ => {return {...LANE};};
   and return that node
 */
 
-const getOrCreateNodeFromFirebase = (node, idField, table) => {
+const getOrCreateNodeWithIdFromFirebase = (node, idField, table) => {
   // check if session exists
   return new Promise((resolve, reject) => {
     if (!!node[idField]) {
@@ -48,8 +48,8 @@ const getOrCreateNodeFromFirebase = (node, idField, table) => {
 // const getSession = (node) => getNodeFromFirebase(node, 'sessionId', DB_NAMES.sessions);
 // const getRound = (node) => getNodeFromFirebase(node, 'roundId', DB_NAMES.rounds);
 
-const getOrCreateCourse = (node) => getOrCreateNodeFromFirebase(node, 'courseId', DB_NAMES.courses);
-const getOrCreateLane = (node) => getOrCreateNodeFromFirebase(node, 'laneId', DB_NAMES.lanes);
+const getOrCreateCourseWithId = (node) => getOrCreateNodeWithIdFromFirebase(node, 'courseId', DB_NAMES.courses);
+const getOrCreateLaneWithId = (node) => getOrCreateNodeWithIdFromFirebase(node, 'laneId', DB_NAMES.lanes);
 
 export default class Tracking extends Component {
   constructor(props) {
@@ -139,7 +139,7 @@ export default class Tracking extends Component {
   continueLane() {
     // lane is started
     this.showLoader();
-    const promises = [getOrCreateLane(this.state.lane), geolocation.getCurrentPosition()];
+    const promises = [getOrCreateLaneWithId(this.state.lane), geolocation.getCurrentPosition()];
     Promise.all(promises).then(values => {
       // const previousLane = this.state.lane;
       const currentLane = values[0];
@@ -170,7 +170,7 @@ export default class Tracking extends Component {
   startNewLane() {
     // use javascript Promise the handle all the async functions
     this.showLoader();
-    const promises = [getOrCreateCourse(this.state.course), getOrCreateLane(this.state.lane), geolocation.getCurrentPosition()];
+    const promises = [getOrCreateCourseWithId(this.state.course), getOrCreateLaneWithId(this.state.lane), geolocation.getCurrentPosition()];
     // after we have received all our values
     Promise.all(promises).then(values => {
       const initialCourse = values[0];
@@ -219,7 +219,7 @@ export default class Tracking extends Component {
     // dont end if no throws
     if (this.state.lane.throws.length) {
       this.showLoader();
-      const promises = [getOrCreateLane(this.state.lane), geolocation.getCurrentPosition()];
+      const promises = [getOrCreateLaneWithId(this.state.lane), geolocation.getCurrentPosition()];
       // hole is started
       Promise.all(promises).then(values => {
         const currentLane = values[0];
@@ -275,7 +275,7 @@ export default class Tracking extends Component {
 
   endCourse() {
     this.showLoader();
-    const promises = [getOrCreateCourse(this.state.course)];
+    const promises = [getOrCreateCourseWithId(this.state.course)];
     // hole is started
     Promise.all(promises).then(values => {
       const currentCourse = values[0];
@@ -329,7 +329,7 @@ export default class Tracking extends Component {
   }
 
   setFaultyThrow(faultyThrow) {
-    const promises = [getOrCreateLane(this.state.lane)];
+    const promises = [getOrCreateLaneWithId(this.state.lane)];
     Promise.all(promises).then(resolvedValues => {
       const currentLane = resolvedValues[0];
 
