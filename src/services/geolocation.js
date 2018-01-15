@@ -13,6 +13,6 @@ const getCurrentPosition = _ => new Promise((resolve, reject) => {
   );
 });
 
-export default geolocation = {
+export default {
   getCurrentPosition
 };
