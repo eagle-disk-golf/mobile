@@ -2,9 +2,8 @@
  eslint max-len: 0
 */
 import React, {Component} from 'react';
-import {View, StyleSheet, Alert, Animated} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
 import {Text, Button, Toast, Fab, ActionSheet, Spinner} from 'native-base';
-// import Icon from 'react-native-vector-icons/Ionicons';
 import Icon from './icon';
 import FadeInView from './fade-in-view';
 import {globalStyles} from '../res/styles';
@@ -363,7 +362,6 @@ const styles = StyleSheet.create({
     right: 20,
   },
   errorButton: {
-    // marginTop: 15,
     width: 50,
     height: 50,
 
@@ -374,7 +372,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2
   },
   icon: {
-    // fontSize: 30,
     transform: [{rotateX: '60deg'}]
   },
   font: {
