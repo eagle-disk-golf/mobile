@@ -374,7 +374,13 @@ export default class Tracking extends Component {
         <Col>
 
           <Row style={[globalStyles.centerBottom, globalStyles.centerHorizontal]} size={35}>
-            <FadeInView visible={isCourseActive || isLaneActive}>
+            {!isCourseActive && !isLaneActive && <FadeInView style={[globalStyles.centerContent]} visible={!isCourseActive && !isLaneActive}>
+              <View style={[globalStyles.centerContent, {marginBottom: 40}]}>
+                <Text style={[globalStyles.textPrimary]}>Start a new game by pressing the throw button</Text>
+              </View>
+            </FadeInView>}
+
+            {isCourseActive && <FadeInView visible={isCourseActive || isLaneActive}>
               <View style={[globalStyles.centerContent, {marginBottom: 40}]}>
                 <Text style={[toggleTransparentText(isCourseActive, globalStyles.textPrimary), globalStyles.verticalMargin]}>
                   Lane number: {laneNumber}
@@ -386,7 +392,7 @@ export default class Tracking extends Component {
                   <Text style={[globalStyles.textWarning]}>+{faultyThrow && faultyThrow.penalty}</Text>
                 </FadeInView>
               </View>
-            </FadeInView>
+            </FadeInView>}
           </Row>
 
           {
