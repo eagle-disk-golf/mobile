@@ -149,7 +149,7 @@ export default class Tracking extends Component {
         par: 3,
         // add location to array
         throws: [...currentLane.throws, geolocation],
-        total_throws: currentLane.total_throws + 1,
+        totalThrows: currentLane.totalThrows + 1,
       };
 
       this.setState({lane});
@@ -184,8 +184,8 @@ export default class Tracking extends Component {
         // add location to array
         throws: [geolocation],
         // this is the first throw
-        total_throws: 1,
-        start_point: geolocation,
+        totalThrows: 1,
+        startPoint: geolocation,
         isActive: true
       };
 
@@ -227,8 +227,8 @@ export default class Tracking extends Component {
           ...currentLane,
           // add location to array
           throws: [...currentLane.throws, geolocation],
-          total_throws: currentLane.total_throws + 1,
-          end_point: geolocation,
+          totalThrows: currentLane.totalThrows + 1,
+          endPoint: geolocation,
           isActive: false,
           completed: true
         };
@@ -339,7 +339,7 @@ export default class Tracking extends Component {
 
       const lane = {
         ...currentLane,
-        total_throws: currentLane.total_throws + faultyThrow.penalty,
+        totalThrows: currentLane.totalThrows + faultyThrow.penalty,
         penalty: currentLane.penalty + faultyThrow.penalty,
         throws
       };
@@ -366,7 +366,7 @@ export default class Tracking extends Component {
           Lane number: {laneNumber}
         </Text>
         <Text style={[globalStyles.textPrimary]}>
-          Current lane throw count: {lane.total_throws}
+          Current lane throw count: {lane.totalThrows}
         </Text>
         {
           /* <Text style={[globalStyles.textPrimary]}>
