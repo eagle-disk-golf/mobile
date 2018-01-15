@@ -74,6 +74,12 @@ const helpers = StyleSheet.create({
   pullRight: {
     alignSelf: 'flex-end'
   },
+  centerTop: {
+    alignItems: 'flex-start'
+  },
+  centerBottom: {
+    alignItems: 'flex-end'
+  },
   textCenter: {
     justifyContent: 'center'
   }

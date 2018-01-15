@@ -4,6 +4,7 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {Text, Button, Toast, Fab, ActionSheet, Spinner} from 'native-base';
+import {Col, Row, Grid} from 'react-native-easy-grid';
 import Icon from './icon';
 import FadeInView from './fade-in-view';
 import {globalStyles} from '../res/styles';
@@ -361,26 +362,34 @@ export default class Tracking extends Component {
     };
 
     return (
-      <View style={[globalStyles.container]}>
-        <Text style={[globalStyles.textPrimary]}>
-          Lane number: {laneNumber}
-        </Text>
-        <Text style={[globalStyles.textPrimary]}>
-          Current lane throw count: {lane.totalThrows}
-        </Text>
+      <Grid style={[]}>
+        <Col>
+
+        <Row style={[globalStyles.centerBottom, globalStyles.centerHorizontal]} size={35}>
+        {isCourseActive && isLaneActive && <View style={[globalStyles.centerContent, {marginBottom: 50}]}>
+          <Text style={[globalStyles.textPrimary, globalStyles.verticalMargin]}>
+            Lane number: {laneNumber}
+          </Text>
+          <Text style={[globalStyles.textPrimary, globalStyles.verticalMargin]}>
+            Throws: {lane.totalThrows}
+          </Text>
+        </View>}
+      </Row>
+
         {
           /* <Text style={[globalStyles.textPrimary]}>
           Par: {lane.total_throws - lane.par}
         </Text> */
         }
 
+        <Row style={[globalStyles.centerContent]} size={65}>
         <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, left: 20}]} visible={isCourseActive && isLaneActive}>
           <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]}  onPress={this.handleSelectFayltyThrow}>
           <Icon size={30} style={[globalStyles.textDefault]} name='ios-alert' />
           </Button>
         </FadeInView>
 
-        <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal, isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
+        <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical, isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
           {!loading && <Text style={[globalStyles.textPrimary]}>Throw</Text>}
           {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
         </Button>
@@ -396,7 +405,9 @@ export default class Tracking extends Component {
             <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />
           </Button>
         </FadeInView>}
-      </View>
+</Row>
+        </Col>
+      </Grid>
     );
   }
 }
