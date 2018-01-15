@@ -33,7 +33,7 @@ const CANCEL_INDEX = 4;
   and return that node
 */
 
-const getNodeFromFirebase = (node, idField, table) => {
+const getOrCreateNodeFromFirebase = (node, idField, table) => {
   // check if session exists
   return new Promise((resolve, reject) => {
     if (!!node[idField]) {
@@ -56,8 +56,8 @@ const getNodeFromFirebase = (node, idField, table) => {
 // const getSession = (node) => getNodeFromFirebase(node, 'sessionId', DB_NAMES.sessions);
 // const getRound = (node) => getNodeFromFirebase(node, 'roundId', DB_NAMES.rounds);
 
-const getCourse = (node) => getNodeFromFirebase(node, 'courseId', DB_NAMES.courses);
-const getLane = (node) => getNodeFromFirebase(node, 'laneId', DB_NAMES.lanes);
+const getOrCreateCourse = (node) => getOrCreateNodeFromFirebase(node, 'courseId', DB_NAMES.courses);
+const getOrCreateLane = (node) => getOrCreateNodeFromFirebase(node, 'laneId', DB_NAMES.lanes);
 
 export default class Tracking extends Component {
   constructor(props) {
@@ -70,7 +70,8 @@ export default class Tracking extends Component {
       isLaneActive: false,
       error: null,
       activeError: false,
-      loading: false
+      loading: false,
+      initialized: false
     };
 
     this.handleTrackThrow = this.handleTrackThrow.bind(this);
@@ -81,6 +82,31 @@ export default class Tracking extends Component {
   }
 
   componentDidMount() {
+    firebase.database().ref(DB_NAMES.courses).limitToLast(1).once('value').then(snapshot => {
+      const value = snapshot.val();
+      const latestCourse = Object.keys(value).map(key => { return {...value[key]}; })[0];
+
+      // get the last played lane
+      const lanesById = Object.keys(latestCourse.lanes).map(key => key);
+      const lastLaneId = lanesById[lanesById.length - 1];
+
+      if (!latestCourse.completed) {
+        // latest course has not been completed, fetch latest lane to check if was completed
+        // this.setState({course: latestCourse, isCourseActive: true});
+        const courseToState = {course: latestCourse, isCourseActive: true};
+
+        firebase.database().ref(DB_NAMES.lanes + lastLaneId).once('value').then(snapshot => {
+          const latestLane = snapshot.val();
+
+          let laneToState = latestCourse && !latestLane.completed ? {lane: latestLane, isLaneActive: true} : {};
+
+          this.setState({...courseToState, ...laneToState, initialized: true});
+        });
+      } else {
+        // latest course was completed successfully
+        this.setState({initialized: true});
+      }
+    });
     // TEST: this will send these params to the summary screen
     // const setParamsAction = NavigationActions.setParams({
     //   params: {lane: this.state.lane, round: this.state.round},
@@ -121,7 +147,7 @@ export default class Tracking extends Component {
   continueLane() {
     // lane is started
     this.showLoader();
-    const promises = [getLane(this.state.lane), geolocation.getCurrentPosition()];
+    const promises = [getOrCreateLane(this.state.lane), geolocation.getCurrentPosition()];
     Promise.all(promises).then(values => {
       // const previousLane = this.state.lane;
       const currentLane = values[0];
@@ -152,7 +178,7 @@ export default class Tracking extends Component {
   startNewLane() {
     // use javascript Promise the handle all the async functions
     this.showLoader();
-    const promises = [getCourse(this.state.course), getLane(this.state.lane), geolocation.getCurrentPosition()];
+    const promises = [getOrCreateCourse(this.state.course), getOrCreateLane(this.state.lane), geolocation.getCurrentPosition()];
     // after we have received all our values
     Promise.all(promises).then(values => {
       const initialCourse = values[0];
@@ -201,7 +227,7 @@ export default class Tracking extends Component {
     // dont end if no throws
     if (this.state.lane.throws.length) {
       this.showLoader();
-      const promises = [getLane(this.state.lane), geolocation.getCurrentPosition()];
+      const promises = [getOrCreateLane(this.state.lane), geolocation.getCurrentPosition()];
       // hole is started
       Promise.all(promises).then(values => {
         const currentLane = values[0];
@@ -257,7 +283,7 @@ export default class Tracking extends Component {
 
   endCourse() {
     this.showLoader();
-    const promises = [getCourse(this.state.course)];
+    const promises = [getOrCreateCourse(this.state.course)];
     // hole is started
     Promise.all(promises).then(values => {
       const currentCourse = values[0];
@@ -299,9 +325,13 @@ export default class Tracking extends Component {
 
 
   render() {
-    console.log(this.state, 'this state');
-    const {lane, course, isLaneActive, isCourseActive, loading} = this.state;
+    const {lane, course, isLaneActive, isCourseActive, loading, initialized} = this.state;
     const laneNumber = Object.keys(course.lanes).length;
+
+    if (!initialized) { return <View style={[globalStyles.container]}>
+      <Spinner color='green' />
+    </View>;
+    };
 
     return (
       <View style={[globalStyles.container]}>

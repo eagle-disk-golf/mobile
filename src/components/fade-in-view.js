@@ -19,7 +19,6 @@ export default class FadeInView extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('=====', 'will receie props', nextProps, '=====');
     if (!!nextProps.visible && (nextProps.visible !== this.props.visible)) {
       this.fadeIn();
     } else if (!nextProps.visible && (nextProps.visible !== this.props.visibe)) {
