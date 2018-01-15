@@ -61,6 +61,7 @@ export default class Tracking extends Component {
       isCourseActive: false,
       isLaneActive: false,
       error: null,
+      faultyThrow: {show: false, penalty: 1},
       loading: false,
       initialized: false,
     };
@@ -69,7 +70,7 @@ export default class Tracking extends Component {
     this.handleEndLane = this.handleEndLane.bind(this);
     this.handleEndCourse = this.handleEndCourse.bind(this);
     this.endCourse = this.endCourse.bind(this);
-    this.handleSelectFayltyThrow = this.handleSelectFayltyThrow.bind(this);
+    this.handleSelectFaultyThrow = this.handleSelectFaultyThrow.bind(this);
   }
 
   componentDidMount() {
@@ -297,7 +298,7 @@ export default class Tracking extends Component {
     });
   }
 
-  handleSelectFayltyThrow() {
+  handleSelectFaultyThrow() {
     const {isCourseActive, isLaneActive} = this.state;
 
     const BUTTONS = [
@@ -319,12 +320,10 @@ export default class Tracking extends Component {
         title: 'Select right option'
       },
       buttonIndex => {
-        console.log(buttonIndex, 'btn index');
         if (buttonIndex !== 3) {
           this.setFaultyThrow(BUTTONS[buttonIndex]);
-          this.setState({faultyThrow: BUTTONS[buttonIndex]});
+          this.flashFaultyThrowError(BUTTONS[buttonIndex]);
         }
-        // this.setState({clicked: BUTTONS[buttonIndex]});
       });
     }
   }
@@ -351,10 +350,19 @@ export default class Tracking extends Component {
     });
   }
 
+  flashFaultyThrowError(faultyThrow, duration = 1000) {
+    this.setState({faultyThrow: {...faultyThrow, show: true}});
+    setTimeout(() => {
+      this.setState({faultyThrow: {penalty: 1, show: false}});
+    }, duration);
+  }
+
 
   render() {
-    const {lane, course, isLaneActive, isCourseActive, loading, initialized} = this.state;
+    const {lane, course, isLaneActive, isCourseActive, loading, initialized, faultyThrow} = this.state;
     const laneNumber = Object.keys(course.lanes).length;
+
+    const toggleTransparentText = (isVisible, styleClass) => isVisible ? styleClass : {color: 'transparent'};
 
     if (!initialized) { return <View style={[globalStyles.container]}>
       <Spinner color='green' />
@@ -362,50 +370,55 @@ export default class Tracking extends Component {
     };
 
     return (
-      <Grid style={[]}>
+      <Grid>
         <Col>
 
-        <Row style={[globalStyles.centerBottom, globalStyles.centerHorizontal]} size={35}>
-        {isCourseActive && isLaneActive && <View style={[globalStyles.centerContent, {marginBottom: 50}]}>
-          <Text style={[globalStyles.textPrimary, globalStyles.verticalMargin]}>
-            Lane number: {laneNumber}
-          </Text>
-          <Text style={[globalStyles.textPrimary, globalStyles.verticalMargin]}>
-            Throws: {lane.totalThrows}
-          </Text>
-        </View>}
-      </Row>
+          <Row style={[globalStyles.centerBottom, globalStyles.centerHorizontal]} size={35}>
+            <FadeInView visible={isCourseActive || isLaneActive}>
+              <View style={[globalStyles.centerContent, {marginBottom: 40}]}>
+                <Text style={[toggleTransparentText(isCourseActive, globalStyles.textPrimary), globalStyles.verticalMargin]}>
+                  Lane number: {laneNumber}
+                </Text>
+                <Text style={[toggleTransparentText(isCourseActive && isLaneActive, globalStyles.textPrimary), globalStyles.verticalMargin]}>
+                  Throws: {lane.totalThrows}
+                </Text>
+                <FadeInView visible={faultyThrow.show}>
+                  <Text style={[globalStyles.textWarning]}>+{faultyThrow && faultyThrow.penalty}</Text>
+                </FadeInView>
+              </View>
+            </FadeInView>
+          </Row>
 
-        {
-          /* <Text style={[globalStyles.textPrimary]}>
-          Par: {lane.total_throws - lane.par}
-        </Text> */
-        }
+          {
+            /* <Text style={[globalStyles.textPrimary]}>
+            Par: {lane.total_throws - lane.par}
+          </Text> */
+          }
 
-        <Row style={[globalStyles.centerContent]} size={65}>
-        <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, left: 20}]} visible={isCourseActive && isLaneActive}>
-          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]}  onPress={this.handleSelectFayltyThrow}>
-          <Icon size={30} style={[globalStyles.textDefault]} name='ios-alert' />
-          </Button>
-        </FadeInView>
+          <Row style={[globalStyles.centerContent]} size={65}>
+            <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, left: 20}]} visible={isCourseActive && isLaneActive}>
+              <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]} onPress={this.handleSelectFaultyThrow}>
+                <Icon size={30} style={[globalStyles.textDefault]} name='ios-alert' />
+              </Button>
+            </FadeInView>
 
-        <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical, isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
-          {!loading && <Text style={[globalStyles.textPrimary]}>Throw</Text>}
-          {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
-        </Button>
+            <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical, isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
+              {!loading && <Text style={[globalStyles.textPrimary]}>Throw</Text>}
+              {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
+            </Button>
 
-        {isCourseActive && isLaneActive && <FadeInView fadeOutDuration={100} style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
-          <Button style={[globalStyles.buttonRounded, styles.smallButtons, styles.shadow, {backgroundColor: 'green'}]}  onPress={this.handleEndLane}>
-            <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />
-          </Button>
-        </FadeInView>}
+            {isCourseActive && isLaneActive && <FadeInView fadeOutDuration={100} style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
+              <Button style={[globalStyles.buttonRounded, styles.smallButtons, styles.shadow, {backgroundColor: 'green'}]} onPress={this.handleEndLane}>
+                <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />
+              </Button>
+            </FadeInView>}
 
-        {isCourseActive && !isLaneActive && <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
-          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]}  onPress={this.handleEndCourse}>
-            <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />
-          </Button>
-        </FadeInView>}
-</Row>
+            {isCourseActive && !isLaneActive && <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
+              <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]} onPress={this.handleEndCourse}>
+                <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />
+              </Button>
+            </FadeInView>}
+          </Row>
         </Col>
       </Grid>
     );
