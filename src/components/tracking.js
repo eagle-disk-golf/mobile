@@ -127,17 +127,13 @@ export default class Tracking extends Component {
       // const previousLane = this.state.lane;
       const currentLane = values[0];
       const geolocation = values[1];
-      const location = {
-        ...geolocation.coords,
-        timestamp: geolocation.timestamp
-      };
 
       // update the currentLane by adding current throw into the throws array
       const lane = {
         ...currentLane,
         par: 3,
         // add location to array
-        throws: [...currentLane.throws, location],
+        throws: [...currentLane.throws, geolocation],
         total_throws: currentLane.total_throws + 1,
       };
 
@@ -162,25 +158,19 @@ export default class Tracking extends Component {
     Promise.all(promises).then(values => {
       const initialCourse = values[0];
       const initialLane = values[1];
-      const geoLocation = values[2];
+      const geolocation = values[2];
 
-      // create location object (flatten the data)
-      const location = {
-        ...geoLocation.coords,
-        timestamp: geoLocation.timestamp
-      };
-
-      // create new lane
+        // create new lane
       const lane = {
         ...initialLane,
         // id from firebase
         // laneId,
         courseId: initialCourse.courseId,
         // add location to array
-        throws: [location],
+        throws: [geolocation],
         // this is the first throw
         total_throws: 1,
-        start_point: location,
+        start_point: geolocation,
         isActive: true
       };
 
@@ -218,16 +208,12 @@ export default class Tracking extends Component {
         const currentLane = values[0];
         const geolocation = values[1];
 
-        const location = {
-          ...geolocation.coords,
-          timestamp: geolocation.timestamp
-        };
         const completedLane = {
           ...currentLane,
           // add location to array
-          throws: [...currentLane.throws, location],
+          throws: [...currentLane.throws, geolocation],
           total_throws: currentLane.total_throws + 1,
-          end_point: location,
+          end_point: geolocation,
           isActive: false,
           completed: true
         };
@@ -272,7 +258,7 @@ export default class Tracking extends Component {
 
   endCourse() {
     this.showLoader();
-    const promises = [getCourse(this.state.course), geolocation.getCurrentPosition()];
+    const promises = [getCourse(this.state.course)];
     // hole is started
     Promise.all(promises).then(values => {
       const currentCourse = values[0];
@@ -283,11 +269,12 @@ export default class Tracking extends Component {
       };
 
       this.setState({course: newEmptyCourse(), isCourseActive: false});
+      this.hideLoader();
+
       let updates = {};
       updates[DB_NAMES.courses + currentCourse.courseId] = updatedCourse;
 
       firebase.database().ref().update(updates);
-      this.hideLoader();
     }).catch((error) => {
       this.hideLoader();
       this.displayError(error);
@@ -332,24 +319,24 @@ export default class Tracking extends Component {
         }
 
         <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, left: 20}]} visible={isCourseActive && isLaneActive}>
-          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons]}  onPress={this.handleSelectErroredThrow}>
+          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]}  onPress={this.handleSelectErroredThrow}>
           <Icon size={30} style={[globalStyles.textDefault]} name='ios-alert' />
           </Button>
         </FadeInView>
 
-        <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
+        <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.verticalMargin, globalStyles.centerHorizontal, isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
           {!loading && <Text style={[globalStyles.textPrimary]}>Throw</Text>}
           {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
         </Button>
 
         {isCourseActive && isLaneActive && <FadeInView fadeOutDuration={100} style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
-          <Button style={[globalStyles.buttonRounded, styles.smallButtons, {backgroundColor: 'green'}]}  onPress={this.handleEndLane}>
+          <Button style={[globalStyles.buttonRounded, styles.smallButtons, styles.shadow, {backgroundColor: 'green'}]}  onPress={this.handleEndLane}>
             <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />
           </Button>
         </FadeInView>}
 
         {isCourseActive && !isLaneActive && <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
-          <Button style={[globalStyles.buttonRounded, styles.smallButtons, globalStyles.bgSuccess]}  onPress={this.handleEndCourse}>
+          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]}  onPress={this.handleEndCourse}>
             <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />
           </Button>
         </FadeInView>}
@@ -380,6 +367,11 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
 
+  },
+  shadow: {
+    shadowColor: 'black',
+    shadowOffset: {width: 0, height: 3},
+    shadowOpacity: 0.2
   },
   icon: {
     // fontSize: 30,
