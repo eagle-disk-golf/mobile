@@ -54,3 +54,5 @@ buck-out/
 
 ./env.js
 env.js
+
+.vscode/
