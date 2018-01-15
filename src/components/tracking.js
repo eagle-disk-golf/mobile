@@ -3,7 +3,7 @@
 */
 import React, {Component} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
-import {Text, Button, Toast, Fab, ActionSheet, Spinner} from 'native-base';
+import {Text, Button, Toast, ActionSheet, Spinner} from 'native-base';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import Icon from './icon';
 import FadeInView from './fade-in-view';

@@ -8,7 +8,7 @@
   },
   "plugins": ["react", "babel"],
   "rules": {
-    "no-unused-vars": 1,
+    "no-unused-vars": ["warn", {"argsIgnorePattern": "_"}],
     "no-var": 1,
     "arrow-parens": 0,
 
