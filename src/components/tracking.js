@@ -17,15 +17,6 @@ import {LANE, COURSE} from '../constants/tracking';
 const newEmptyCourse = _ => {return {...COURSE, lanes: {}};};
 const newEmptyLane = _ => {return {...LANE};};
 
-const BUTTONS = [
-  {text: 'Over bound', icon: 'remove-circle', iconColor: COLORS.success},
-  {text: 'Lost', icon: 'eye-off', iconColor: COLORS.primary},
-  {text: 'Mando', icon: 'redo', iconColor: COLORS.warningrr},
-  // { text: 'Delete', icon: 'trash', iconColor: '#fa213b' },
-  {text: 'Cancel', icon: 'close', iconColor: '#25de5b'}
-];
-const DESTRUCTIVE_INDEX = 4;
-const CANCEL_INDEX = 4;
 
 /*
   return the node param (session, round or lane) if it is already referenced in firebase.
@@ -69,34 +60,33 @@ export default class Tracking extends Component {
       isCourseActive: false,
       isLaneActive: false,
       error: null,
-      activeError: false,
       loading: false,
-      initialized: false
+      initialized: false,
     };
 
     this.handleTrackThrow = this.handleTrackThrow.bind(this);
     this.handleEndLane = this.handleEndLane.bind(this);
     this.handleEndCourse = this.handleEndCourse.bind(this);
     this.endCourse = this.endCourse.bind(this);
-    this.handleSelectErroredThrow = this.handleSelectErroredThrow.bind(this);
+    this.handleSelectFayltyThrow = this.handleSelectFayltyThrow.bind(this);
   }
 
   componentDidMount() {
     firebase.database().ref(DB_NAMES.courses).limitToLast(1).once('value').then(snapshot => {
-      const value = snapshot.val();
+      const value = snapshot.val() ? snapshot.val() : {};
       const latestCourse = Object.keys(value).map(key => { return {...value[key]}; })[0];
 
       // get the last played lane
-      const lanesById = Object.keys(latestCourse.lanes).map(key => key);
+      const lanesById = latestCourse && latestCourse.lanes ? Object.keys(latestCourse.lanes).map(key => key) : [];
       const lastLaneId = lanesById[lanesById.length - 1];
 
-      if (!latestCourse.completed) {
+      if (latestCourse && !latestCourse.completed) {
         // latest course has not been completed, fetch latest lane to check if was completed
         // this.setState({course: latestCourse, isCourseActive: true});
         const courseToState = {course: latestCourse, isCourseActive: true};
 
         firebase.database().ref(DB_NAMES.lanes + lastLaneId).once('value').then(snapshot => {
-          const latestLane = snapshot.val();
+          const latestLane = snapshot.val() ? snapshot.val() : {};
 
           let laneToState = latestCourse && !latestLane.completed ? {lane: latestLane, isLaneActive: true} : {};
 
@@ -306,21 +296,58 @@ export default class Tracking extends Component {
     });
   }
 
-  handleSelectErroredThrow() {
+  handleSelectFayltyThrow() {
     const {isCourseActive, isLaneActive} = this.state;
 
+    const BUTTONS = [
+      {name: 'over-bound', flag: 'isOverBound', text: 'Over bound', icon: 'remove-circle', iconColor: COLORS.success, penalty: 1},
+      {name: 'lost', flag: 'isLost', text: 'Lost', icon: 'eye-off', iconColor: COLORS.primary, penalty: 1},
+      {name: 'mando', flag: 'isMando', text: 'Mando', icon: 'redo', iconColor: COLORS.warningr, penalty: 1},
+      {text: 'Cancel', icon: 'close', iconColor: '#25de5b'}
+    ];
+    const DESTRUCTIVE_INDEX = 3;
+    const CANCEL_INDEX = 3;
+
+
     if (isCourseActive && isLaneActive) {
-    ActionSheet.show(
-      {
-        options: BUTTONS,
+      ActionSheet.show(
+        {
+          options: BUTTONS,
         cancelButtonIndex: CANCEL_INDEX,
         destructiveButtonIndex: DESTRUCTIVE_INDEX,
         title: 'Select right option'
       },
       buttonIndex => {
-        this.setState({clicked: BUTTONS[buttonIndex]});
+        console.log(buttonIndex, 'btn index');
+        if (buttonIndex !== 3) {
+          this.setFaultyThrow(BUTTONS[buttonIndex]);
+          this.setState({faultyThrow: BUTTONS[buttonIndex]});
+        }
+        // this.setState({clicked: BUTTONS[buttonIndex]});
       });
     }
+  }
+
+  setFaultyThrow(faultyThrow) {
+    const promises = [getOrCreateLane(this.state.lane)];
+    Promise.all(promises).then(resolvedValues => {
+      const currentLane = resolvedValues[0];
+
+      let throws = currentLane.throws;
+      // last throw, add flag that is true (isOverBound, isLost etc)
+      throws[throws.length - 1][faultyThrow.flag] = true;
+
+      const lane = {
+        ...currentLane,
+        total_throws: currentLane.total_throws + faultyThrow.penalty,
+        penalty: currentLane.penalty + faultyThrow.penalty,
+        throws
+      };
+
+      this.setState({lane});
+
+      firebase.database().ref(DB_NAMES.lanes + lane.laneId).set(lane);
+    });
   }
 
 
@@ -348,7 +375,7 @@ export default class Tracking extends Component {
         }
 
         <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, left: 20}]} visible={isCourseActive && isLaneActive}>
-          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]}  onPress={this.handleSelectErroredThrow}>
+          <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]}  onPress={this.handleSelectFayltyThrow}>
           <Icon size={30} style={[globalStyles.textDefault]} name='ios-alert' />
           </Button>
         </FadeInView>

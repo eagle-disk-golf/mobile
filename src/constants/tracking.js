@@ -14,5 +14,6 @@ export const LANE = {
   end_point: {},
   duration: null,
   isActive: false,
-  completed: false
+  completed: false,
+  penalty: 0
 };
