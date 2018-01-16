@@ -1,12 +1,12 @@
 import * as firebase from 'firebase';
-import env from '../../env';
+import Config from 'react-native-config';
 
 // Initialize Firebase
 const firebaseConfig = {
-  apiKey: env.FIREBASE_API_KEY,
-  authDomain: env.FIREBASE_AUTH_DOMAIN,
-  databaseURL: env.FIREBASE_DATABASE_URL,
-  storageBucket: env.FIREBASE_STORAGE_BUCKET,
+  apiKey: Config.FIREBASE_API_KEY,
+  authDomain: Config.FIREBASE_AUTH_DOMAIN,
+  databaseURL: Config.FIREBASE_DATABASE_URL,
+  storageBucket: Config.FIREBASE_STORAGE_BUCKET,
 };
 
 export const DB_NAMES = {
