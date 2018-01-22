@@ -82,7 +82,11 @@ const helpers = StyleSheet.create({
   },
   textCenter: {
     justifyContent: 'center'
-  }
+  },
+  textTop:{
+    fontSize:30
+    
+  },
 });
 
 const layout = StyleSheet.create({
@@ -110,3 +114,4 @@ export const globalStyles = {
   ...layout,
   ...buttons
 };
+
