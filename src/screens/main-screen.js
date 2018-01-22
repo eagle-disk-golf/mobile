@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Container, Content} from 'native-base';
 import Main from '../components/main'
 
@@ -14,11 +14,7 @@ import Main from '../components/main'
 export default class MainScreen extends Component {
     render() {
     return (
-      <Container>
-        <Content>
-          <Main navigation={this.props.navigation} />
-        </Content>
-      </Container>
+        <Main navigation={this.props.navigation} />
     );
   }
 }
