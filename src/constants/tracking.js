@@ -2,6 +2,8 @@ export const COURSE = {
   lanes: {},
   completed: false,
   courseId: null,
+  startLocation: {},
+  endLocation: {}
 };
 
 export const LANE = {
@@ -10,8 +12,8 @@ export const LANE = {
   throws: [],
   par: 3,
   totalThrows: 0,
-  startPoint: {},
-  endPoint: {},
+  startLocation: {},
+  endLocation: {},
   duration: null,
   isActive: false,
   completed: false,

@@ -7,11 +7,13 @@ import {Text, Button, Toast, ActionSheet, Spinner} from 'native-base';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import Icon from './icon';
 import FadeInView from './fade-in-view';
+import NewCourseModal from './new-course-modal';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
 
 import firebase, {DB_NAMES} from '../services/firebase';
 import geolocation from '../services/geolocation';
+import {getAddressByCoordinates} from '../services/geocoding';
 
 import {LANE, COURSE} from '../constants/tracking';
 
@@ -45,8 +47,6 @@ const getOrCreateNodeWithIdFromFirebase = (node, idField, table) => {
   });
 };
 
-// const getSession = (node) => getNodeFromFirebase(node, 'sessionId', DB_NAMES.sessions);
-// const getRound = (node) => getNodeFromFirebase(node, 'roundId', DB_NAMES.rounds);
 
 const getOrCreateCourseWithId = (node) => getOrCreateNodeWithIdFromFirebase(node, 'courseId', DB_NAMES.courses);
 const getOrCreateLaneWithId = (node) => getOrCreateNodeWithIdFromFirebase(node, 'laneId', DB_NAMES.lanes);
@@ -131,9 +131,76 @@ export default class Tracking extends Component {
 
   handleTrackThrow() {
     const {isLaneActive} = this.state;
+
     if (isLaneActive) {
       this.continueLane();
     } else this.startNewLane();
+  }
+
+  startNewLane() {
+    const {isCourseActive} = this.state;
+
+    geolocation.getCurrentPosition().then(pos => {
+
+    });
+    // use javascript Promise the handle all the async functions
+    this.showLoader();
+    const promises = [getOrCreateCourseWithId(this.state.course), getOrCreateLaneWithId(this.state.lane), geolocation.getCurrentPosition()];
+    // after we have received all our values
+    Promise.all(promises).then(values => {
+      const initialCourse = values[0];
+      const initialLane = values[1];
+      const geolocation = values[2];
+
+        // create new lane
+      const lane = {
+        ...initialLane,
+        // id from firebase
+        // laneId,
+        courseId: initialCourse.courseId,
+        // add location to array
+        throws: [geolocation],
+        // this is the first throw
+        totalThrows: 1,
+        startLocation: geolocation,
+        isActive: true
+      };
+
+      let lanesById = initialCourse.lanes ? initialCourse.lanes : {};
+      lanesById[lane.laneId] = true;
+      const course = {
+        ...initialCourse,
+        lanes: lanesById,
+        startLocation: geolocation
+      };
+
+      // set this lane to state and push to firebase
+      let updates = {};
+      updates[DB_NAMES.lanes + lane.laneId] = lane;
+      updates[DB_NAMES.courses + course.courseId] = course;
+
+      this.setState({lane, course, isCourseActive: true, isLaneActive: true});
+      firebase.database().ref().update(updates);
+      this.hideLoader();
+
+      if (!isCourseActive) {
+        // fetch location and update it to course asynchronoysly
+        getAddressByCoordinates(geolocation).then(val => {
+          const address = val && val.results && val.results[0] ? val.results[0] : null;
+          let addressUpdate = {};
+          addressUpdate[DB_NAMES.courses + course.courseId + '/address'] = address;
+
+          this.setState({course: {...this.state.course, address}});
+          firebase.database().ref().update(addressUpdate);
+        }).catch(er => {
+          this.displayError(er);
+          console.log(er);
+        });
+      }
+    }).catch((error) => {
+      this.displayError(error);
+      this.hideLoader();
+    });
   }
 
   continueLane() {
@@ -167,53 +234,6 @@ export default class Tracking extends Component {
     });
   }
 
-  startNewLane() {
-    // use javascript Promise the handle all the async functions
-    this.showLoader();
-    const promises = [getOrCreateCourseWithId(this.state.course), getOrCreateLaneWithId(this.state.lane), geolocation.getCurrentPosition()];
-    // after we have received all our values
-    Promise.all(promises).then(values => {
-      const initialCourse = values[0];
-      const initialLane = values[1];
-      const geolocation = values[2];
-
-        // create new lane
-      const lane = {
-        ...initialLane,
-        // id from firebase
-        // laneId,
-        courseId: initialCourse.courseId,
-        // add location to array
-        throws: [geolocation],
-        // this is the first throw
-        totalThrows: 1,
-        startPoint: geolocation,
-        isActive: true
-      };
-
-      let lanesById = initialCourse.lanes ? initialCourse.lanes : {};
-      lanesById[lane.laneId] = true;
-      const course = {
-        ...initialCourse,
-        lanes: lanesById,
-      };
-
-      // set this lane to state and push to firebase
-      let updates = {};
-      updates[DB_NAMES.lanes + lane.laneId] = lane;
-      updates[DB_NAMES.courses + course.courseId] = course;
-
-      this.setState({lane, course, isCourseActive: true, isLaneActive: true});
-      firebase.database().ref().update(updates);
-      this.hideLoader();
-      // })
-    }).catch((error) => {
-      this.displayError(error);
-      this.hideLoader();
-      // console.warn(error);
-    });
-  }
-
   // when ending round, is the user at the basket or not??
   handleEndLane() {
     // dont end if no throws
@@ -230,7 +250,7 @@ export default class Tracking extends Component {
           // add location to array
           throws: [...currentLane.throws, geolocation],
           totalThrows: currentLane.totalThrows + 1,
-          endPoint: geolocation,
+          endLocation: geolocation,
           isActive: false,
           completed: true
         };
@@ -275,14 +295,16 @@ export default class Tracking extends Component {
 
   endCourse() {
     this.showLoader();
-    const promises = [getOrCreateCourseWithId(this.state.course)];
+    const promises = [getOrCreateCourseWithId(this.state.course), geolocation.getCurrentPosition()];
     // hole is started
     Promise.all(promises).then(values => {
       const currentCourse = values[0];
+      const geolocation = values[1];
 
       const updatedCourse = {
         ...currentCourse,
-        completed: true
+        completed: true,
+        endLocation: geolocation
       };
 
       this.setState({course: newEmptyCourse(), isCourseActive: false});
@@ -360,6 +382,7 @@ export default class Tracking extends Component {
 
   render() {
     const {lane, course, isLaneActive, isCourseActive, loading, initialized, faultyThrow} = this.state;
+    // const isGameActive = isCourseActive || isLaneActive;
     const laneNumber = Object.keys(course.lanes).length;
 
     const toggleTransparentText = (isVisible, styleClass) => isVisible ? styleClass : {color: 'transparent'};
@@ -411,6 +434,9 @@ export default class Tracking extends Component {
             <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical, isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
               {!loading && <Text style={[globalStyles.textPrimary]}>Throw</Text>}
               {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
+              {
+                /* <NewCourseModal onSuccess={(text) => this.handleStartNewCourse(text)} visible={newCourseModalVisible} placeholderText={address ? address : previousCourseName} /> */
+              }
             </Button>
 
             {isCourseActive && isLaneActive && <FadeInView fadeOutDuration={100} style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
