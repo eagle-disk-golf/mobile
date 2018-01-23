@@ -140,9 +140,6 @@ export default class Tracking extends Component {
   startNewLane() {
     const {isCourseActive} = this.state;
 
-    geolocation.getCurrentPosition().then(pos => {
-
-    });
     // use javascript Promise the handle all the async functions
     this.showLoader();
     const promises = [getOrCreateCourseWithId(this.state.course), getOrCreateLaneWithId(this.state.lane), geolocation.getCurrentPosition()];
