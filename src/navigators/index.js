@@ -6,9 +6,9 @@
   History: Riku - 12.12.2017 - Use custom icon, formatting
 */
 
-import React, {} from 'react';
+import React, {Component} from 'react';
 import {} from 'native-base';
-import {Platform} from 'react-native';
+import {Platform, View} from 'react-native';
 import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
 import Icon from '../components/icon';
 
@@ -31,17 +31,13 @@ const TabIcon = ({name, isFocused}) => {
   return <Icon size={20} name={name} style={{color: iconColor}} />;
 };
 
-const contentOptions = {
-  initialRouteName: 'Home',
-  drawerPosition: 'left'
-
-};
-
 // Nesting StackNavigator for Summary details
-const SummaryNavigator = StackNavigator({
-  Summary: {screen: SummaryScreen},
-  SummaryDetail: {screen: SummaryDetailScreen}
-});
+// const SummaryNavigator = StackNavigator({
+//   Summary: {screen: SummaryScreen},
+//   SummaryDetail: {
+//     screen: SummaryDetailScreen,
+//   }
+// }, {headerMode: 'none'});
 
 const TabBarOptions = {
   showIcon: true,
@@ -59,7 +55,7 @@ const TabBarOptions = {
   }
 };
 
-const MainNavigator = TabNavigator({
+const MainTabNavigator = TabNavigator({
   Main: {
     screen: MainScreen,
     navigationOptions: {
@@ -75,9 +71,10 @@ const MainNavigator = TabNavigator({
     }
   },
   Summary: {
-    screen: SummaryNavigator,
+    screen: SummaryScreen,
     navigationOptions: {
-      tabBarIcon: ({focused}) => <TabIcon isFocused={focused} name="ios-analytics" />
+      tabBarIcon: ({focused}) => <TabIcon isFocused={focused} name="ios-analytics" />,
+      showTabBar: false
     }
   },
 }, {
@@ -87,36 +84,57 @@ const MainNavigator = TabNavigator({
   });
 // Nesting tabnavigator inside of stacknavi to make the header appear
 
+// const MainNavigation = StackNavigator({
+//   MainTabs: {
+//     screen: MainTabNavigator,
+//   },
+// }, {headerMode: 'none'});
+
+
+// Wrap main navigator inside screen element so header can receive navigation props
+class MainNavigationScreen extends Component {
+  static navigationOptions = ({navigation}) => {
+    return {
+      headerLeft: <HeaderLeft navigation={navigation} />,
+      headerRight: <HeaderRight navigation={navigation} />
+    };
+  }
+  render() {
+    return (
+      <View style={{flex: 1}}>
+        <MainTabNavigator navigation={this.props.navigation} />
+      </View>
+    );
+  }
+}
+
+MainNavigationScreen.router = MainTabNavigator.router;
+
 // higher header on ios
 const getHeaderHeight = () => Platform.OS === 'ios' ? 90 : 85;
-
-const MainNavigatorContainer = StackNavigator({
-  Home: {
-    screen: MainNavigator,
-    navigationOptions: {
-      headerStyle: {
-        backgroundColor: COLORS.primary,
-        borderBottomColor: 'transparent',
-        height: getHeaderHeight(),
-        paddingLeft: 20,
-        paddingRight: 20,
-      },
-      headerLeft: <HeaderLeft />,
-      headerRight: <HeaderRight />
-    }
+const RootNavigationOptions = {
+  navigationOptions: {
+    headerStyle: {
+      backgroundColor: COLORS.primary,
+      borderBottomColor: 'transparent',
+      height: getHeaderHeight(),
+      paddingLeft: 20,
+      paddingRight: 20,
+    },
   }
-});
+};
 
-export const RootNavigator = DrawerNavigator({
-  Home: {
-    screen: MainNavigatorContainer,
-    navigationOptions: {
-      drawerIcon: <Icon name="ios-menu" style={{color: '#fff'}} />
-    }
+export const RootNavigator = StackNavigator({
+  MainNavigation: {
+    screen: MainNavigationScreen,
+    ...RootNavigationOptions
   },
   Test: {
-    screen: TestScreen
+    screen: TestScreen,
+    ...RootNavigationOptions
+  },
+  SummaryDetail: {
+    screen: SummaryDetailScreen,
+    ...RootNavigationOptions
   }
-},
-  contentOptions
-);
+});

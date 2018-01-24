@@ -22,7 +22,17 @@ const text = StyleSheet.create({
     // color: COLORS.warning
   },
   fontDefault: {
-   fontFamily: 'Roboto'}
+   fontFamily: 'Roboto'
+  },
+  h1: {
+    fontSize: 28
+  },
+  h2: {
+    fontSize: 24
+  },
+  h3: {
+    fontSize: 20
+  }
 });
 
 // background
@@ -83,9 +93,9 @@ const helpers = StyleSheet.create({
   textCenter: {
     justifyContent: 'center'
   },
-  textTop:{
-    fontSize:30
-    
+  textTop: {
+    fontSize: 30
+
   },
 });
 

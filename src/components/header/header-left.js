@@ -12,9 +12,13 @@ import {StyleSheet} from 'react-native';
 import {Text, Thumbnail, Item} from 'native-base';
 
 export default class HeaderLeft extends Component {
+  static navigationOptions = ({navigation}) => {
+    console.log(navigation, 'navgiatino');
+  }
   render() {
+    console.log(this, 'mooro:');
     return (
-      <Item style={styles.container}>
+      <Item onPress={() => this.props.navigation.navigate('Test')} style={styles.container}>
         <Thumbnail style={styles.headerImage} source={require('../../res/images/newgame_card.png')} />
         <Text style={styles.title}>Eagle{'\n'}Disc{'\n'}Golf</Text>
       </Item>

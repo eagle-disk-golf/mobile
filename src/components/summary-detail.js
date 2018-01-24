@@ -13,7 +13,6 @@ import {globalStyles} from '../res/styles';
 
 export default class SummaryDetail extends Component {
   render() {
-    console.log(this.props, 'summary');
     return (
       <View>
           <Text>Summary Detail</Text>

@@ -1,16 +1,13 @@
 import React, {Component} from 'react';
-import {Container, Content} from 'native-base';
+import {View} from 'react-native';
 import SummaryDetail from '../components/summary-detail';
 
 export default class SummaryDetailScreen extends Component {
   render() {
     return (
-      <Container>
-        <Content>
-          <SummaryDetail navigation={this.props.navigation} />
-        </Content>
-      </Container>
+      <View>
+        <SummaryDetail navigation={this.props.navigation} />
+      </View>
     );
   }
-
 }
