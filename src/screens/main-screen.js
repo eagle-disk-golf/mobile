@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Container, Content} from 'native-base';
-import Main from '../components/main'
+import Main from '../components/main';
 
 // const instructions = Platform.select({
 //   ios: 'Press Cmd+R to reload,\n' +

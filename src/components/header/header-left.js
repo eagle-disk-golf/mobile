@@ -12,9 +12,6 @@ import {StyleSheet} from 'react-native';
 import {Text, Thumbnail, Item} from 'native-base';
 
 export default class HeaderLeft extends Component {
-  static navigationOptions = ({navigation}) => {
-    console.log(navigation, 'navgiatino');
-  }
   render() {
     console.log(this, 'mooro:');
     return (

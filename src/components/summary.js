@@ -9,12 +9,24 @@
 */
 
 import React, {Component} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, FlatList, ListView, TouchableHighlight} from 'react-native';
 import {Text, List, ListItem, Body, Right, Spinner} from 'native-base';
 import Icon from './icon';
 import {globalStyles} from '../res/styles';
 import firebase, {DB_NAMES} from '../services/firebase';
 import time from '../services/time';
+
+const CustomListItem = ({item, index, navigation}) => {
+  return <ListItem key={index} onPress={() => navigation.navigate('SummaryDetail')}>
+    <Body>
+      <Text>{item && item.startLocation && item.startLocation.timestamp ? time.getFormattedDate(item.startLocation.timestamp) : ''}</Text>
+      <Text note>{item.address.formatted_address}</Text>
+    </Body>
+    <Right>
+      <ArrowForwardIcon />
+    </Right>
+  </ListItem>;
+};
 
 export default class Summary extends Component {
   constructor(props) {
@@ -23,8 +35,15 @@ export default class Summary extends Component {
     this.state = {
       initialized: false,
       loading: false,
-      games: []
+      fetching: false,
+      dataset: [],
+      page: 0,
+      offset: 10,
+      itemsPerPage: 10,
+      canLoadMore: true
     };
+
+    this.fetchGames = this.fetchGames.bind(this);
   }
 
   showLoader() {
@@ -35,25 +54,46 @@ export default class Summary extends Component {
     this.setState({loading: false});
   }
 
-  componentDidMount() {
-    this.showLoader();
-    firebase.database().ref(DB_NAMES.courses).limitToLast(10).once('value').then(snapshot => {
-      const value = snapshot.val() ? snapshot.val() : {};
-      const latestGames = Object.keys(value).map(key => {return {...value[key]};});
+  fetchGames() {
+    this.setState({fetching: true});
+    const {page, offset, itemsPerPage, fetching} = this.state;
 
-      this.setState({games: latestGames});
-      this.hideLoader();
-    });
+    if (!fetching) {
+      this.showLoader();
+      firebase.database().ref(DB_NAMES.courses).limitToLast(offset).once('value').then(snapshot => {
+        const value = snapshot.val() ? snapshot.val() : {};
+        const latestGames = Object.keys(value).map(key => {return {...value[key]};});
+
+        const canLoadMore = latestGames.length > 0 ? true : false;
+
+        this.setState({dataset: [...this.state.dataset, ...latestGames], canLoadMore, page: page + 1, offset: offset + itemsPerPage, fetching: false});
+        this.hideLoader();
+      });
+    }
+  }
+
+  componentDidMount() {
+    this.fetchGames();
   }
 
 
   render() {
-    const {loading} = this.state;
+    const {loading, dataset} = this.state;
 
     return (
-      <View>
+      <View style={{flex: 1}}>
         <Text style={[globalStyles.h3, globalStyles.centerHorizontal, styles.header]}>Latest games</Text>
-        <List
+        <FlatList
+          style={[globalStyles.bgDefault, {flex: 1}]}
+          data={dataset || []}
+          // onRefresh={this.fetchGames}
+          refreshing={loading}
+          // onEndReachedThreshold={0.5}
+          // onEndReached={_ => this.fetchGames()}
+          renderItem={({item, index, separators}) => <CustomListItem key={index} item={item} navigation={this.props.navigation} />}>
+        </FlatList>
+
+        {/* <List
           style={[globalStyles.bgDefault]}
           dataArray={this.state.games || []}
           renderRow={(game) => <ListItem onPress={() => this.props.navigation.navigate('SummaryDetail')}>
@@ -65,7 +105,7 @@ export default class Summary extends Component {
               <ArrowForwardIcon />
             </Right>
           </ListItem>}>
-        </List>
+        </List> */}
         {loading && <Spinner color='green' />}
       </View>
     );
