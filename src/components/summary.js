@@ -62,7 +62,7 @@ export default class Summary extends Component {
       this.showLoader();
       firebase.database().ref(DB_NAMES.courses).limitToLast(offset).once('value').then(snapshot => {
         const value = snapshot.val() ? snapshot.val() : {};
-        const latestGames = Object.keys(value).map(key => {return {...value[key]};});
+        const latestGames = Object.keys(value).map(key => {return {...value[key]};}).reverse();
 
         const canLoadMore = latestGames.length > 0 ? true : false;
 
