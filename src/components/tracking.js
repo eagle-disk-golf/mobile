@@ -342,6 +342,7 @@ export default class Tracking extends Component {
         console.log(typeof(buttonIndex), 'typeof button index');
         const pressedButton = BUTTONS[buttonIndex];
         console.log(pressedButton, 'button was pressed');
+        // for some reason, buttonIndex is NOT a number but a string
         if (buttonIndex !== '3') {
           this.setFaultyThrow(BUTTONS[buttonIndex]);
           this.flashFaultyThrowError(BUTTONS[buttonIndex]);
