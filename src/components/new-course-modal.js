@@ -35,12 +35,12 @@ export default class NewCourseModal extends Component {
 
 
   openModal() {
-    console.log('open modal');
+    // console.log('open modal');
     this.setState({modalVisible: true});
   }
 
   handleSuccess() {
-    console.log(this.state, 'modal state and praops', this.props);
+    // console.log(this.state, 'modal state and praops', this.props);
     const {text} = this.state;
     const {onSuccess} = this.props;
 
@@ -49,7 +49,7 @@ export default class NewCourseModal extends Component {
   }
 
   handleCancel() {
-    console.log(this.state, 'modal state');
+    // console.log(this.state, 'modal state');
     const {onCancel = () => null} = this.props;
 
     onCancel();

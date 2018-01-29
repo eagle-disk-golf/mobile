@@ -5,7 +5,7 @@ import Container from '../components/container';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 export default class Test extends Component {
   render() {
-    console.log(this.props.navigation, 'test');
+    // console.log(this.props.navigation, 'test');
     return (
       <View style={styles.container}>
         <MapView

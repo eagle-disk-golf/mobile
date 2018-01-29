@@ -5,7 +5,7 @@ import SummaryDetail from '../components/summary-detail';
 export default class SummaryDetailScreen extends Component {
   render() {
     return (
-      <View>
+      <View style={{flex: 1}}>
         <SummaryDetail navigation={this.props.navigation} />
       </View>
     );

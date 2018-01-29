@@ -93,9 +93,9 @@ export default class Summary extends Component {
           renderItem={({item, index, separators}) => <CustomListItem key={index} item={item} navigation={this.props.navigation} />}>
         </FlatList> */}
 
-        {/* <List
+        <List
           style={[globalStyles.bgDefault]}
-          dataArray={this.state.games || []}
+          dataArray={dataset || []}
           renderRow={(game) => <ListItem onPress={() => this.props.navigation.navigate('SummaryDetail')}>
             <Body>
               <Text>{game && game.startLocation && game.startLocation.timestamp ? time.getFormattedDate(game.startLocation.timestamp) : ''}</Text>
@@ -105,7 +105,7 @@ export default class Summary extends Component {
               <ArrowForwardIcon />
             </Right>
           </ListItem>}>
-        </List> */}
+        </List>
         {loading && <Spinner color='green' />}
       </View>
     );

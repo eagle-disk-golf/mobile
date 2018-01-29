@@ -13,7 +13,7 @@ import {Text, Thumbnail, Item} from 'native-base';
 
 export default class HeaderLeft extends Component {
   render() {
-    console.log(this, 'mooro:');
+    // console.log(this, 'mooro:');
     return (
       <Item onPress={() => this.props.navigation.navigate('Test')} style={styles.container}>
         <Thumbnail style={styles.headerImage} source={require('../../res/images/newgame_card.png')} />
