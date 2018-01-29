@@ -339,8 +339,10 @@ export default class Tracking extends Component {
         title: 'Select right option'
       },
       buttonIndex => {
-        console.log(buttonIndex, 'btn index');
-        if (buttonIndex !== 3) {
+        console.log(typeof(buttonIndex), 'typeof button index');
+        const pressedButton = BUTTONS[buttonIndex];
+        console.log(pressedButton, 'button was pressed');
+        if (buttonIndex !== '3') {
           this.setFaultyThrow(BUTTONS[buttonIndex]);
           this.flashFaultyThrowError(BUTTONS[buttonIndex]);
         }
