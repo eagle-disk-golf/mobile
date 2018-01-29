@@ -32,7 +32,6 @@ class Panel extends Component {
       expanded: !this.state.expanded  //Step 2
     });
 
-    // console.log(initialValue, 'initialVAlue');
     this.state.animation.setValue(initialValue);  //Step 3
     Animated.spring(     //Step 4
       this.state.animation,
@@ -43,7 +42,6 @@ class Panel extends Component {
   }
 
   _setMaxHeight(event) {
-    // console.log('settings max height');
     this.setState({
       maxHeight: event.nativeEvent.layout.height
     });
@@ -59,7 +57,6 @@ class Panel extends Component {
 
   render() {
     const {animation, expanded} = this.state;
-    // console.log(animation, 'animatiop');
     // let icon = this.icons['down'];
 
     // if (this.state.expanded) {
