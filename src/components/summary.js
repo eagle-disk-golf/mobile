@@ -83,7 +83,7 @@ export default class Summary extends Component {
     return (
       <View style={{flex: 1}}>
         <Text style={[globalStyles.h3, globalStyles.centerHorizontal, styles.header]}>Latest games</Text>
-        <FlatList
+        {/* <FlatList
           style={[globalStyles.bgDefault, {flex: 1}]}
           data={dataset || []}
           // onRefresh={this.fetchGames}
@@ -91,7 +91,7 @@ export default class Summary extends Component {
           // onEndReachedThreshold={0.5}
           // onEndReached={_ => this.fetchGames()}
           renderItem={({item, index, separators}) => <CustomListItem key={index} item={item} navigation={this.props.navigation} />}>
-        </FlatList>
+        </FlatList> */}
 
         {/* <List
           style={[globalStyles.bgDefault]}
