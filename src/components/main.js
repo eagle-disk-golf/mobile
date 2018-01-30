@@ -12,60 +12,26 @@ export default class MainButton extends Component {
   render() {
     return (
       <Grid>
-        <Col>
-          <Row size={50}>
-            <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Tracking')}>
-              <ImageBackground
-                source={require('../res/images/new_game_card.png')}
-                style={[style.image]}
-              />
-              <Text
-                style={[style.text]}>
-                NEW GAME
-                </Text>
+        <Row>
+        <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Tracking')}>
+              <ImageBackground source={require('../res/images/new_game_card.png')} style={[style.image]}/>
+              <Text style={[style.text]}>NEW GAME</Text>
             </TouchableOpacity>
-          </Row>
-
-          <Row size={50}>
-            <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Summary')}>
-              <ImageBackground
-                source={require('../res/images/statistic_card.png')}
-                style={[style.image]}
-              />
-              <Text
-                style={style.text}>
-                STATISTICS
-                </Text>
+        </Row>
+        <Row>
+            <Col>
+                <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Summary')}>
+                    <ImageBackground source={require('../res/images/summary_card.png')} style={[style.image]}/>
+              <Text style={style.text}>SUMMARY</Text>
+            </TouchableOpacity>  
+            </Col>
+            <Col>
+                <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Summary')}>
+                    <ImageBackground source={require('../res/images/newgame_card.png')} style={[style.image]}/>
+              <Text style={style.text}>F.A.Q</Text>
             </TouchableOpacity>
-          </Row>
-        </Col>
-
-        <Col>
-          <Row size={50}>
-            <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Summary')}>
-              <ImageBackground
-                source={require('../res/images/summary_card.png')}
-                style={[style.image]}
-              />
-              <Text
-                style={style.text}>
-                SUMMARY
-                </Text>
-            </TouchableOpacity>
-          </Row>
-          <Row size={50}>
-            <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Tracking')}>
-              <ImageBackground
-                source={require('../res/images/new_game_card.png')}
-                style={[style.image]}
-              />
-              <Text
-                style={style.text}>
-                NEW GAME
-                </Text>
-            </TouchableOpacity>
-          </Row>
-        </Col>
+            </Col>
+        </Row> 
       </Grid>
     );
   }
@@ -81,21 +47,21 @@ const style = StyleSheet.create({
     alignSelf: 'auto',
     width: undefined,
     height: undefined,
-    margin: 3
+    margin: 0
   },
   col: {
     width: '100%',
     height: '100%'
   },
   row: {
-    borderWidth: 1
+    borderWidth: 0
   },
   text: {
     position: 'absolute',
     fontSize: 30,
     fontFamily: 'Roboto',
     alignSelf: 'center',
-    marginTop: '10%',
-    backgroundColor: 'transparent'
+    marginTop: '7%',
+    color: '#003337'
   }
 });

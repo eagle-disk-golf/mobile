@@ -4,6 +4,7 @@
   Made by: Riku
   History: Topi - 30.11.2017 - Added StackNavigation for SummaryScreen
   History: Riku - 12.12.2017 - Use custom icon, formatting
+  History: Oskari - 29.1.2018 - Styling
 */
 
 import React, {Component} from 'react';
@@ -41,10 +42,11 @@ const TabIcon = ({name, isFocused}) => {
 
 const TabBarOptions = {
   showIcon: true,
-  activeTintColor: COLORS.primary,
+  activeTintColor: '#003337',
   inactiveTintColor: 'lightgray',
   style: {
-    backgroundColor: '#fff'
+    backgroundColor: '#F8FDFF',
+    elevation: 0
   },
   labelStyle: {
     margin: 0,

@@ -394,7 +394,7 @@ export default class Tracking extends Component {
     };
 
     return (
-      <Grid>
+      <Grid style={styles.grid}>
         <Col>
 
           <Row style={[globalStyles.centerBottom, globalStyles.centerHorizontal]} size={35}>
@@ -432,7 +432,9 @@ export default class Tracking extends Component {
               </Button>
             </FadeInView>
 
-            <Button style={[globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical, isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
+            <Button style={[
+                           globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical, 
+                           isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
               {!loading && <Text style={[globalStyles.textPrimary]}>Throw</Text>}
               {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
               {
@@ -491,5 +493,8 @@ const styles = StyleSheet.create({
   font: {
     fontFamily: 'Roboto',
     fontSize: 20
-  }
+  },
+    grid: {
+        backgroundColor: '#F8FDFF'
+    }
 });

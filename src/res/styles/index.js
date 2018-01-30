@@ -112,7 +112,10 @@ const buttons = StyleSheet.create({
   },
   buttonRounded: {
     borderRadius: 100,
-    justifyContent: 'center'
+    justifyContent: 'center',
+    elevation:5,
+    borderWidth:1,
+    borderColor: '#7F1B4B'
   },
 });
 

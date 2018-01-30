@@ -4,6 +4,7 @@
   Made by: Jenni
   History:
   12.12.2017 Riku: Transparent borderBottom for item
+  29.1.2018 Oskari: Styling
 
 */
 
@@ -25,22 +26,19 @@ export default class HeaderLeft extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    borderBottomColor: 'transparent',
-    // marginBottom: 5
-    // height: 30,
-    // marginTop: 10,
-    // marginBottom: 50
+    borderBottomColor: 'transparent'
   },
   header: {
-    backgroundColor: 'pink',
   },
   headerImage: {
     height: 60,
     width: 60,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 20,
+    color: '#003337',
+    fontFamily: 'Roboto'
   },
 });
