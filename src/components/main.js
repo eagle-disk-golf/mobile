@@ -40,6 +40,8 @@ const style = StyleSheet.create({
     flex: 1,
   },
     card: {
+        marginLeft:5,
+        marginRight:5,
         borderWidth: 2,
         borderColor: '#000000',
         margin: 0,

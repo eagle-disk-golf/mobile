@@ -47,9 +47,9 @@ const TabBarOptions = {
   style: {
     backgroundColor: '#F8FDFF',
     elevation: 0,
-    borderBottomWidth: 2,
-    borderTopWidth: 2,
-    borderColor: '#7F1D4B'
+    borderBottomWidth: 0.5,
+    borderTopWidth: 0.0,
+    borderColor: '#c1bfbf'
   },
   labelStyle: {
     margin: 0,
