@@ -68,93 +68,23 @@
 
 
 import React, {Component} from 'react';
-import {Container} from 'native-base';
 import {View, StyleSheet, Text, ScrollView} from 'react-native';
+import PanelList from './panel-list';
 import Panel from './panel';
 import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import {globalStyles} from '../res/styles';
+import {COLORS} from '../res/styles/constants';
 
-class Panels extends Component {
+class SummaryDetail extends Component {
+
   render() {
     return (
-      <ScrollView style={styles.container} >
-        <Panel title="A Panel">
-          <View style={{backgroundColor: 'green', flexDirection: 'column'}}>
-            <MapView
-              style={{height: 200, width: '100%'}}
-              provider={PROVIDER_GOOGLE}
-              initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            />
-            <View>
-              <Text>results</Text>
-              <Text>results</Text>
-              <Text>results</Text>
-              <Text>results</Text>
-              <Text>results</Text>
-            </View>
-
-          </View>
-        </Panel>
-        <Panel title="A Panel">
-          <View style={{backgroundColor: 'green', flexDirection: 'column'}}>
-            <MapView
-              style={{height: 200, width: '100%'}}
-              provider={PROVIDER_GOOGLE}
-              initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            />
-            <View>
-              <Text>results</Text>
-              <Text>results</Text>
-              <Text>results</Text>
-              <Text>results</Text>
-              <Text>results</Text>
-            </View>
-
-          </View>
-        </Panel>
-        <Panel title="Another">
-          <Text>Lorem ipsum dolor sit amet...</Text>
-          <View style={{backgroundColor: 'green', flexDirection: 'column'}}>
-            <MapView
-              style={{height: 200, width: '100%'}}
-              provider={PROVIDER_GOOGLE}
-              initialRegion={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-            />
-            <View>
-              <Text>results</Text>
-              <Text>results</Text>
-              <Text>results</Text>
-              <Text>results</Text>
-              <Text>results</Text>
-            </View>
-
-          </View>
-        </Panel>
-      </ScrollView>
+      <View>
+        <PanelList />
+      </View>
     );
   }
 }
 
-export default Panels;
+export default SummaryDetail;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f4f7f9',
-    paddingTop: 30
-  }
-});
