@@ -46,7 +46,10 @@ const TabBarOptions = {
   inactiveTintColor: 'lightgray',
   style: {
     backgroundColor: '#F8FDFF',
-    elevation: 0
+    elevation: 0,
+    borderBottomWidth: 2,
+    borderTopWidth: 2,
+    borderColor: '#7F1D4B'
   },
   labelStyle: {
     margin: 0,

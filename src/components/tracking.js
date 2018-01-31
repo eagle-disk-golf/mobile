@@ -443,7 +443,7 @@ export default class Tracking extends Component {
             </Button>
 
             {isCourseActive && isLaneActive && <FadeInView fadeOutDuration={100} style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
-              <Button style={[globalStyles.buttonRounded, styles.smallButtons, styles.shadow, {backgroundColor: 'green'}]} onPress={this.handleEndLane}>
+              <Button style={[globalStyles.buttonRounded, styles.smallButtons, styles.shadow, {backgroundColor: '#0E8C5A'}]} onPress={this.handleEndLane}>
                 <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />
               </Button>
             </FadeInView>}

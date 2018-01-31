@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {TouchableOpacity, StyleSheet, ImageBackground, View} from 'react-native';
-import {Text } from 'native-base';
+import {Text, Card, CardItem } from 'native-base';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import {globalStyles} from '../res/styles';
 
@@ -10,27 +10,25 @@ import {globalStyles} from '../res/styles';
 
 export default class MainButton extends Component {
   render() {
+  const resizeMode = 'stretch';
+
     return (
-      <Grid>
-        <Row>
-        <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Tracking')}>
-              <ImageBackground source={require('../res/images/new_game_card.png')} style={[style.image]}/>
-              <Text style={[style.text]}>NEW GAME</Text>
+      <Grid style={[globalStyles.bgDefault]}>
+        <Row size={50}>
+        <Card style={style.card}>
+            <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Tracking')}>
+              <ImageBackground source={require('../res/images/new_game_card.png')} style={[style.image]} resizeMode='stretch'/>
+              <Text style={[globalStyles.textDark, style.text]}>NEW GAME</Text>
             </TouchableOpacity>
+        </Card>
         </Row>
-        <Row>
-            <Col>
-                <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Summary')}>
-                    <ImageBackground source={require('../res/images/summary_card.png')} style={[style.image]}/>
-              <Text style={style.text}>SUMMARY</Text>
+        <Row  size={50}>
+        <Card style={style.card}>
+            <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Summary')}>
+                    <ImageBackground source={require('../res/images/summary_card.png')} style={[style.image]} resizeMode='stretch' />
+              <Text style={[globalStyles.textDark, style.text]}>SUMMARY</Text>
             </TouchableOpacity>  
-            </Col>
-            <Col>
-                <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Summary')}>
-                    <ImageBackground source={require('../res/images/newgame_card.png')} style={[style.image]}/>
-              <Text style={style.text}>F.A.Q</Text>
-            </TouchableOpacity>
-            </Col>
+        </Card>
         </Row> 
       </Grid>
     );
@@ -39,29 +37,27 @@ export default class MainButton extends Component {
 
 const style = StyleSheet.create({
   touch: {
-    flex: 1
-  },
-  image: {
-    minWidth: '10%',
     flex: 1,
-    alignSelf: 'auto',
-    width: undefined,
-    height: undefined,
-    margin: 0
   },
-  col: {
-    width: '100%',
+    card: {
+        borderWidth: 2,
+        borderColor: '#000000',
+        margin: 0,
+        padding:2
+    },
+  image: {
+    margin: 0,
+    padding: 0,
     height: '100%'
   },
   row: {
-    borderWidth: 0
+      marginTop:0,
+      marginBottom:0
   },
   text: {
     position: 'absolute',
     fontSize: 30,
-    fontFamily: 'Roboto',
     alignSelf: 'center',
-    marginTop: '7%',
-    color: '#003337'
+    marginTop: '3%'
   }
 });
