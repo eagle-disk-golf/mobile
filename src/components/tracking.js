@@ -324,7 +324,7 @@ export default class Tracking extends Component {
       {name: 'over-bound', flag: 'isOverBound', text: 'Over bound', icon: 'remove-circle', iconColor: COLORS.success, penalty: 1},
       {name: 'lost', flag: 'isLost', text: 'Lost', icon: 'eye-off', iconColor: COLORS.primary, penalty: 1},
       {name: 'mando', flag: 'isMando', text: 'Mando', icon: 'redo', iconColor: COLORS.warningr, penalty: 1},
-      {text: 'Cancel', icon: 'close', iconColor: '#25de5b'}
+      {name: 'cancel', text: 'Cancel', icon: 'close', iconColor: '#25de5b'}
     ];
     const DESTRUCTIVE_INDEX = 3;
     const CANCEL_INDEX = 3;
@@ -339,11 +339,9 @@ export default class Tracking extends Component {
         title: 'Select right option'
       },
       buttonIndex => {
-        console.log(typeof(buttonIndex), 'typeof button index');
         const pressedButton = BUTTONS[buttonIndex];
-        console.log(pressedButton, 'button was pressed');
         // for some reason, buttonIndex is NOT a number but a string
-        if (buttonIndex !== '3') {
+        if (pressedButton.name !== 'cancel') {
           this.setFaultyThrow(BUTTONS[buttonIndex]);
           this.flashFaultyThrowError(BUTTONS[buttonIndex]);
         }
@@ -433,7 +431,7 @@ export default class Tracking extends Component {
             </FadeInView>
 
             <Button style={[
-                           globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical, 
+                           globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical,
                            isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
               {!loading && <Text style={[globalStyles.textPrimary]}>Throw</Text>}
               {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
