@@ -9,18 +9,19 @@
 */
 
 import React, {Component} from 'react';
-import {View, StyleSheet, FlatList, ListView, TouchableHighlight} from 'react-native';
-import {Text, List, ListItem, Body, Right, Spinner} from 'native-base';
+import {View, StyleSheet} from 'react-native';
+import {Text, ListItem, Body, Right} from 'native-base';
 import Icon from './icon';
+import InfiniteListView from './infinite-list-view';
 import {globalStyles} from '../res/styles';
 import firebase, {DB_NAMES} from '../services/firebase';
 import time from '../services/time';
 
 const CustomListItem = ({item, index, navigation}) => {
-  return <ListItem key={index} onPress={() => navigation.navigate('SummaryDetail')}>
+  return <ListItem key={index} onPress={() => navigation.navigate('SummaryDetail', item)}>
     <Body>
       <Text>{item && item.startLocation && item.startLocation.timestamp ? time.getFormattedDate(item.startLocation.timestamp) : ''}</Text>
-      <Text note>{item.address.formatted_address}</Text>
+      <Text note>{item && item.address && item.address.formatted_address}</Text>
     </Body>
     <Right>
       <ArrowForwardIcon />
@@ -40,7 +41,8 @@ export default class Summary extends Component {
       page: 0,
       offset: 10,
       itemsPerPage: 10,
-      canLoadMore: true
+      canLoadMore: true,
+      previousDatasetLength: 0
     };
 
     this.fetchGames = this.fetchGames.bind(this);
@@ -54,9 +56,13 @@ export default class Summary extends Component {
     this.setState({loading: false});
   }
 
+  canLoad() {
+    return this.state.canLoadMore;
+  }
+
   fetchGames() {
     this.setState({fetching: true});
-    const {page, offset, itemsPerPage, fetching} = this.state;
+    const {page, offset, itemsPerPage, fetching, previousDatasetLength} = this.state;
 
     if (!fetching) {
       this.showLoader();
@@ -64,9 +70,15 @@ export default class Summary extends Component {
         const value = snapshot.val() ? snapshot.val() : {};
         const latestGames = Object.keys(value).map(key => {return {...value[key]};}).reverse();
 
-        const canLoadMore = latestGames.length > 0 ? true : false;
+        const canLoadMore = latestGames.length !== previousDatasetLength;
 
-        this.setState({dataset: [...this.state.dataset, ...latestGames], canLoadMore, page: page + 1, offset: offset + itemsPerPage, fetching: false});
+        this.setState({
+          dataset: latestGames,
+          canLoadMore, page: page + 1, offset: offset + itemsPerPage,
+          fetching: false,
+          initialized: true,
+          lastCourseId: latestGames[0].courseId
+        });
         this.hideLoader();
       });
     }
@@ -81,32 +93,18 @@ export default class Summary extends Component {
     const {loading, dataset} = this.state;
 
     return (
-      <View style={{flex: 1}}>
+      <View style={styles.container}>
         <Text style={[globalStyles.h3, globalStyles.centerHorizontal, styles.header]}>Latest games</Text>
-        {/* <FlatList
-          style={[globalStyles.bgDefault, {flex: 1}]}
-          data={dataset || []}
-          // onRefresh={this.fetchGames}
-          refreshing={loading}
-          // onEndReachedThreshold={0.5}
-          // onEndReached={_ => this.fetchGames()}
-          renderItem={({item, index, separators}) => <CustomListItem key={index} item={item} navigation={this.props.navigation} />}>
-        </FlatList> */}
 
-        <List
-          style={[globalStyles.bgDefault]}
-          dataArray={dataset || []}
-          renderRow={(game) => <ListItem onPress={() => this.props.navigation.navigate('SummaryDetail')}>
-            <Body>
-              <Text>{game && game.startLocation && game.startLocation.timestamp ? time.getFormattedDate(game.startLocation.timestamp) : ''}</Text>
-              <Text note>{game.address.formatted_address}</Text>
-            </Body>
-            <Right>
-              <ArrowForwardIcon />
-            </Right>
-          </ListItem>}>
-        </List>
-        {loading && <Spinner color='green' />}
+        <InfiniteListView
+          style={styles.list}
+          data={dataset}
+          renderRow={(item, _, index) => <CustomListItem index={index} item={item} navigation={this.props.navigation} />}
+          canLoad={this.canLoad()}
+          isLoading={loading}
+          onLoad={this.fetchGames}
+        />
+
       </View>
     );
   }
@@ -115,7 +113,16 @@ export default class Summary extends Component {
 const ArrowForwardIcon = () => <Icon size={20} name="ios-arrow-forward" />;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // padding: 10
+    // backgroundColor: '#fff'
+  },
   header: {
+    // backgroundColor: '#fff,
     marginVertical: 20
+  },
+  list: {
+
   }
 });
