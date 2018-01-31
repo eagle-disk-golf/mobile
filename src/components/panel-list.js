@@ -58,7 +58,7 @@ export default class PanelList extends Component {
           if (panelEndPosition < containerEndPosition) {
             scrollList.scrollTo({y: panelFrameOffsetY});
             console.log('does not go ove');
-          } else {
+           } else {
             scrollList.scrollToEnd();
             console.log('goes over');
             // scrollList.scrollTo({y: panelFrameOffsetY - (panelEndPosition - containerEndPosition)});
@@ -101,7 +101,7 @@ export default class PanelList extends Component {
               <View style={{flexDirection: 'column'}}>
                 <MapView
                   ref={(ref) => { this.refs[`map_${index}`] = ref; }}
-                  onLayout={() => this.refs[`map_${index}`].fitToCoordinates(lane.throws, { edgePadding: { top: 50, right: 10, bottom: 10, left: 10 }, animated: false })}
+                  onLayout={() => this.refs[`map_${index}`].fitToCoordinates(lane.throws, {edgePadding: {top: 50, right: 10, bottom: 10, left: 10}, animated: false})}
                   style={{height: 200, width: '100%'}}
                   provider={PROVIDER_GOOGLE}
                   minZoomLevel={10}
