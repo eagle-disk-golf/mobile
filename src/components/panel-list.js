@@ -1,33 +1,24 @@
 import React, {Component} from 'react';
-import {StyleSheet, ScrollView, View, Text, Dimensions, UIManager, findNodeHandle, Platform} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import {StyleSheet, ScrollView, View, Text, Dimensions, Platform, findNodeHandle} from 'react-native';
+import {Spinner} from 'native-base';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Panel from './panel';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
+import {getDistanceInMetersBetweenCoordinates} from '../helpers/geolocation';
 
 const isAndroid = Platform.OS === 'android';
 
-const lanes = [
-  {name: '1 lane'},
-  {name: '2 lane'},
-  {name: '3 lane'},
-  {name: '4 lane'},
-  {name: '5 lane'},
-  {name: '6 lane'},
-  {name: '7 lane'},
-  {name: '8 lane'},
-  {name: '9 lane'},
-  {name: '10 lane'},
-  {name: '11 lane'},
-];
-
 const titleHeight = 60;
-const TitleComponent = (game) => <View style={[styles.titleContainer]}>
-  <View style={[styles.titleItemContainer, styles.borderRight]}><Text>1</Text></View>
-  <View style={[styles.titleItemContainer, styles.borderRight]}><Text>4</Text></View>
-  <View style={[styles.titleItemContainer, styles.borderRight]}><Text>3</Text></View>
-  <View style={styles.titleItemContainer}><Text>par</Text></View>
-</View>;
+const TitleComponent = ({item, index}) => {
+  const score = item.par - item.throws.length;
+  return (<View style={[styles.titleContainer]}>
+    <View style={[styles.titleItemContainer, styles.borderRight]}><Text>{index + 1}</Text></View>
+    <View style={[styles.titleItemContainer, styles.borderRight]}><Text>{item.throws.length}</Text></View>
+    <View style={[styles.titleItemContainer, styles.borderRight]}><Text>{item.par}</Text></View>
+    <View style={styles.titleItemContainer}><Text>{score === 0 ? 'par' : score}</Text></View>
+  </View>);
+};
 
 export default class PanelList extends Component {
   scrollToPane(event, index) {
@@ -66,31 +57,21 @@ export default class PanelList extends Component {
           console.log(panelFrameOffsetY, 'panelfrmaoffset');
           if (panelEndPosition < containerEndPosition) {
             scrollList.scrollTo({y: panelFrameOffsetY});
-          } else {
-            scrollList.scrollTo({y: panelFrameOffsetY - (panelEndPosition - containerEndPosition)});
+            console.log('does not go ove');
+           } else {
+            scrollList.scrollToEnd();
+            console.log('goes over');
+            // scrollList.scrollTo({y: panelFrameOffsetY - (panelEndPosition - containerEndPosition)});
           }
         });
       });
     }
-
-    // scrollList.scrollTo({y: event.nativeEvent.pageY});
-    /* eslint max-params: 0 */
-    // scrollListContainer.measure((containerFrameOffsetX, containerFrameOffsetY, containerWidth, containerHeight, containerPageOffsetX, containerPageOffsetY) => {
-    //   panel.measure((panelFrameOffsetX, panelFrameOffsetY, panelWidth, panelHeight, panelPageOffsetX, panelPageOffsetY) => {
-    //     const panelEndPosition = panelFrameOffsetY + window.height + event.contentHeight;
-    //     const containerEndPosition = window.height + containerHeight;
-
-    //     console.log(panelFrameOffsetY, 'panelfrmaoffset');
-    //     if (panelEndPosition < containerEndPosition) {
-    //       scrollList.scrollTo({y: panelFrameOffsetY});
-    //     } else {
-    //       scrollList.scrollTo({y: panelFrameOffsetY - (panelEndPosition - containerEndPosition)});
-    //     }
-    //   });
-    // });
   }
 
   render() {
+    const {lanes} = this.props;
+    const isInitialized = lanes && (lanes.length > 0);
+    console.log(isInitialized, 'isInitialized');
     return (
       <ScrollView removeClippedSubviews={false} ref='scrollList' style={styles.container}>
         <View renderToHardwareTextureAndroid={true} collapsable={false} ref='scrollListContainer' onLayout={() => {}}>
@@ -109,29 +90,45 @@ export default class PanelList extends Component {
             </View>
           </View>
 
-          {lanes && lanes.map((lane, index) => <View collapsable={false} onLayout={() => {}} ref={`scroll_list_panel_item_${index}`} key={index}>
+          {!isInitialized && <Spinner color="green" />}
+          {isInitialized && lanes && lanes.map((lane, index) => <View collapsable={false} onLayout={() => {}} ref={`scroll_list_panel_item_${index}`} key={index}>
             <Panel
               onItemSelected={(event) => this.scrollToPane(event, index)}
               onItemDeSelect={(event) => null}
-              renderTitle={<TitleComponent />}
+              renderTitle={<TitleComponent index={index} item={lane} />}
               titleHeight={60}
               title="A Panel">
-              <View style={{backgroundColor: 'green', flexDirection: 'column'}}>
+              <View style={{flexDirection: 'column'}}>
                 <MapView
+                  ref={(ref) => { this.refs[`map_${index}`] = ref; }}
+                  onLayout={() => this.refs[`map_${index}`].fitToCoordinates(lane.throws, {edgePadding: {top: 50, right: 10, bottom: 10, left: 10}, animated: false})}
                   style={{height: 200, width: '100%'}}
                   provider={PROVIDER_GOOGLE}
-                  initialRegion={{
-                    latitude: 37.78825,
-                    longitude: -122.4324,
-                    latitudeDelta: 0.0922,
-                    longitudeDelta: 0.0421,
-                  }}
-                />
-                <View>
-                  <Text>results</Text>
-                  <Text>results</Text>
-                  <Text>results</Text>
-                  <Text>results</Text>
+                  minZoomLevel={10}
+                  maxZoomLevel={20}
+                  region={{
+                    latitude: lane.startLocation.latitude,
+                    longitude: lane.startLocation.longitude,
+                    latitudeDelta: 1,
+                    longitudeDelta: 1,
+                  }}>
+                    {lane.throws.map((item, index) => (
+                      <Marker
+                        key={index}
+                        coordinate={{latitude: item.latitude, longitude: item.longitude}}
+                        title='title'
+                        description='kuvaus'
+                      />
+                  ))}
+
+                </MapView>
+                <View style={styles.resultsContainer}>
+                  {lane.throws.map((item, index) => (
+                    <Text key={index} style={styles.result}>
+                      {index + 1}. {getDistanceInMetersBetweenCoordinates(lane.startLocation, item)}m
+                      </Text>
+                  ))}
+
                 </View>
               </View>
             </Panel></View>)}
@@ -178,5 +175,17 @@ const styles = StyleSheet.create({
   borderLeft: {
     borderLeftColor: 'black',
     borderLeftWidth: 1
+  },
+  resultsContainer: {
+    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
+  },
+  result: {
+    // backgroundColor: 'orange',
+    width: '33%',
+    paddingTop: 20,
+    paddingBottom: 20
   }
 });

@@ -24,7 +24,7 @@ import TestScreen from '../screens/test';
 import HeaderLeft from '../components/header/header-left';
 import HeaderRight from '../components/header/header-right';
 
-import SummaryDetailScreen from '../screens/summarydetail-screen';
+import SummaryDetailScreen from '../screens/summary-detail-screen';
 import SummaryDetail from '../components/summary-detail';
 
 const TabIcon = ({name, isFocused}) => {

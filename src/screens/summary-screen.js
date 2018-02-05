@@ -6,9 +6,7 @@ import Summary from '../components/summary';
 export default class SummaryScreen extends Component {
   render() {
     return (
-      <View style={{flex: 1}}>
-        <Summary navigation={this.props.navigation} />
-      </View>
+      <Summary navigation={this.props.navigation} />
     );
   }
 
