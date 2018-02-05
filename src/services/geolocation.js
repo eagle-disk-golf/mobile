@@ -1,8 +1,10 @@
-// if physical device, set => gps location mode: battery saving
-const options = {enableHighAccuracy: true, timeout: 5000, maximumAge: 1000};
+import Geolocation from 'react-native-geolocation-service';
+import {isAndroid} from '../helpers/platform';
+// if physical android device, set => gps location mode: battery saving
+const options = {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000};
 
 const getCurrentPosition = _ => new Promise((resolve, reject) => {
-  navigator.geolocation.getCurrentPosition(
+  Geolocation.getCurrentPosition(
     (position) => {
       const flattened = {
         ...position.coords,

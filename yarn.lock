@@ -3946,6 +3946,10 @@ react-native-easy-grid@0.1.15, react-native-easy-grid@^0.1.15:
   dependencies:
     lodash "^4.11.1"
 
+react-native-geolocation-service@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-geolocation-service/-/react-native-geolocation-service-1.0.0.tgz#73eeeb81bed51a571fb165da7c1e90170629c9b2"
+
 react-native-icon@^0.2.10:
   version "0.2.10"
   resolved "https://registry.yarnpkg.com/react-native-icon/-/react-native-icon-0.2.10.tgz#9177e647ac05e22f3dbe20fa7ab4bb4a31363fb4"
