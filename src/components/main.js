@@ -7,7 +7,7 @@ import {globalStyles} from '../res/styles';
 // Other way to import components/variables/etc
 // import styles from '../res/styles'
 
-
+    
 export default class MainButton extends Component {
   render() {
   const resizeMode = 'stretch';
