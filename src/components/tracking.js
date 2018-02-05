@@ -2,7 +2,7 @@
  eslint max-len: 0
 */
 import React, {Component} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
+import {View, StyleSheet, Alert, PermissionsAndroid, Platform} from 'react-native';
 import {Text, Button, Toast, ActionSheet, Spinner} from 'native-base';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import Icon from './icon';
@@ -14,6 +14,14 @@ import {COLORS} from '../res/styles/constants';
 import firebase, {DB_NAMES} from '../services/firebase';
 import geolocation from '../services/geolocation';
 import {getAddressByCoordinates} from '../services/geocoding';
+import {isAndroid} from '../helpers/platform';
+
+
+// const requestLocationPermissionOnAndroid = new Promise((resolve, reject) => {
+
+// });
+
+
 
 import {LANE, COURSE} from '../constants/tracking';
 
@@ -64,6 +72,8 @@ export default class Tracking extends Component {
       faultyThrow: {show: false, penalty: 1},
       loading: false,
       initialized: false,
+      androidLocationPermission: false,
+      androidLocationPermissionRequested: false
     };
 
     this.handleTrackThrow = this.handleTrackThrow.bind(this);
@@ -74,6 +84,15 @@ export default class Tracking extends Component {
   }
 
   componentDidMount() {
+    const {androidLocationPermissionRequested, androidLocationPermission} = this.state;
+    // check if android has permission to read location
+    if (isAndroid && !androidLocationPermissionRequested && !androidLocationPermission) {
+      setTimeout(() => {
+        this.requestPermissionToReadLocation();
+      }, 1000);
+    }
+
+
     firebase.database().ref(DB_NAMES.courses).limitToLast(1).once('value').then(snapshot => {
       const value = snapshot.val() ? snapshot.val() : {};
       const latestCourse = Object.keys(value).map(key => { return {...value[key]}; })[0];
@@ -99,38 +118,64 @@ export default class Tracking extends Component {
         this.setState({initialized: true});
       }
     });
-    // TEST: this will send these params to the summary screen
-    // const setParamsAction = NavigationActions.setParams({
-    //   params: {lane: this.state.lane, round: this.state.round},
-    //   key: 'Summary',
-    // });
-    // const setParamsActionForParent = NavigationActions.setParams({
-    //   params: {lane: this.state.lane, round: this.state.round},
-    //   key: 'Test',
-    // });
-    // this.props.navigation.dispatch(setParamsAction);
-    // this.props.navigation.dispatch(setParamsActionForParent);
   }
 
-  showLoader() {
-    this.setState({loading: true});
-  }
-  hideLoader() {
-    this.setState({loading: false});
+  requestPermissionToReadLocation(callback = null) {
+    const self = this;
+    async function req() {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+            'title': 'Location permissions',
+            'message': 'EagleDiscGolf needs access to your location ' +
+              'in order to track your throws correctly'
+          }
+        );
+
+        let stateOptions = {};
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          stateOptions['androidLocationPermission'] = true;
+        } else {
+          stateOptions['androidLocationPermission'] = false;
+          self.displayError({message: 'Please allow EagleDiscGolf to use your location services'});
+        }
+
+        stateOptions['androidLocationPermissionRequested'] = true;
+        self.setState(stateOptions);
+      } catch (er) {
+        console.warn(er);
+      }
+    };
+
+    req().then(() => {
+      if (callback !== null) callback();
+    }).catch(er => this.displayError(er));
   }
 
-  displayError(error) {
-    Alert.alert(
-      'Whoops',
-      error.message,
-      [
-        {text: 'Okay'},
-        // {text: 'Cancel', onPress: () => console.log('cancel')}
-      ]);
-  }
+showLoader() {
+  this.setState({loading: true});
+}
+hideLoader() {
+  this.setState({loading: false});
+}
 
-  handleTrackThrow() {
-    const {isLaneActive} = this.state;
+displayError(error) {
+  Alert.alert(
+    'Whoops',
+    error.message,
+    [
+      {text: 'Okay'},
+    ]);
+}
+
+handleTrackThrow() {
+  const {isLaneActive, androidLocationPermission, androidLocationPermissionRequested} = this.state;
+    if (isAndroid && !androidLocationPermission && !androidLocationPermissionRequested) {
+      // request permission from user
+      // run this function again to
+      this.requestPermissionToReadLocation();
+      return;
+    }
 
     if (isLaneActive) {
       this.continueLane();
@@ -263,8 +308,7 @@ export default class Tracking extends Component {
         firebase.database().ref().update(updates);
         this.hideLoader();
       }).catch((error) => {
-        console.warn(error);
-        this.setState({error: error.message});
+        this.displayError(error);
         this.hideLoader();
       });
     } else {
