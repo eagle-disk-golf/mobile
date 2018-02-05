@@ -26,6 +26,7 @@ import HeaderRight from '../components/header/header-right';
 
 import SummaryDetailScreen from '../screens/summary-detail-screen';
 import SummaryDetail from '../components/summary-detail';
+import SummaryDetailLaneScreen from '../screens/summary-detail-lane-screen';
 
 const TabIcon = ({name, isFocused}) => {
   const iconColor = isFocused ? null : 'lightgray';
@@ -140,6 +141,10 @@ export const RootNavigator = StackNavigator({
   },
   SummaryDetail: {
     screen: SummaryDetailScreen,
+    ...RootNavigationOptions
+  },
+    SummaryDetailLane: {
+    screen: SummaryDetailLaneScreen,
     ...RootNavigationOptions
   }
 });

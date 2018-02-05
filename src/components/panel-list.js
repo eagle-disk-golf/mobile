@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, ScrollView, View, Text, Dimensions, Platform, findNodeHandle} from 'react-native';
+import {StyleSheet, ScrollView, View, Text, Dimensions, Platform, findNodeHandle, TouchableOpacity} from 'react-native';
 import {Spinner} from 'native-base';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Panel from './panel';
@@ -10,14 +10,18 @@ import {getDistanceInMetersBetweenCoordinates} from '../helpers/geolocation';
 const isAndroid = Platform.OS === 'android';
 
 const titleHeight = 60;
-const TitleComponent = ({item, index}) => {
+const TitleComponent = ({item, index, testi}) => {
   const score = item.par - item.throws.length;
-  return (<View style={[styles.titleContainer]}>
+  return (
+    <TouchableOpacity onPress={testi}>
+    <View style={[styles.titleContainer]}>
     <View style={[styles.titleItemContainer, styles.borderRight]}><Text>{index + 1}</Text></View>
     <View style={[styles.titleItemContainer, styles.borderRight]}><Text>{item.throws.length}</Text></View>
     <View style={[styles.titleItemContainer, styles.borderRight]}><Text>{item.par}</Text></View>
     <View style={styles.titleItemContainer}><Text>{score === 0 ? 'par' : score}</Text></View>
-  </View>);
+  </View>
+  </TouchableOpacity>
+  );
 };
 
 export default class PanelList extends Component {
@@ -69,7 +73,8 @@ export default class PanelList extends Component {
   }
 
   render() {
-    const {lanes} = this.props;
+    const {lanes, navigation} = this.props;
+    console.log(navigation, 'navigaiont');
     const isInitialized = lanes && (lanes.length > 0);
     console.log(isInitialized, 'isInitialized');
     return (
@@ -91,47 +96,7 @@ export default class PanelList extends Component {
           </View>
 
           {!isInitialized && <Spinner color="green" />}
-          {isInitialized && lanes && lanes.map((lane, index) => <View collapsable={false} onLayout={() => {}} ref={`scroll_list_panel_item_${index}`} key={index}>
-            <Panel
-              onItemSelected={(event) => this.scrollToPane(event, index)}
-              onItemDeSelect={(event) => null}
-              renderTitle={<TitleComponent index={index} item={lane} />}
-              titleHeight={60}
-              title="A Panel">
-              <View style={{flexDirection: 'column'}}>
-                <MapView
-                  ref={(ref) => { this.refs[`map_${index}`] = ref; }}
-                  onLayout={() => this.refs[`map_${index}`].fitToCoordinates(lane.throws, {edgePadding: {top: 50, right: 10, bottom: 10, left: 10}, animated: false})}
-                  style={{height: 200, width: '100%'}}
-                  provider={PROVIDER_GOOGLE}
-                  minZoomLevel={10}
-                  maxZoomLevel={20}
-                  region={{
-                    latitude: lane.startLocation.latitude,
-                    longitude: lane.startLocation.longitude,
-                    latitudeDelta: 1,
-                    longitudeDelta: 1,
-                  }}>
-                    {lane.throws.map((item, index) => (
-                      <Marker
-                        key={index}
-                        coordinate={{latitude: item.latitude, longitude: item.longitude}}
-                        title='title'
-                        description='kuvaus'
-                      />
-                  ))}
-
-                </MapView>
-                <View style={styles.resultsContainer}>
-                  {lane.throws.map((item, index) => (
-                    <Text key={index} style={styles.result}>
-                      {index + 1}. {getDistanceInMetersBetweenCoordinates(lane.startLocation, item)}m
-                      </Text>
-                  ))}
-
-                </View>
-              </View>
-            </Panel></View>)}
+          {isInitialized && lanes && lanes.map((lane, index) => <TitleComponent index={index} item={lane} testi={() => this.props.navigation.navigate('SummaryDetailLane', lane) } /> )}
         </View>
       </ScrollView>
     );
