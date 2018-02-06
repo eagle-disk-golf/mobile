@@ -23,44 +23,52 @@ export default class SummaryDetailLane extends Component {
     };
   }
 
+  zoomToMarkers() {
+    // if called fitToElements immediatly, the map wont zoom in for some reason
+    // this usually happens only on the first time map is opened
+    setTimeout(() => {
+      this.mapView.fitToElements(true);
+    }, 100);
+  }
+
   render() {
     console.log(this.props, 'props');
     const {loading} = this.state;
     const lane = this.props.navigation.state.params;
     return (
-              <View style={{flexDirection: 'column'}}>
-      <MapView
-                  ref={(ref) => { this.refs.mapView = ref; }}
-            //      onLayout={() => this.refs.mapView.fitToCoordinates(lane.throws, {edgePadding: {top: 50, right: 10, bottom: 10, left: 10}, animated: false})}
-                  style={{height: 200, width: '100%'}}
-                  provider={PROVIDER_GOOGLE}
-                  minZoomLevel={10}
-                  maxZoomLevel={20}
-                  region={{
-                    latitude: lane.startLocation.latitude,
-                    longitude: lane.startLocation.longitude,
-                    latitudeDelta: 1,
-                    longitudeDelta: 1,
-                  }}>
-                    {lane.throws.map((item, index) => (
-                      <Marker
-                        key={index}
-                        coordinate={{latitude: item.latitude, longitude: item.longitude}}
-                        title='title'
-                        description='kuvaus'
-                      />
-                  ))}
+      <View style={{flexDirection: 'column'}}>
+        <MapView
+          ref={(ref) => {this.mapView = ref;}}
+          onLayout={() => this.zoomToMarkers()}
+          style={{height: 200, width: '100%'}}
+          provider={PROVIDER_GOOGLE}
+          minZoomLevel={10}
+          maxZoomLevel={20}
+          region={{
+            latitude: lane.startLocation.latitude,
+            longitude: lane.startLocation.longitude,
+            latitudeDelta: 1,
+            longitudeDelta: 1,
+          }}>
+          {lane.throws.map((item, index) => (
+            <Marker
+              key={index}
+              coordinate={{latitude: item.latitude, longitude: item.longitude}}
+              title='title'
+              description='kuvaus'
+            />
+          ))}
 
-                </MapView>
-                <View style={styles.resultsContainer}>
-                  {lane.throws.map((item, index) => (
-                    <Text key={index} style={styles.result}>
-                      {index + 1}. {getDistanceInMetersBetweenCoordinates(lane.startLocation, item)}m
+        </MapView>
+        <View style={styles.resultsContainer}>
+          {lane.throws.map((item, index) => (
+            <Text key={index} style={styles.result}>
+              {index + 1}. {getDistanceInMetersBetweenCoordinates(lane.startLocation, item)}m
                       </Text>
-                  ))}
+          ))}
 
-                </View>
-              </View>
+        </View>
+      </View>
     );
   }
 }
