@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import SummaryDetail from '../components/summary-detail';
 import time from '../services/time';
+import {globalStyles} from '../res/styles/index';
 
 export default class SummaryDetailScreen extends Component {
   static navigationOptions = ({navigation}) => ({
@@ -10,7 +11,7 @@ export default class SummaryDetailScreen extends Component {
 
   render() {
     return (
-      <View>
+      <View style={[globalStyles.bgDefault, {flex: 1}]}>
         <SummaryDetail navigation={this.props.navigation} />
       </View>
     );

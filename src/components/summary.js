@@ -18,7 +18,7 @@ import firebase, {DB_NAMES} from '../services/firebase';
 import time from '../services/time';
 
 const CustomListItem = ({item, index, navigation}) => {
-  return <ListItem key={index} onPress={() => navigation.navigate('SummaryDetail', item)}>
+  return <ListItem style={globalStyles.bgDefault} key={index} onPress={() => navigation.navigate('SummaryDetail', item)}>
     <Body>
       <Text>{item && item.startLocation && item.startLocation.timestamp ? time.getFormattedDate(item.startLocation.timestamp) : ''}</Text>
       <Text note>{item && item.address && item.address.formatted_address}</Text>
@@ -97,7 +97,6 @@ export default class Summary extends Component {
         <Text style={[globalStyles.h3, globalStyles.centerHorizontal, styles.header]}>Latest games</Text>
 
         <InfiniteListView
-          style={styles.list}
           data={dataset}
           renderRow={(item, _, index) => <CustomListItem index={index} item={item} navigation={this.props.navigation} />}
           canLoad={this.canLoad()}
