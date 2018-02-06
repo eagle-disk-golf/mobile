@@ -16,14 +16,16 @@ import {toArray} from '../helpers/data';
 
 const titleHeight = 60;
 const TitleComponent = ({item, index, testi}) => {
-  const score = item.par - item.throws.length;
+  const score = item.throws.length - item.par;
+  const scoreWithSign = score < 0 ? score.toString() : `+${score}`;
+
   return (
     <TouchableOpacity onPress={testi}>
     <View style={[styles.titleContainer]}>
     <View style={[styles.titleItemContainer, styles.borderRight]}><Text>{index + 1}</Text></View>
     <View style={[styles.titleItemContainer, styles.borderRight]}><Text>{item.throws.length}</Text></View>
     <View style={[styles.titleItemContainer, styles.borderRight]}><Text>{item.par}</Text></View>
-    <View style={styles.titleItemContainer}><Text>{score === 0 ? 'par' : score}</Text></View>
+    <View style={styles.titleItemContainer}><Text>{score === 0 ? 'par' : scoreWithSign}</Text></View>
   </View>
   </TouchableOpacity>
   );

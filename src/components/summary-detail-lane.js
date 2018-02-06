@@ -40,7 +40,7 @@ export default class SummaryDetailLane extends Component {
         <MapView
           ref={(ref) => {this.mapView = ref;}}
           onLayout={() => this.zoomToMarkers()}
-          style={{height: 200, width: '100%'}}
+          style={{height: 300, width: '100%'}}
           provider={PROVIDER_GOOGLE}
           minZoomLevel={10}
           maxZoomLevel={20}
