@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import SummaryDetail from '../components/summary-detail';
 import time from '../services/time';
 import {globalStyles} from '../res/styles/index';
+import {COLORS} from '../res/styles/constants';
 
 export default class SummaryDetailScreen extends Component {
   static navigationOptions = ({navigation}) => ({

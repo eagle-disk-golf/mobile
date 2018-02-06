@@ -27,6 +27,7 @@ import HeaderRight from '../components/header/header-right';
 import SummaryDetailScreen from '../screens/summary-detail-screen';
 import SummaryDetail from '../components/summary-detail';
 import SummaryDetailLaneScreen from '../screens/summary-detail-lane-screen';
+import {isIos} from '../helpers/platform';
 
 const TabIcon = ({name, isFocused}) => {
   const iconColor = isFocused ? null : 'lightgray';
@@ -80,7 +81,6 @@ const MainTabNavigator = TabNavigator({
     screen: SummaryScreen,
     navigationOptions: {
       tabBarIcon: ({focused}) => <TabIcon isFocused={focused} name="ios-analytics" />,
-      showTabBar: false
     }
   },
 }, {
@@ -102,7 +102,7 @@ class MainNavigationScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return {
       headerLeft: <HeaderLeft navigation={navigation} />,
-      headerRight: <HeaderRight navigation={navigation} />
+      // headerRight: <HeaderRight navigation={navigation} />
     };
   }
   render() {
@@ -117,34 +117,41 @@ class MainNavigationScreen extends Component {
 MainNavigationScreen.router = MainTabNavigator.router;
 
 // higher header on ios
-const getHeaderHeight = () => Platform.OS === 'ios' ? 90 : 85;
-const RootNavigationOptions = {
-  navigationOptions: {
-    headerStyle: {
-      backgroundColor: COLORS.primary,
-      borderBottomColor: 'transparent',
-      height: getHeaderHeight(),
-      paddingLeft: 20,
-      paddingRight: 20,
-    },
-  }
+const getHeaderHeight = () => isIos ? 100 : 85;
+const defaultNavigationOptions = {
+  headerStyle: {
+    backgroundColor: COLORS.primary,
+    borderBottomColor: 'transparent',
+    height: getHeaderHeight(),
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  headerTintColor: COLORS.textPrimary
 };
 
 export const RootNavigator = StackNavigator({
   MainNavigation: {
     screen: MainNavigationScreen,
-    ...RootNavigationOptions
+    navigationOptions: {
+      ...defaultNavigationOptions
+    }
   },
   Test: {
     screen: TestScreen,
-    ...RootNavigationOptions
+    navigationOptions: {
+      ...defaultNavigationOptions
+    }
   },
   SummaryDetail: {
     screen: SummaryDetailScreen,
-    ...RootNavigationOptions
+    navigationOptions: {
+      ...defaultNavigationOptions
+    }
   },
     SummaryDetailLane: {
     screen: SummaryDetailLaneScreen,
-    ...RootNavigationOptions
+    navigationOptions: {
+      ...defaultNavigationOptions
+    }
   }
 });
