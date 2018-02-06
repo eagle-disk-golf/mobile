@@ -18,7 +18,6 @@ import {getDistanceInMetersBetweenCoordinates} from '../helpers/geolocation';
 const itemHasError = item => !!item.isLost || !!item.isMando || !!item.isOverbound;
 
 const CustomMarker = ({index, item, throws}) => {
-
   const MARKER_COLORS = {
     first: COLORS.primary,
     normal: COLORS.primaryLighter,
@@ -26,7 +25,7 @@ const CustomMarker = ({index, item, throws}) => {
     last: COLORS.success
   };
 
-  const MARKER_DESCRIPTIONS = {
+  const DESCRIPTIONS = {
     isMando: 'Your throw was mando',
     isLost: 'Your throw was lost',
     isOverbound: 'Your throw was overbounds',
@@ -34,36 +33,17 @@ const CustomMarker = ({index, item, throws}) => {
     isLast: 'Last throw, score!'
   };
 
-  // const hasError = !!item['isLost'] || !!item['isOverbound'] || !!item['isMando'];
   const error = item.isLost ? 'isLost' : item.isOverbound ? 'isOverbound' : item.isMando ? 'isMando' : null;
   const isFirst = index === 0;
   const isLast = index === (throws.length - 1);
-  const markerStyle = error ? 'error' : (isFirst ? 'first' : (isLast ? 'last' : 'normal'));
+  const markerStyle = error ? error : (isFirst ? 'first' : (isLast ? 'last' : 'normal'));
 
-  // const GreenZone = () => <Image style={{height: 30, width: 30}} source={require('../res/images/greenzone.png')} />;
-  // const Basket = _ => <Image style={{height: 30, width: 30}} source={require('../res/images/basket.png')} />;
-  // const ImageMarker = isFirst ? <GreenZone /> : isLast ? <Basket /> : null;
-
-  // if (isFirst || isLast) {
-  //   return (
-  //     <Marker
-  //       key={index}
-  //       pinColor={MARKER_COLORS[markerStyle]}
-  //       coordinate={{latitude: item.latitude, longitude: item.longitude}}
-  //       title={`Throw: ${index + 1}`}
-  //       description='kuvaus'>
-  //       <View>
-  //         {ImageMarker}
-  //       </View>
-  //     </Marker>
-  //   );
-  // }
   return (
     <Marker
       pinColor={MARKER_COLORS[markerStyle]}
       coordinate={{latitude: item.latitude, longitude: item.longitude}}
       title={`Throw: ${index + 1}`}
-      description={MARKER_DESCRIPTIONS[markerStyle]} />
+      description={DESCRIPTIONS[markerStyle]} />
   );
 };
 
