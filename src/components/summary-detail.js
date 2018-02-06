@@ -55,8 +55,7 @@ export default class SummaryDetail extends Component {
 
     firebase.database().ref(DB_NAMES.lanes).orderByChild('courseId').equalTo(course.courseId).once('value').then(snapshot => {
       const data = toArray(snapshot.val());
-      this.setState({lanes: data});
-      console.log(data, 'res data');
+      this.setState({lanes: data.reverse()});
       this.hideLoader();
     });
   }
@@ -110,14 +109,14 @@ const styles = StyleSheet.create({
     borderLeftWidth: borderWidth,
     borderBottomWidth: borderWidth,
     borderRightWidth: borderWidth,
-    borderColor: COLORS.textDark
+    borderColor: COLORS.textPrimary
   },
   border: {
-    borderColor: COLORS.default,
+    borderColor: COLORS.white,
     borderWidth: borderWidth
   },
   borderRight: {
-    borderRightColor: COLORS.textDark,
+    borderRightColor: COLORS.textPrimary,
     borderRightWidth: 0.5
   },
   titleItemContainer: {

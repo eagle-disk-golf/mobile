@@ -4,19 +4,19 @@ import {COLORS, MARGINS} from './constants';
 // text styling
 const text = StyleSheet.create({
   textDefault: {
-    color: COLORS.default
+    color: COLORS.white
   },
   textPrimary: {
-    color: COLORS.textDark
+    color: COLORS.textPrimary
   },
   textSuccess: {
-    color: COLORS.success
+    color: COLORS.accent
   },
   textInfo: {
     // color: COLORS.info
   },
   textWarning: {
-    color: COLORS.warning
+    color: COLORS.alert
   },
   textDanger: {
     // color: COLORS.warning
@@ -38,19 +38,19 @@ const text = StyleSheet.create({
 // background
 const background = StyleSheet.create({
   bgDefault: {
-    backgroundColor: COLORS.default
+    backgroundColor: COLORS.white
   },
   bgPrimary: {
     backgroundColor: COLORS.primary
   },
   bgSuccess: {
-    backgroundColor: COLORS.success
+    backgroundColor: COLORS.accent
   },
   bgInfo: {
     // backgroundColor: COLORS.info
   },
   bgWarning: {
-    backgroundColor: COLORS.warning
+    backgroundColor: COLORS.alert
   },
   bgDanger: {
     // backgroundColor: COLORS.warning

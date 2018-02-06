@@ -1,10 +1,17 @@
 // TODO: define color palette
 export const COLORS = {
-  default: '#F8FDFF',
+  white: '#F8FDFF',
   primary: '#43A6B5',
-  success: '#7F1B4B',
-  textDark: '#003337',
-  warning: '#FCB922'
+  primaryLighter: '#D4F1F0',
+
+  accent: '#7F1B4B',
+  textPrimary: '#003337',
+
+  alert: '#FCB922',
+  danger: '#A61919',
+  success: '#0E8C5A',
+  disabled: '#7B8081',
+
 };
 
 export const MARGINS = {
@@ -13,3 +20,4 @@ export const MARGINS = {
   marginMd: 30,
   marginLg: 40
 };
+
