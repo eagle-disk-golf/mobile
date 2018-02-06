@@ -290,7 +290,7 @@ handleTrackThrow() {
         const completedLane = {
           ...currentLane,
           // add location to array
-          throws: [...currentLane.throws, geolocation],
+          throws: [...currentLane.throws],
           totalThrows: currentLane.totalThrows + 1,
           endLocation: geolocation,
           isActive: false,
