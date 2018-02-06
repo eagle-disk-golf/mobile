@@ -84,7 +84,7 @@ export default class SummaryDetail extends Component {
           </View>
 
           {loading && <Spinner color="green" />}
-          {!loading && lanes && lanes.map((lane, index) => <TitleComponent key={index} index={index} item={lane} testi={() => this.props.navigation.navigate('SummaryDetailLane', lane) } /> )}
+          {!loading && lanes && lanes.map((lane, index) => <TitleComponent key={index} index={index} item={lane} testi={() => this.props.navigation.navigate('SummaryDetailLane', {lane, index}) } /> )}
         </View>
       </ScrollView>
       </View>

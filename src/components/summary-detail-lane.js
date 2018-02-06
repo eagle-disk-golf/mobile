@@ -86,7 +86,7 @@ export default class SummaryDetailLane extends Component {
   render() {
     console.log(this.props, 'props');
     const {loading} = this.state;
-    const lane = this.props.navigation.state.params;
+    const {lane} = this.props.navigation.state.params;
 
     return (
       <View style={{flexDirection: 'column'}}>

@@ -5,9 +5,10 @@ import time from '../services/time';
 
 export default class SummaryDetailLaneScreen extends Component {
   static navigationOptions = ({navigation}) => {
-    console.log(navigation, 'navigation');
+    console.log(navigation.state, 'navigation');
+    const {index} = navigation.state.params;
     return {
-      title: 'testiii'
+      title: `Lane: ${index + 1}`
     };
   };
 
