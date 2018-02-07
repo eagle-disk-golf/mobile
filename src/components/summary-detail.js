@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   penalty: {
     position: 'absolute',
-    top: 21.5,
+    top: 20,
     right: 15,
     color: COLORS.danger
   },
