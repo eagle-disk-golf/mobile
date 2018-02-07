@@ -9,7 +9,7 @@
 */
 
 import React, {Component} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Alert} from 'react-native';
 import {Text, ListItem, Body, Right} from 'native-base';
 import Icon from './icon';
 import InfiniteListView from './infinite-list-view';
@@ -18,8 +18,8 @@ import firebase, {DB_NAMES} from '../services/firebase';
 import time from '../services/time';
 import {toArray, reverseArray} from '../helpers/data';
 
-const CustomListItem = ({item, index, navigation}) => {
-  return <ListItem style={globalStyles.bgDefault} key={index} onPress={() => navigation.navigate('SummaryDetail', item)}>
+const CustomListItem = ({item, index, onPress, onLongPress}) => {
+  return <ListItem style={globalStyles.bgDefault} key={index} onPress={onPress} onLongPress={onLongPress}>
     <Body>
       <Text>{item && item.startLocation && item.startLocation.timestamp ? time.getFormattedDate(item.startLocation.timestamp) : ''}</Text>
       <Text note>{item && item.address && item.address.formatted_address}</Text>
@@ -111,9 +111,34 @@ export default class Summary extends Component {
     this.fetchGames();
   }
 
+  confirmDelete(item) {
+    Alert.alert(
+      'Delete game',
+      'Are you sure you want to delete the selected game?',
+      [
+        {text: 'Yes, end round', onPress: () => this.deleteItem(item)},
+        {text: 'Cancel'}
+      ]);
+  }
+
+  deleteItem(item) {
+    console.log(item, 'item to delte');
+    const {dataset} = this.state;
+
+    this.setState({refreshing: true});
+    firebase.database().ref(DB_NAMES.courses + item.courseId).remove().then(res => {
+      const filteredState = dataset.filter((val) => val.courseId !== item.courseId);
+      this.setState({refreshing: false, dataset: filteredState});
+      console.log(res, 'deleted');
+    }).catch(er => {
+      console.warn(er);
+    });
+  }
+
 
   render() {
     const {loading, dataset, refreshing} = this.state;
+    const {navigation} = this.props;
 
     return (
       <View style={styles.container}>
@@ -121,7 +146,8 @@ export default class Summary extends Component {
 
         <InfiniteListView
           data={dataset}
-          renderRow={({item, index}) => <CustomListItem index={index} item={item} navigation={this.props.navigation} />}
+          renderRow={({item, index}) => <CustomListItem index={index} item={item} onPress={() => navigation.navigate('SummaryDetail', item)} onLongPress={() => this.confirmDelete(item)} />}
+          w
           canLoad={this.canLoad()}
           isLoading={loading}
           onLoad={this.fetchGames}

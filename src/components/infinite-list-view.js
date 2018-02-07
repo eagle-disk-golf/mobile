@@ -38,7 +38,7 @@ export default class InfiniteListView extends Component {
         renderItem={this.props.renderRow}
         onEndReached={this.onEndReached}
         refreshing={this.props.refreshing}
-        onEndReachedThreshold={0.3}
+        onEndReachedThreshold={0.2}
         ListFooterComponent={() => this.renderLoader()}
       />
     );
