@@ -1,28 +1,17 @@
 import React, {Component} from 'react';
-import {ListView, ActivityIndicator} from 'react-native';
+import {ListView, FlatList, ActivityIndicator} from 'react-native';
 
 export default class InfiniteListView extends Component {
 
   static defaultProps = {
     canLoad: false,
-    isLoading: false
+    isLoading: false,
+    refreshing: false
   };
 
   constructor(props) {
     super(props);
-    this.createDataSource(props);
     this.onEndReached = this.onEndReached.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.createDataSource(nextProps);
-  }
-
-  createDataSource({data}) {
-    const ds = new ListView.DataSource({
-      rowHasChanged: (r1, r2) => r1 !== r2
-    });
-    this.dataSource = ds.cloneWithRows(data);
   }
 
   onEndReached() {
@@ -37,18 +26,20 @@ export default class InfiniteListView extends Component {
         <ActivityIndicator style={{padding: 20, justifyContent: 'center'}} animating={true} size='small' />
       );
     }
+    return null;
   };
 
   render() {
     return (
-      <ListView
+      <FlatList
         {...this.props}
-        enableEmptySections
-        dataSource={this.dataSource}
-        renderRow={this.props.renderRow}
+        onRefresh={this.props.onRefresh}
+        data={this.props.data}
+        renderItem={this.props.renderRow}
         onEndReached={this.onEndReached}
-        onEndReachedThreshold={0.5}
-        renderFooter = { () => this.renderLoader()}
+        refreshing={this.props.refreshing}
+        onEndReachedThreshold={0.3}
+        ListFooterComponent={() => this.renderLoader()}
       />
     );
   }

@@ -7,7 +7,7 @@ import {COLORS} from '../res/styles/constants';
 
 export default class SummaryDetailScreen extends Component {
   static navigationOptions = ({navigation}) => ({
-    title: `${time.getFormattedDate(navigation.state.params.startLocation.timestamp)} ${navigation.state.params.address.formatted_address}`,
+    title: `${time.getFormattedDate(navigation.state.params.startLocation.timestamp)} ${navigation.state.params.address ? navigation.state.params.address.formatted_address : 'Unnamed game'}`,
   });
 
   render() {
