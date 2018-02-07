@@ -77,7 +77,8 @@ export default class Summary extends Component {
           canLoadMore, page: page + 1, offset: offset + itemsPerPage,
           fetching: false,
           initialized: true,
-          lastCourseId: latestGames[0].courseId
+          lastCourseId: latestGames[0].courseId,
+          previousDatasetLength: latestGames.length
         });
         this.hideLoader();
       });
