@@ -1,4 +1,4 @@
-/*
+﻿/*
   KIDE
   File created: 23.10.2017
   Made by: Riku
@@ -6,6 +6,7 @@
   23.11.2017 Topi: List and ListItem added
   30.11.2017 Topi: Styling
   12.12.2017 Riku: Use custom icon component
+  12.02.2018 Topi: Added clock timestamp to listed items
 */
 
 import React, {Component} from 'react';
@@ -18,10 +19,12 @@ import firebase, {DB_NAMES} from '../services/firebase';
 import time from '../services/time';
 import {toArray, reverseArray} from '../helpers/data';
 
-const CustomListItem = ({item, index, onPress, onLongPress}) => {
+const CustomListItem = ({ item, index, onPress, onLongPress }) => {
+    const timeStamp = item && item.startLocation ? item.startLocation.timestamp : null;
+
   return <ListItem style={globalStyles.bgDefault} key={index} onPress={onPress} onLongPress={onLongPress}>
-    <Body>
-      <Text>{item && item.startLocation && item.startLocation.timestamp ? time.getFormattedDate(item.startLocation.timestamp) : ''}</Text>
+      <Body>
+          <Text>{timeStamp ? `${time.getFormattedDate(timeStamp)} ${time.getFormattedTime(timeStamp)}` : ''}</Text>
       <Text note>{item && item.address && item.address.formatted_address}</Text>
     </Body>
     <Right>
@@ -93,7 +96,6 @@ export default class Summary extends Component {
     }
   }
 
-
   refreshGames() {
     const {loading} = this.state;
 
@@ -106,7 +108,6 @@ export default class Summary extends Component {
     }
   }
 
-
   componentDidMount() {
     this.fetchGames();
   }
@@ -116,7 +117,7 @@ export default class Summary extends Component {
       'Delete game',
       'Are you sure you want to delete the selected game?',
       [
-        {text: 'Yes, end round', onPress: () => this.deleteItem(item)},
+        {text: 'Yes, delete the game', onPress: () => this.deleteItem(item)},
         {text: 'Cancel'}
       ]);
   }

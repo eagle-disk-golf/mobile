@@ -1,4 +1,4 @@
-const getDurationBetweenDates = (start, finish) => {
+﻿const getDurationBetweenDates = (start, finish) => {
   // Calculate the difference in milliseconds
   const difference = start - finish;
   //take out milliseconds
@@ -21,7 +21,14 @@ const getFormattedDate = (timestamp) => {
   return localeDateString;
 };
 
+const getFormattedTime = (timestamp) => {
+    const date = new Date(timestamp);
+    const timeString = date.getHours() + ":" + date.getMinutes();
+    return timeString;
+};
+
 export default {
   getDurationBetweenDates,
-  getFormattedDate
+  getFormattedDate,
+  getFormattedTime
 };

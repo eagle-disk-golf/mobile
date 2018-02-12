@@ -1,4 +1,4 @@
-/*
+﻿/*
   KIDE
   File created: 5.2.2018
   Made by: Jenni
@@ -13,7 +13,6 @@ import {COLORS} from '../res/styles/constants';
 import firebase, {DB_NAMES} from '../services/firebase';
 import {toArray} from '../helpers/data';
 import {getDistanceInMetersBetweenCoordinates} from '../helpers/geolocation';
-
 
 const itemHasError = item => !!item.isLost || !!item.isMando || !!item.isOverbound;
 
