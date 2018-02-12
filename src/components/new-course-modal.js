@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import {Text, View, Button, Modal, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import {Form, Item, Input} from 'native-base';
 import {COLORS} from '../res/styles/constants';
@@ -18,9 +18,9 @@ export default class NewCourseModal extends Component {
   }
 
   componentDidMount() {
-    const {visible} = this.props;
+      const { visible } = this.props;
 
-    if (visible) this.openModal();
+      if (visible) this.openModal();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,7 +32,6 @@ export default class NewCourseModal extends Component {
       this.closeModal();
     }
   }
-
 
   openModal() {
     this.setState({modalVisible: true});

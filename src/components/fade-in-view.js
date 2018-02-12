@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import {Animated} from 'react-native';
 import {stylesToArray} from '../helpers/components';
 
@@ -47,7 +47,6 @@ export default class FadeInView extends Component {
       }
     ).start();
   }
-
 
   render() {
     const {opacity} = this.state;

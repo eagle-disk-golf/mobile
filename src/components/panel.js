@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import {StyleSheet, Text, View, Image, TouchableHighlight, Animated} from 'react-native'; //Step 1
 
 class Panel extends Component {
@@ -91,7 +91,6 @@ class Panel extends Component {
     const {animation, expanded, shouldPanelOpen, canRenderChildren} = this.state;
     const {renderTitle, renderContent} = this.props;
     // let icon = this.icons['down'];
-
     // if (this.state.expanded) {
     //   icon = this.icons['up'];   //Step 4
     // }
@@ -141,7 +140,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   button: {
-
 
   },
   buttonImage: {

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import {StyleSheet, ScrollView, View, Text, Dimensions, Platform, findNodeHandle, TouchableOpacity} from 'react-native';
 import {Spinner} from 'native-base';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
@@ -27,7 +27,6 @@ const TitleComponent = ({item, index, testi}) => {
 export default class PanelList extends Component {
   scrollToPane(event, index) {
     const window = Dimensions.get('window');
-
     const scrollList = this.refs.scrollList;
     const scrollListContainer = this.refs.scrollListContainer;
     const panel = this.refs[`scroll_list_panel_item_${index}`];
@@ -102,7 +101,6 @@ export default class PanelList extends Component {
     );
   }
 }
-
 
 const borderWidth = 0.5;
 /* eslint object-shorthand: 0 */

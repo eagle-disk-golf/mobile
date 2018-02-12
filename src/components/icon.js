@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import {StyleSheet, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {stylesToArray} from '../helpers/components';
@@ -12,7 +12,6 @@ export default class CustomIcon extends Component {
     );
   }
 }
-
 
 const styleHelper = StyleSheet.create({
   icon: {
