@@ -1,4 +1,4 @@
-/*
+﻿/*
   KIDE
   File created: 23.10.2017
   Made by: Riku
@@ -93,7 +93,6 @@ export default class Summary extends Component {
     }
   }
 
-
   refreshGames() {
     const {loading} = this.state;
 
@@ -106,7 +105,6 @@ export default class Summary extends Component {
     }
   }
 
-
   componentDidMount() {
     this.fetchGames();
   }
@@ -116,7 +114,7 @@ export default class Summary extends Component {
       'Delete game',
       'Are you sure you want to delete the selected game?',
       [
-        {text: 'Yes, end round', onPress: () => this.deleteItem(item)},
+        {text: 'Yes, end the round', onPress: () => this.deleteItem(item)},
         {text: 'Cancel'}
       ]);
   }

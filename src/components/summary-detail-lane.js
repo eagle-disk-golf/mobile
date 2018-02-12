@@ -1,4 +1,4 @@
-/*
+﻿/*
   KIDE
   File created: 5.2.2018
   Made by: Jenni
@@ -13,7 +13,6 @@ import {COLORS} from '../res/styles/constants';
 import firebase, {DB_NAMES} from '../services/firebase';
 import {toArray} from '../helpers/data';
 import {getDistanceInMetersBetweenCoordinates} from '../helpers/geolocation';
-
 
 const itemHasError = item => !!item.isLost || !!item.isMando || !!item.isOverbound;
 
@@ -56,8 +55,8 @@ export default class SummaryDetailLane extends Component {
   }
 
   zoomToMarkers() {
-    // if called fitToElements immediatly, the map wont zoom in for some reason
-    // this usually happens only on the first time map is opened
+    // if called fitToElements immediately, the map wont zoom in for some reason
+    // this usually happens only on the first time the map is opened
     setTimeout(() => {
       this.mapView.fitToElements(true);
     }, 100);
@@ -109,10 +108,7 @@ export default class SummaryDetailLane extends Component {
     );
   }
 }
-
-
 const styles = StyleSheet.create({
-
   resultsContainer: {
     padding: 20,
     flexDirection: 'row',
