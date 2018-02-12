@@ -71,7 +71,7 @@ export default class Tracking extends Component {
       error: null,
       faultyThrow: {show: false, penalty: 1},
       loading: false,
-      initialized: false,
+      initialized: true,
       androidLocationPermission: false,
       androidLocationPermissionRequested: false
     };
@@ -93,31 +93,34 @@ export default class Tracking extends Component {
     }
 
 
-    firebase.database().ref(DB_NAMES.courses).limitToLast(1).once('value').then(snapshot => {
-      const value = snapshot.val() ? snapshot.val() : {};
-      const latestCourse = Object.keys(value).map(key => { return {...value[key]}; })[0];
+    // THis was used the fetch the latest game from firebase and check if the previous game was
+    // completed. Because we don't actually have users in the database everyone will be playing the same game
 
-      // get the last played lane
-      const lanesById = latestCourse && latestCourse.lanes ? Object.keys(latestCourse.lanes).map(key => key) : [];
-      const lastLaneId = lanesById[lanesById.length - 1];
+    // firebase.database().ref(DB_NAMES.courses).limitToLast(1).once('value').then(snapshot => {
+    //   const value = snapshot.val() ? snapshot.val() : {};
+    //   const latestCourse = Object.keys(value).map(key => { return {...value[key]}; })[0];
 
-      if (latestCourse && !latestCourse.completed) {
-        // latest course has not been completed, fetch latest lane to check if was completed
-        // this.setState({course: latestCourse, isCourseActive: true});
-        const courseToState = {course: latestCourse, isCourseActive: true};
+    //   // get the last played lane
+    //   const lanesById = latestCourse && latestCourse.lanes ? Object.keys(latestCourse.lanes).map(key => key) : [];
+    //   const lastLaneId = lanesById[lanesById.length - 1];
 
-        firebase.database().ref(DB_NAMES.lanes + lastLaneId).once('value').then(snapshot => {
-          const latestLane = snapshot.val() ? snapshot.val() : {};
+    //   if (latestCourse && !latestCourse.completed) {
+    //     // latest course has not been completed, fetch latest lane to check if was completed
+    //     // this.setState({course: latestCourse, isCourseActive: true});
+    //     const courseToState = {course: latestCourse, isCourseActive: true};
 
-          let laneToState = latestCourse && !latestLane.completed ? {lane: latestLane, isLaneActive: true} : {};
+    //     firebase.database().ref(DB_NAMES.lanes + lastLaneId).once('value').then(snapshot => {
+    //       const latestLane = snapshot.val() ? snapshot.val() : {};
 
-          this.setState({...courseToState, ...laneToState, initialized: true});
-        });
-      } else {
-        // latest course was completed successfully
-        this.setState({initialized: true});
-      }
-    });
+    //       let laneToState = latestCourse && !latestLane.completed ? {lane: latestLane, isLaneActive: true} : {};
+
+    //       this.setState({...courseToState, ...laneToState, initialized: true});
+    //     });
+    //   } else {
+    //     // latest course was completed successfully
+    //     this.setState({initialized: true});
+    //   }
+    // });
   }
 
   requestPermissionToReadLocation(callback = null) {
