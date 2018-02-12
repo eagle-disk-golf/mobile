@@ -12,7 +12,7 @@ import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
 import firebase, {DB_NAMES} from '../services/firebase';
 import {toArray} from '../helpers/data';
-import {getDistanceInMetersBetweenCoordinates} from '../helpers/geolocation';
+import { getDistanceInMetersBetweenCoordinates } from '../helpers/geolocation';
 
 const itemHasError = item => !!item.isLost || !!item.isMando || !!item.isOverbound;
 
@@ -66,8 +66,8 @@ export default class SummaryDetailLane extends Component {
   render() {
     console.log(this.props, 'props');
     const {loading} = this.state;
-    const {lane} = this.props.navigation.state.params;
-    const laneMarkers = [...lane.throws, lane.endLocation];
+    const { lane, index } = this.props.navigation.state.params;
+    const laneMarkers = [...lane.throws, lane.endLocation];   
 
     return (
       <View style={{flexDirection: 'column'}}>
@@ -109,20 +109,22 @@ export default class SummaryDetailLane extends Component {
               );
             }
           })}
+
           <View style={styles.information}>
-                    <Text>Lane:</Text>
-                    <Text>Total throws:</Text>
-                    <Text>Par:</Text>
-                    <Text>Score:</Text>
-                    <Text>Distance covered:</Text>
-                    <Text>Total time:</Text>
+                    <Text>Lane: {index + 1}</Text>
+                    <Text>Total throws: {lane.totalThrows}</Text>
+                    <Text>Par: {lane.par}</Text>
+                    <Text>Score: {lane.totalThrows - lane.par}</Text>
+                    <Text>Distance covered:
+                        TEE
+                        </Text>
+                    <Text>Total time: TEE</Text>
           </View>
         </View>
       </View>
     );
   }
 }
-
 
 const styles = StyleSheet.create({
     resultsContainer: {
