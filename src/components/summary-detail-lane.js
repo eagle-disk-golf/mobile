@@ -109,7 +109,14 @@ export default class SummaryDetailLane extends Component {
               );
             }
           })}
-
+          <View style={styles.information}>
+                    <Text>Lane:</Text>
+                    <Text>Total throws:</Text>
+                    <Text>Par:</Text>
+                    <Text>Score:</Text>
+                    <Text>Distance covered:</Text>
+                    <Text>Total time:</Text>
+          </View>
         </View>
       </View>
     );
@@ -118,15 +125,18 @@ export default class SummaryDetailLane extends Component {
 
 
 const styles = StyleSheet.create({
-
-  resultsContainer: {
-    padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap'
-  },
-  result: {
-      width: '100%',
-      paddingTop: 5
-  }
+    resultsContainer: {
+        padding: 20,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        flexWrap: 'wrap'
+    },
+    result: {
+        width: '100%',
+        paddingTop: 5
+    },
+    information: {
+        width: '100%',
+        paddingTop: 5
+    }
 });
