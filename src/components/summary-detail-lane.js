@@ -104,7 +104,7 @@ export default class SummaryDetailLane extends Component {
             if (nextItem) {
               return (
               <Text key={index} style={styles.result}>
-                {index + 1}. {getDistanceInMetersBetweenCoordinates(item, nextItem)} m
+                      {index + 1}. {getDistanceInMetersBetweenCoordinates(item, nextItem)} m
               </Text>
               );
             }
@@ -126,8 +126,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap'
   },
   result: {
-    width: '33%',
-    paddingTop: 20,
-    paddingBottom: 20
+      width: '100%',
+      paddingTop: 5
   }
 });
