@@ -5,14 +5,11 @@
   History:
 */
 
-import React, {Component, Fragment} from 'react';
-import {View, StyleSheet, Text, Image} from 'react-native';
+import React, {Component} from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 import Color from 'color';
 import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle} from 'react-native-maps';
-import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
-import firebase, {DB_NAMES} from '../services/firebase';
-import {toArray} from '../helpers/data';
 import {getDistanceInMetersBetweenCoordinates, createSquareInMetersFromCoordinate} from '../helpers/geolocation';
 
 
