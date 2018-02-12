@@ -104,7 +104,7 @@ export default class SummaryDetailLane extends Component {
             if (nextItem) {
               return (
               <Text key={index} style={styles.result}>
-                {index + 1}. {getDistanceInMetersBetweenCoordinates(item, nextItem)}m
+                {index + 1}. {getDistanceInMetersBetweenCoordinates(item, nextItem)} m
               </Text>
               );
             }
