@@ -7,43 +7,70 @@
 
 import React, {Component, Fragment} from 'react';
 import {View, StyleSheet, Text, Image} from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Marker, Polyline} from 'react-native-maps';
+import Color from 'color';
+import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle} from 'react-native-maps';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
 import firebase, {DB_NAMES} from '../services/firebase';
 import {toArray} from '../helpers/data';
-import { getDistanceInMetersBetweenCoordinates } from '../helpers/geolocation';
+import {getDistanceInMetersBetweenCoordinates, createSquareInMetersFromCoordinate} from '../helpers/geolocation';
+
 
 const itemHasError = item => !!item.isLost || !!item.isMando || !!item.isOverbound;
 
-const CustomMarker = ({index, item, throws}) => {
-  const MARKER_COLORS = {
-    first: COLORS.primary,
-    normal: COLORS.primaryLighter,
-    error: COLORS.danger,
-    last: COLORS.success
-  };
+const MARKERS = {
+  isMando: index => ({
+    color: COLORS.danger,
+    description: 'Your throw was mando!',
+    title: `Throw: ${index + 1}`
+  }),
+  isLost: index => ({
+    color: COLORS.danger,
+    description: 'You lost your disc!',
+    title: `Throw: ${index + 1}`
+  }),
+  isOverbound: index => ({
+    color: COLORS.danger,
+    description: 'Your throw went overbounds!',
+    title: `Throw ${index + 1}`
+  }),
+  isFirst: index => ({
+    color: COLORS.primary,
+    description: 'First throw',
+    title: `Throw: ${index + 1}`
+  }),
+  isLast: index => ({
+    color: COLORS.success,
+    description: 'You scored!',
+    title: 'Basket'
+  }),
+  normal: index => ({
+    color: COLORS.primaryLighter,
+    description: '',
+    title: `Throw: ${index + 1}`
+  })
+};
 
-  const DESCRIPTIONS = {
-    isMando: 'Your throw was mando',
-    isLost: 'Your throw was lost',
-    isOverbound: 'Your throw was overbounds',
-    isFirst: 'First throw',
-    isLast: 'Last throw, score!'
-  };
 
-
+const getThrowMarker = (item, throws) => {
   const error = item.isLost ? 'isLost' : item.isOverbound ? 'isOverbound' : item.isMando ? 'isMando' : null;
+  const index = throws.indexOf(item);
   const isFirst = index === 0;
-  const isLast = index === (throws.length - 1);
-  const markerStyle = error ? error : (isFirst ? 'first' : (isLast ? 'last' : 'normal'));
+  const isLast = index === throws.length - 1;
+  const markerStyle = error ? error : (isFirst ? 'isFirst' : (isLast ? 'isLast' : 'normal'));
+
+  return MARKERS[markerStyle](index);
+};
+
+const CustomMarker = ({item, throws}) => {
+  const marker = getThrowMarker(item, throws);
 
   return (
     <Marker
-      pinColor={MARKER_COLORS[markerStyle]}
+      pinColor={marker.color}
       coordinate={{latitude: item.latitude, longitude: item.longitude}}
-      title={isLast ? 'You scored !' : `Throw: ${index + 1}`}
-      description={DESCRIPTIONS[markerStyle]} />
+      title={marker.title}
+      description={marker.description} />
   );
 };
 
@@ -65,9 +92,8 @@ export default class SummaryDetailLane extends Component {
 
   render() {
     console.log(this.props, 'props');
-    const {loading} = this.state;
-    const { lane, index } = this.props.navigation.state.params;
-    const laneMarkers = [...lane.throws, lane.endLocation];   
+    const {lane, index} = this.props.navigation.state.params;
+    const laneMarkers = [...lane.throws, lane.endLocation];
 
     return (
       <View style={{flexDirection: 'column'}}>
@@ -88,14 +114,24 @@ export default class SummaryDetailLane extends Component {
             const nextItem = laneMarkers[index + 1];
             const strokeColor = itemHasError(item) ? COLORS.danger : COLORS.textPrimary;
             return (
-              <View>
-                <CustomMarker index={index} key={index} item={item} throws={laneMarkers} />
+              <View key={index}>
+                <CustomMarker key={`marker-${index}`} item={item} throws={laneMarkers} />
                 {nextItem && <Polyline
+                  key={`polyline-${index}`}
                   coordinates={[item, nextItem]}
                   strokeColor={strokeColor}
                   strokeWidth={2} />}
               </View>);
           })}
+
+          {/* {for showing circle around the basket} */}
+          <Circle
+            center={laneMarkers[laneMarkers.length - 1]}
+            radius={5}
+            fillColor={Color(COLORS.success).lighten(1).rgb().toString()} />
+          <Polygon
+            fillColor={Color(COLORS.primary).lighten(0.5).rgb().toString()}
+            coordinates={createSquareInMetersFromCoordinate(laneMarkers[0])} />
 
         </MapView>
         <View style={styles.resultsContainer}>
@@ -103,22 +139,22 @@ export default class SummaryDetailLane extends Component {
             const nextItem = laneMarkers[index + 1];
             if (nextItem) {
               return (
-              <Text key={index} style={styles.result}>
-                      {index + 1}. {getDistanceInMetersBetweenCoordinates(item, nextItem)} m
+                <Text key={index} style={styles.result}>
+                  {index + 1}. {getDistanceInMetersBetweenCoordinates(item, nextItem)} m
               </Text>
               );
             }
           })}
 
           <View style={styles.information}>
-                    <Text>Lane: {index + 1}</Text>
-                    <Text>Total throws: {lane.totalThrows}</Text>
-                    <Text>Par: {lane.par}</Text>
-                    <Text>Score: {lane.totalThrows - lane.par}</Text>
-                    <Text>Distance covered:
-                        TEE
+            <Text>Lane: {index + 1}</Text>
+            <Text>Total throws: {lane.totalThrows}</Text>
+            <Text>Par: {lane.par}</Text>
+            <Text>Score: {lane.totalThrows - lane.par}</Text>
+            <Text>Distance covered:
+                TEE
                         </Text>
-                    <Text>Total time: TEE</Text>
+            <Text>Total time: TEE</Text>
           </View>
         </View>
       </View>
@@ -127,18 +163,18 @@ export default class SummaryDetailLane extends Component {
 }
 
 const styles = StyleSheet.create({
-    resultsContainer: {
-        padding: 20,
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        flexWrap: 'wrap'
-    },
-    result: {
-        width: '100%',
-        paddingTop: 5
-    },
-    information: {
-        width: '100%',
-        paddingTop: 5
-    }
+  resultsContainer: {
+    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap'
+  },
+  result: {
+    width: '100%',
+    paddingTop: 5
+  },
+  information: {
+    width: '100%',
+    paddingTop: 5
+  }
 });
