@@ -17,7 +17,7 @@ or
 <code>react-native run-android</code>
 
 
-### Developing with google maps on android emulator.
+### Developing with Google Maps on Android emulator.
 
 Due to bug https://github.com/react-community/react-native-maps/issues/1399, using maps is REALLY slow on emulator.
 
