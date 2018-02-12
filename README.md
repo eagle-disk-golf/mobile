@@ -1,4 +1,4 @@
-## Enviroment setup
+﻿## Environment setup
 
 For setting up the development enviroment refer to the docs (building projects with native code) 
 https://facebook.github.io/react-native/docs/getting-started.html
@@ -64,6 +64,6 @@ to
   }
 </code></pre>
 
-allows you to actually use the map when developing
+allows you to actually use the map when developing.
 
 
