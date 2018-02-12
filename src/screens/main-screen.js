@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+﻿import React, { Component } from 'react';
 import Main from '../components/main';
 
 // const instructions = Platform.select({
@@ -7,7 +7,6 @@ import Main from '../components/main';
 //   android: 'Double tap R on your keyboard to reload,\n' +
 //     'Shake or press menu button for dev menu he',
 // });
-
 
 export default class MainScreen extends Component {
     render() {

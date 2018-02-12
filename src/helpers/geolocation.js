@@ -1,5 +1,5 @@
-// implementation based on this example
-//https://stackoverflow.com/questions/365826/calculate-distance-between-2-gps-coordinates#365853
+﻿// implementation based on this example
+// https://stackoverflow.com/questions/365826/calculate-distance-between-2-gps-coordinates#365853
 const degreesToRadians = (degrees) => {
   return degrees * Math.PI / 180;
 };

@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+﻿import {StyleSheet} from 'react-native';
 import {COLORS, MARGINS} from './constants';
 
 // text styling
@@ -118,7 +118,6 @@ const buttons = StyleSheet.create({
     borderColor: '#7F1B4B'
   },
 });
-
 
 export const globalStyles = {
   ...helpers,

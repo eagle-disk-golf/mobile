@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {Text} from 'native-base';
 import Container from '../components/container';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+
 export default class Test extends Component {
   render() {
     return (
@@ -22,7 +23,6 @@ export default class Test extends Component {
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   container: {
