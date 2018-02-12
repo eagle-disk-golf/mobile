@@ -1,4 +1,4 @@
-# OSX
+﻿# OSX
 #
 .DS_Store
 
@@ -57,3 +57,7 @@ env.js
 .env
 
 .vscode/
+
+.vs/
+
+.ios\EagleDiskGolf.xcodeproj
