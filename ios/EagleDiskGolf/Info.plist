@@ -73,7 +73,6 @@
 		<string>RobotoCondensed-Light.ttf</string>
 		<string>RobotoCondensed-LightItalic.ttf</string>
 		<string>RobotoCondensed-Regular.ttf</string>
-		<string>icomoon.ttf</string>
 	</array>
 	<key>NSAppTransportSecurity</key>
 	<dict>

@@ -1,4 +1,4 @@
-﻿/*
+/*
   KIDE
   File created: 30.11.2017
   Made by: Topi
@@ -16,11 +16,11 @@ import {toArray} from '../helpers/data';
 
 const titleHeight = 60;
 const TitleComponent = ({item, index, testi}) => {
-const score = item.totalThrows - item.par;
-const scoreWithSign = score < 0 ? score.toString() : `+${score}`;
-const scoreColor = score > 0 ? COLORS.danger : COLORS.success;
+  const score = item.totalThrows - item.par;
+  const scoreWithSign = score < 0 ? score.toString() : `+${score}`;
+  const scoreColor = score > 0 ? COLORS.danger : COLORS.success;
 
-return (
+  return (
     <TouchableOpacity onPress={testi}>
       <View style={[styles.titleContainer]}>
         <View style={[styles.titleItemContainer, styles.borderRight]}>
@@ -72,6 +72,7 @@ export default class SummaryDetail extends Component {
     });
   }
 
+
   render() {
     console.log(this.props, 'props');
     const {lanes, loading} = this.state;
@@ -102,6 +103,7 @@ export default class SummaryDetail extends Component {
     );
   }
 }
+
 
 const borderWidth = 0.5;
 /* eslint object-shorthand: 0 */
