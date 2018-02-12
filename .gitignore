@@ -70,5 +70,5 @@ env.js
 .vscode\
 .vscode/
 
-.vs\
-.vs/
+.vs\*
+.vs/*
