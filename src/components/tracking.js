@@ -401,7 +401,6 @@ handleTrackThrow() {
 
       const lane = {
         ...currentLane,
-        totalThrows: currentLane.totalThrows + faultyThrow.penalty,
         penalty: currentLane.penalty + faultyThrow.penalty,
         throws
       };

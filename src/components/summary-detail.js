@@ -1,4 +1,4 @@
-/*
+﻿/*
   KIDE
   File created: 30.11.2017
   Made by: Topi
@@ -16,7 +16,7 @@ import {toArray} from '../helpers/data';
 
 const titleHeight = 60;
 const TitleComponent = ({item, index, testi}) => {
-  const score = item.totalThrows - item.par;
+  const score = (item.totalThrows + item.penalty) - item.par;
   const scoreWithSign = score < 0 ? score.toString() : `+${score}`;
   const scoreColor = score > 0 ? COLORS.danger : COLORS.success;
 
