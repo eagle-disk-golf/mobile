@@ -32,6 +32,7 @@ const CustomMarker = ({index, item, throws}) => {
     isLast: 'Last throw, score!'
   };
 
+
   const error = item.isLost ? 'isLost' : item.isOverbound ? 'isOverbound' : item.isMando ? 'isMando' : null;
   const isFirst = index === 0;
   const isLast = index === (throws.length - 1);
@@ -41,7 +42,7 @@ const CustomMarker = ({index, item, throws}) => {
     <Marker
       pinColor={MARKER_COLORS[markerStyle]}
       coordinate={{latitude: item.latitude, longitude: item.longitude}}
-      title={`Throw: ${index + 1}`}
+      title={isLast ? 'You scored !' : `Throw: ${index + 1}`}
       description={DESCRIPTIONS[markerStyle]} />
   );
 };
@@ -66,6 +67,7 @@ export default class SummaryDetailLane extends Component {
     console.log(this.props, 'props');
     const {loading} = this.state;
     const {lane} = this.props.navigation.state.params;
+    const laneMarkers = [...lane.throws, lane.endLocation];
 
     return (
       <View style={{flexDirection: 'column'}}>
@@ -82,12 +84,12 @@ export default class SummaryDetailLane extends Component {
             latitudeDelta: 1,
             longitudeDelta: 1,
           }}>
-          {lane.throws.map((item, index) => {
-            const nextItem = lane.throws[index + 1];
+          {laneMarkers.map((item, index) => {
+            const nextItem = laneMarkers[index + 1];
             const strokeColor = itemHasError(item) ? COLORS.danger : COLORS.textPrimary;
             return (
               <View>
-                <CustomMarker index={index} key={index} item={item} throws={lane.throws} />
+                <CustomMarker index={index} key={index} item={item} throws={laneMarkers} />
                 {nextItem && <Polyline
                   coordinates={[item, nextItem]}
                   strokeColor={strokeColor}
@@ -97,11 +99,16 @@ export default class SummaryDetailLane extends Component {
 
         </MapView>
         <View style={styles.resultsContainer}>
-          {lane.throws.map((item, index) => (
-            <Text key={index} style={styles.result}>
-              {index + 1}. {getDistanceInMetersBetweenCoordinates(lane.startLocation, item)}m
+          {laneMarkers.map((item, index) => {
+            const nextItem = laneMarkers[index + 1];
+            if (nextItem) {
+              return (
+              <Text key={index} style={styles.result}>
+                {index + 1}. {getDistanceInMetersBetweenCoordinates(item, nextItem)}m
               </Text>
-          ))}
+              );
+            }
+          })}
 
         </View>
       </View>
