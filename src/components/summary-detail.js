@@ -67,7 +67,7 @@ export default class SummaryDetail extends Component {
 
     firebase.database().ref(DB_NAMES.lanes).orderByChild('courseId').equalTo(course.courseId).once('value').then(snapshot => {
       const data = toArray(snapshot.val());
-      this.setState({lanes: data.reverse()});
+      this.setState({lanes: data});
       this.hideLoader();
     });
   }
