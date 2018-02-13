@@ -27,3 +27,43 @@ export const getDistanceInMetersBetweenCoordinates = (startingLocation, endingLo
   }
     return 0;
 };
+
+
+export const createSquareInMetersFromCoordinate = (location, radius = 5) => {
+  // https://gis.stackexchange.com/questions/2951/algorithm-for-offsetting-a-latitude-longitude-by-some-amount-of-meters
+
+  //If your displacements aren't too great (less than a few kilometers) and you're not right at the poles,
+  //use the quick and dirty estimate that 111,111 meters (111.111 km) in the y direction is 1 degree (of latitude)
+  // and 111,111 * cos(latitude) meters in the x direction is 1 degree (of longitude).
+  const offsetInMeters = 111111;
+  const createLatitude = _ => radius / offsetInMeters;
+  const createLongitude = latitude => (radius / offsetInMeters) * Math.cos(latitude);
+
+  const getPoint = index => {
+    if (index === 0) {
+      const latitude = location.latitude + createLatitude();
+      const longitude = location.longitude + createLongitude(latitude);
+      return {latitude, longitude};
+    }
+
+    if (index === 1) {
+      const latitude = location.latitude + createLatitude();
+      const longitude = location.longitude - createLongitude(latitude);
+      return {latitude, longitude};
+    }
+
+    if (index === 2) {
+      const latitude = location.latitude - createLatitude();
+      const longitude = location.longitude - createLongitude(latitude);
+      return {latitude, longitude};
+    }
+
+    if (index == 3) {
+      const latitude = location.latitude - createLatitude();
+      const longitude = location.longitude + createLongitude(latitude);
+      return {latitude, longitude};
+    }
+  };
+
+  return [getPoint(0), getPoint(1), getPoint(2), getPoint(3)];
+};
