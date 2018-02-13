@@ -133,11 +133,7 @@ export default class SummaryDetailLane extends Component {
           <Polygon
             fillColor={Color(COLORS.primary).lighten(0.5).rgb().toString()}
             coordinates={createSquareInMetersFromCoordinate(laneMarkers[0])} />
-
             </MapView>
-
-
-
         <View style={styles.resultsContainer}>
           {laneMarkers.map((item, index) => {
             const nextItem = laneMarkers[index + 1];
@@ -148,10 +144,8 @@ export default class SummaryDetailLane extends Component {
               </Text>
               );
             }
-                })}
-
-
-                </View>
+          })}
+        </View>
         <View style={styles.viewGridStyle}>
             <Grid style={styles.gridStyle}>
                 <Row style={styles.rowStyle}>
@@ -199,14 +193,13 @@ export default class SummaryDetailLane extends Component {
                         <Text>Distance covered:</Text>
                     </Col>
                     <Col>
-                        <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(lane.startLocation, lane.endLocation)} meters TODO</Text>
+                        <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(lane.startLocation, lane.endLocation)} meters</Text>
                     </Col>
                 </Row>
             </Grid>
         </View>
-
         </View>
-            </ScrollView>
+       </ScrollView>
     );
   }
 }
