@@ -144,70 +144,74 @@ export default class SummaryDetailLane extends Component {
               );
             }
           })}
-
-          <View style={styles.information}>
-                    <Text>Lane: <Text style={styles.boldResult}>{index + 1}</Text></Text>
-                        <Text>Total throws: <Text style={styles.boldResult}>{lane.totalThrows}</Text></Text>
-                            <Text>Par: <Text style={styles.boldResult}>{lane.par}</Text></Text>
-                                <Text>Score: <Text style={styles.boldResult}>{lane.totalThrows - lane.par}</Text></Text>
-            <Text>Distance covered:
-                <Text style={styles.boldResult}>TEE</Text>
-                        </Text>
-                <Text>Total time: <Text style={styles.boldResult}>TEE</Text></Text>
-          </View>
             </View>
-            <View>
-                   <Grid>
-                    <Row>
-                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
-                          <Text>Lane:</Text>
+        <View>
+                <Grid>
+                    <Row style={styles.rowStyle}>
+                        <Col>
+                            <Text>Lane:</Text>
                       </Col>
-                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                      <Col>
                           <Text style={styles.boldResult}>{index + 1}</Text>
                       </Col>
                     </Row>
-                    <Row>
-                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                    <Row style={styles.rowStyle}>
+                      <Col>
                           <Text>Total throws:</Text>
                       </Col>
-                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                      <Col>
                           <Text style={styles.boldResult}>{lane.totalThrows}</Text>
                       </Col>
                     </Row>
-                    <Row>
-                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                    <Row style={styles.rowStyle}>
+                      <Col>
                         <Text>Par:</Text>
                       </Col>
-                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                      <Col>
                         <Text style={styles.boldResult}>{lane.par}</Text>
                       </Col>
                     </Row>
-                    <Row>
-                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                    <Row style={styles.rowStyle}>
+                      <Col>
                         <Text>Score:</Text>
                       </Col>
-                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                      <Col>
                         <Text style={styles.boldResult}>{lane.totalThrows - lane.par}</Text>
                       </Col>
                     </Row>
-                    <Row>
-                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                    <Row style={styles.rowStyle}>
+                      <Col>
                         <Text>Total time:</Text>
                       </Col>
-                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                      <Col>
                         <Text style={styles.boldResult}>tee</Text>
                       </Col>
                     </Row>
-                    <Row>
-                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                    <Row style={styles.rowStyle}>
+                      <Col>
                         <Text>Distance covered:</Text>
                       </Col>
-                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                      <Col>
                         <Text style={styles.boldResult}>tee</Text>
                       </Col>
                     </Row>
                 </Grid>
-                </View>
+            </View>
+
+            {/*
+       <View style={styles.information}>
+           <Text>Lane: <Text style={styles.boldResult}>{index + 1}</Text></Text>
+            <Text>Total throws: <Text style={styles.boldResult}>{lane.totalThrows}</Text></Text>
+            <Text>Par: <Text style={styles.boldResult}>{lane.par}</Text></Text>
+            <Text>Score: <Text style={styles.boldResult}>{lane.totalThrows - lane.par}</Text></Text>
+            <Text>Distance covered:
+                <Text style={styles.boldResult}>TEE</Text>
+            </Text>
+            <Text>Total time: <Text style={styles.boldResult}>TEE</Text></Text>
+        </View>
+*/}
+
+
       </View>
     );
   }
@@ -230,5 +234,10 @@ const styles = StyleSheet.create({
   information: {
     width: '100%',
     paddingTop: 5
-  }
+  },
+  rowStyle: {
+      flex: 0,
+      height: 20,
+      paddingLeft: 20
+  },
 });
