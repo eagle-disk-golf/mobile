@@ -3,15 +3,18 @@
   File created: 5.2.2018
   Made by: Jenni
   History:
+  12.02.2018: Topi: Added information box
+  13.02.2018: Topi: Added styling and native base grid box
 */
 
 import React, {Component} from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import Color from 'color';
-import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle} from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle } from 'react-native-maps';
+import { Container, Header, Content } from 'native-base';
+import { Col, Row, Grid } from 'react-native-easy-grid';
 import {COLORS} from '../res/styles/constants';
 import {getDistanceInMetersBetweenCoordinates, createSquareInMetersFromCoordinate} from '../helpers/geolocation';
-
 
 const itemHasError = item => !!item.isLost || !!item.isMando || !!item.isOverbound;
 
@@ -47,7 +50,6 @@ const MARKERS = {
     title: `Throw: ${index + 1}`
   })
 };
-
 
 const getThrowMarker = (item, throws) => {
   const error = item.isLost ? 'isLost' : item.isOverbound ? 'isOverbound' : item.isMando ? 'isMando' : null;
@@ -137,23 +139,75 @@ export default class SummaryDetailLane extends Component {
             if (nextItem) {
               return (
                 <Text key={index} style={styles.result}>
-                  {index + 1}. {getDistanceInMetersBetweenCoordinates(item, nextItem)} m
+                      {index + 1}. <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(item, nextItem)}</Text> m
               </Text>
               );
             }
           })}
 
           <View style={styles.information}>
-            <Text>Lane: {index + 1}</Text>
-            <Text>Total throws: {lane.totalThrows}</Text>
-            <Text>Par: {lane.par}</Text>
-            <Text>Score: {lane.totalThrows - lane.par}</Text>
+                    <Text>Lane: <Text style={styles.boldResult}>{index + 1}</Text></Text>
+                        <Text>Total throws: <Text style={styles.boldResult}>{lane.totalThrows}</Text></Text>
+                            <Text>Par: <Text style={styles.boldResult}>{lane.par}</Text></Text>
+                                <Text>Score: <Text style={styles.boldResult}>{lane.totalThrows - lane.par}</Text></Text>
             <Text>Distance covered:
-                TEE
+                <Text style={styles.boldResult}>TEE</Text>
                         </Text>
-            <Text>Total time: TEE</Text>
+                <Text>Total time: <Text style={styles.boldResult}>TEE</Text></Text>
           </View>
-        </View>
+            </View>
+            <View>
+                   <Grid>
+                    <Row>
+                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                          <Text>Lane:</Text>
+                      </Col>
+                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                          <Text style={styles.boldResult}>{index + 1}</Text>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                          <Text>Total throws:</Text>
+                      </Col>
+                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                          <Text style={styles.boldResult}>{lane.totalThrows}</Text>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                        <Text>Par:</Text>
+                      </Col>
+                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                        <Text style={styles.boldResult}>{lane.par}</Text>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                        <Text>Score:</Text>
+                      </Col>
+                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                        <Text style={styles.boldResult}>{lane.totalThrows - lane.par}</Text>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                        <Text>Total time:</Text>
+                      </Col>
+                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                        <Text style={styles.boldResult}>tee</Text>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col style={{ backgroundColor: '#635DB7', height: 200 }}>
+                        <Text>Distance covered:</Text>
+                      </Col>
+                      <Col style={{ backgroundColor: '#00CE9F', height: 200 }}>
+                        <Text style={styles.boldResult}>tee</Text>
+                      </Col>
+                    </Row>
+                </Grid>
+                </View>
       </View>
     );
   }
@@ -167,8 +221,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap'
   },
   result: {
-    width: '100%',
-    paddingTop: 5
+      width: '100%',
+      paddingTop: 5
+  },
+  boldResult: {
+      fontWeight: 'bold'
   },
   information: {
     width: '100%',
