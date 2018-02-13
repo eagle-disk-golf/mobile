@@ -8,7 +8,7 @@
 */
 
 import React, {Component} from 'react';
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import Color from 'color';
 import MapView, { PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle } from 'react-native-maps';
 import { Container, Header, Content } from 'native-base';
@@ -96,7 +96,8 @@ export default class SummaryDetailLane extends Component {
     const laneMarkers = [...lane.throws, lane.endLocation];
 
     return (
-      <View style={{flexDirection: 'column'}}>
+        <ScrollView>
+      <View style={{flexDirection: 'column', flex: 0}}>
         <MapView
           ref={(ref) => {this.mapView = ref;}}
           onLayout={() => this.zoomToMarkers()}
@@ -133,7 +134,10 @@ export default class SummaryDetailLane extends Component {
             fillColor={Color(COLORS.primary).lighten(0.5).rgb().toString()}
             coordinates={createSquareInMetersFromCoordinate(laneMarkers[0])} />
 
-        </MapView>
+            </MapView>
+
+
+
         <View style={styles.resultsContainer}>
           {laneMarkers.map((item, index) => {
             const nextItem = laneMarkers[index + 1];
@@ -144,61 +148,65 @@ export default class SummaryDetailLane extends Component {
               </Text>
               );
             }
-          })}
-            </View>
-       <View>
-        <Grid>
-         <Row style={styles.rowStyle}>
-           <Col>
-             <Text>Lane:</Text>
-           </Col>
-           <Col>
-             <Text style={styles.boldResult}>{index + 1}</Text>
-           </Col>
-         </Row>
-         <Row style={styles.rowStyle}>
-           <Col>
-             <Text>Total throws:</Text>
-           </Col>
-           <Col>
-             <Text style={styles.boldResult}>{lane.totalThrows}</Text>
-           </Col>
-         </Row>
-         <Row style={styles.rowStyle}>
-           <Col>
-             <Text>Par:</Text>
-           </Col>
-           <Col>
-             <Text style={styles.boldResult}>{lane.par}</Text>
-           </Col>
-         </Row>
-         <Row style={styles.rowStyle}>
-           <Col>
-             <Text>Score:</Text>
-           </Col>
-           <Col>
-             <Text style={styles.boldResult}>{lane.totalThrows - lane.par}</Text>
-           </Col>
-         </Row>
-         <Row style={styles.rowStyle}>
-           <Col>
-             <Text>Total time:</Text>
-           </Col>
-           <Col>
-                 <Text style={styles.boldResult}>{time.getFormattedMinutes(lane.endLocation.timestamp - lane.startLocation.timestamp)}</Text>
-           </Col>
-         </Row>
-         <Row style={styles.rowStyle}>
-           <Col>
-             <Text>Distance covered:</Text>
-           </Col>
-           <Col>
-             <Text style={styles.boldResult}>tee</Text>
-           </Col>
-         </Row>
-        </Grid>
-       </View>
-      </View>
+                })}
+
+
+                </View>
+        <View style={styles.viewGridStyle}>
+            <Grid style={styles.gridStyle}>
+                <Row style={styles.rowStyle}>
+                    <Col>
+                        <Text>Lane:</Text>
+                    </Col>
+                    <Col>
+                        <Text style={styles.boldResult}>{index + 1}</Text>
+                    </Col>
+                </Row>
+                <Row style={styles.rowStyle}>
+                    <Col>
+                        <Text>Total throws:</Text>
+                    </Col>
+                    <Col>
+                        <Text style={styles.boldResult}>{lane.totalThrows}</Text>
+                    </Col>
+                </Row>
+                <Row style={styles.rowStyle}>
+                    <Col>
+                        <Text>Par:</Text>
+                    </Col>
+                    <Col>
+                        <Text style={styles.boldResult}>{lane.par}</Text>
+                    </Col>
+                </Row>
+                <Row style={styles.rowStyle}>
+                    <Col>
+                        <Text>Score:</Text>
+                    </Col>
+                    <Col>
+                        <Text style={styles.boldResult}>{lane.totalThrows - lane.par}</Text>
+                    </Col>
+                </Row>
+                <Row style={styles.rowStyle}>
+                    <Col>
+                        <Text>Total time:</Text>
+                    </Col>
+                    <Col>
+                        <Text style={styles.boldResult}>{time.getFormattedMinutes(lane.endLocation.timestamp - lane.startLocation.timestamp)}</Text>
+                    </Col>
+                </Row>
+                <Row style={styles.rowStyle}>
+                    <Col>
+                        <Text>Distance covered:</Text>
+                    </Col>
+                    <Col>
+                        <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(lane.startLocation, lane.endLocation)} meters TODO</Text>
+                    </Col>
+                </Row>
+            </Grid>
+        </View>
+
+        </View>
+            </ScrollView>
     );
   }
 }
@@ -222,8 +230,15 @@ const styles = StyleSheet.create({
     paddingTop: 5
   },
   rowStyle: {
-    flex: 0,
+    flex: 1,
     height: 20,
     paddingLeft: 20
   },
+  gridStyle: {
+      flex: 1,
+      paddingBottom: 20
+  },
+  viewGridStyle: {
+      width: '100%'
+  }
 });
