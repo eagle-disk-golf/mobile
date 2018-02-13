@@ -27,8 +27,15 @@ const getFormattedTime = (timestamp) => {
     return timeString;
 };
 
+const getFormattedMinutes = (timestamp) => {
+    const date = new Date(timestamp);
+    const minuteString = date.getMinutes() + ":" + date.getSeconds() + " minutes";
+    return minuteString;
+};
+
 export default {
   getDurationBetweenDates,
   getFormattedDate,
-  getFormattedTime
+  getFormattedTime,
+  getFormattedMinutes
 };
