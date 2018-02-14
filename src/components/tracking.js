@@ -328,7 +328,7 @@ handleTrackThrow() {
         'End game?',
         'Are you sure you want to end the current game?',
         [
-          {text: 'Yes, end round', onPress: () => this.endCourse()},
+          {text: 'Yes, end game', onPress: () => this.endCourse()},
           {text: 'Cancel', onPress: () => console.log('cancel')}
         ]);
     }
@@ -367,7 +367,7 @@ handleTrackThrow() {
     const BUTTONS = [
       {name: 'over-bound', flag: 'isOverBound', text: 'Over bound', icon: 'remove-circle', iconColor: COLORS.success, penalty: 1},
       {name: 'lost', flag: 'isLost', text: 'Lost', icon: 'eye-off', iconColor: COLORS.primary, penalty: 1},
-      {name: 'mando', flag: 'isMando', text: 'Mando', icon: 'redo', iconColor: COLORS.warningr, penalty: 1},
+      {name: 'mando', flag: 'isMando', text: 'Mando', icon: 'redo', iconColor: COLORS.warning, penalty: 1},
       {name: 'cancel', text: 'Cancel', icon: 'close', iconColor: '#25de5b'}
     ];
     const DESTRUCTIVE_INDEX = 3;
@@ -427,6 +427,7 @@ handleTrackThrow() {
     // const isGameActive = isCourseActive || isLaneActive;
     const laneNumber = Object.keys(course.lanes).length;
 
+
     const toggleTransparentText = (isVisible, styleClass) => isVisible ? styleClass : {color: 'transparent'};
 
     if (!initialized) { return <View style={[globalStyles.container]}>
@@ -439,9 +440,9 @@ handleTrackThrow() {
         <Col>
 
           <Row style={[globalStyles.centerBottom, globalStyles.centerHorizontal]} size={35}>
-            {!isCourseActive && !isLaneActive && <FadeInView style={[globalStyles.centerContent]} visible={!isCourseActive && !isLaneActive}>
+            {!isCourseActive && <FadeInView style={[globalStyles.centerContent]} visible={!isCourseActive && !isLaneActive}>
               <View style={[globalStyles.centerContent, {marginBottom: 40}]}>
-                <Text style={[globalStyles.textPrimary]}>Start a new game by pressing the throw button</Text>
+                <Text style={[globalStyles.textPrimary]}>You're at the Tee, ready to start a new game?</Text>
               </View>
             </FadeInView>}
 
@@ -451,7 +452,7 @@ handleTrackThrow() {
                   Lane number: {laneNumber}
                 </Text>
                 <Text style={[toggleTransparentText(isCourseActive && isLaneActive, globalStyles.textPrimary), globalStyles.verticalMargin]}>
-                  Throws: {lane.totalThrows}
+                  Throws: {lane.totalThrows + lane.penalty}
                 </Text>
                 <FadeInView visible={faultyThrow.show}>
                   <Text style={[globalStyles.textWarning]}>+{faultyThrow && faultyThrow.penalty}</Text>
@@ -460,23 +461,18 @@ handleTrackThrow() {
             </FadeInView>}
           </Row>
 
-          {
-            /* <Text style={[globalStyles.textPrimary]}>
-            Par: {lane.total_throws - lane.par}
-          </Text> */
-          }
 
           <Row style={[globalStyles.centerContent]} size={65}>
             <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, left: 20}]} visible={isCourseActive && isLaneActive}>
-              <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]} onPress={this.handleSelectFaultyThrow}>
+              <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.border, styles.shadow]} onPress={this.handleSelectFaultyThrow}>
                 <Icon size={30} style={[globalStyles.textDefault]} name='ios-alert' />
               </Button>
             </FadeInView>
 
             <Button style={[
-                           globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical,
+                           globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical, styles.border,
                            isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
-              {!loading && <Text style={[globalStyles.textPrimary]}>Throw</Text>}
+              {!loading && <Text style={[globalStyles.textPrimary]}>{!isCourseActive ? 'Start' : isLaneActive ? 'Throw' : 'Continue'}</Text>}
               {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
               {
                 /* <NewCourseModal onSuccess={(text) => this.handleStartNewCourse(text)} visible={newCourseModalVisible} placeholderText={address ? address : previousCourseName} /> */
@@ -484,17 +480,18 @@ handleTrackThrow() {
             </Button>
 
             {isCourseActive && isLaneActive && <FadeInView fadeOutDuration={100} style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
-              <Button style={[globalStyles.buttonRounded, styles.smallButtons, styles.shadow, {backgroundColor: '#0E8C5A'}]} onPress={this.handleEndLane}>
+              <Button style={[globalStyles.buttonRounded, styles.smallButtons, styles.border, styles.shadow, {backgroundColor: COLORS.success}]} onPress={this.handleEndLane}>
                 <Icon size={30} style={[globalStyles.textDefault]} name='ios-basket' />
               </Button>
             </FadeInView>}
 
-            {isCourseActive && !isLaneActive && <FadeInView style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
-              <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.shadow]} onPress={this.handleEndCourse}>
+          </Row>
+            {isCourseActive && !isLaneActive && <FadeInView style={[styles.fadeInView, {position: 'absolute', bottom: 20, left: 0, right: 0}]} visible={true}>
+              <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.border, styles.shadow, {alignSelf: 'center'}]} onPress={this.handleEndCourse}>
+                {/* <Text>Quit</Text> */}
                 <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />
               </Button>
             </FadeInView>}
-          </Row>
         </Col>
       </Grid>
     );
@@ -509,7 +506,11 @@ const styles = StyleSheet.create({
   },
   smallButtons: {
     width: 50,
-    height: 50
+    height: 50,
+  },
+  border: {
+    borderWidth: 0.2,
+    borderColor: COLORS.textPrimary
   },
   stopButton: {
     width: 60,
