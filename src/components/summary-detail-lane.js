@@ -39,7 +39,7 @@ const MARKERS = {
     description: 'First throw',
     title: `Throw: ${index + 1}`
   }),
-  isLast: index => ({
+  isLast: _ => ({
     color: COLORS.success,
     description: 'You scored!',
     title: 'Basket'
@@ -52,7 +52,11 @@ const MARKERS = {
 };
 
 const getThrowMarker = (item, throws) => {
-  const error = item && item.isLost ? 'isLost' : item && item.isOverbound ? 'isOverbound' : item && item.isMando ? 'isMando' : null;
+  const error = item && item.isLost ?
+    'isLost' : item && item.isOverbound ?
+      'isOverbound' : item && item.isMando ?
+        'isMando' : null;
+
   const index = throws.indexOf(item);
   const isFirst = index === 0;
   const isLast = index === throws.length - 1;
@@ -97,6 +101,7 @@ export default class SummaryDetailLane extends Component {
     const {lane, index} = this.props.navigation.state.params;
     const laneMarkers = lane && lane.completed && lane.endLocation ? [...lane.throws,  lane.endLocation] : lane.throws;
 
+    /* eslint max-len: 0 */
     return (
         <ScrollView>
       <View style={{flexDirection: 'column', flex: 0}}>

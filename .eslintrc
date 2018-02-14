@@ -44,7 +44,7 @@
     "no-extend-native": 2,
     "no-extra-boolean-cast": 0,
     "no-floating-decimal": 2,
-    "no-inline-comments": 1,
+    "no-inline-comments": 0,
     "no-labels": 2,
     "no-mixed-spaces-and-tabs": 0,
     "no-multi-spaces": 0,

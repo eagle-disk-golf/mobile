@@ -2,7 +2,7 @@
  eslint max-len: 0
 */
 import React, {Component} from 'react';
-import {View, StyleSheet, Alert, PermissionsAndroid, Platform} from 'react-native';
+import {View, StyleSheet, Alert, PermissionsAndroid} from 'react-native';
 import {Text, Button, Toast, ActionSheet, Spinner} from 'native-base';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import Icon from './icon';

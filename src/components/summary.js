@@ -1,15 +1,4 @@
-﻿/*
-  KIDE
-  File created: 23.10.2017
-  Made by: Riku
-  History:
-  23.11.2017 Topi: List and ListItem added
-  30.11.2017 Topi: Styling
-  12.12.2017 Riku: Use custom icon component
-  12.02.2018 Topi: Added clock timestamp to listed items
-*/
-
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {Text, ListItem, Body, Right} from 'native-base';
 import Icon from './icon';
@@ -171,8 +160,12 @@ export default class Summary extends Component {
 
         <InfiniteListView
           data={dataset}
-          renderRow={({item, index}) => <CustomListItem index={index} item={item} onPress={() => navigation.navigate('SummaryDetail', item)} onLongPress={() => this.confirmDelete(item)} />}
-          w
+          renderRow={({item, index}) =>
+            <CustomListItem
+              index={index}
+              item={item}
+              onPress={() => navigation.navigate('SummaryDetail', item)}
+              onLongPress={() => this.confirmDelete(item)} />}
           canLoad={this.canLoad()}
           isLoading={loading}
           onLoad={this.fetchGames}

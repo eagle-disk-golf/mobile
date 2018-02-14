@@ -1,13 +1,5 @@
-﻿/*
-  KIDE
-  File created: 30.11.2017
-  Made by: Topi
-  History:
-
-*/
-
-import React, {Component} from 'react';
-import {View, StyleSheet,  ScrollView, TouchableOpacity, Alert} from 'react-native';
+﻿import React, {Component} from 'react';
+import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 import {Spinner, Text} from 'native-base';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
@@ -66,7 +58,11 @@ export default class SummaryDetail extends Component {
   fetchData(course) {
     this.showLoader();
 
-    firebase.database().ref(DB_NAMES.lanes).orderByChild('courseId').equalTo(course.courseId).once('value').then(snapshot => {
+    firebase.database()
+      .ref(DB_NAMES.lanes)
+      .orderByChild('courseId')
+      .equalTo(course.courseId)
+      .once('value').then(snapshot => {
       const data = toArray(snapshot.val());
       this.setState({lanes: data});
       this.hideLoader();
@@ -96,7 +92,12 @@ export default class SummaryDetail extends Component {
             </View>
 
             {loading && <Spinner color="green" />}
-            {!loading && lanes && lanes.map((lane, index) => <TitleComponent key={index} index={index} item={lane} onPress={() => this.props.navigation.navigate('SummaryDetailLane', {lane, index})} />)}
+            {!loading && lanes && lanes.map((lane, index) =>
+              <TitleComponent
+                key={index}
+                index={index}
+                item={lane}
+                onPress={() => this.props.navigation.navigate('SummaryDetailLane', {lane, index})} />)}
           </View>
         </ScrollView>
       </View>
