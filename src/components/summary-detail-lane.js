@@ -97,119 +97,118 @@ export default class SummaryDetailLane extends Component {
   }
 
   render() {
-    console.log(this.props, 'props');
     const {lane, index} = this.props.navigation.state.params;
-    const laneMarkers = lane && lane.completed && lane.endLocation ? [...lane.throws,  lane.endLocation] : lane.throws;
+    const laneMarkers = lane && lane.completed && lane.endLocation ? [...lane.throws, lane.endLocation] : lane.throws;
 
     /* eslint max-len: 0 */
     return (
-        <ScrollView>
-      <View style={{flexDirection: 'column', flex: 0}}>
-        <MapView
-          ref={(ref) => {this.mapView = ref;}}
-          onLayout={() => this.zoomToMarkers()}
-          style={{height: 300, width: '100%'}}
-          provider={PROVIDER_GOOGLE}
-          minZoomLevel={10}
-          maxZoomLevel={20}
-          region={{
-            latitude: lane.startLocation.latitude,
-            longitude: lane.startLocation.longitude,
-            latitudeDelta: 1,
-            longitudeDelta: 1,
-          }}>
-          {laneMarkers.map((item, index) => {
-            const nextItem = laneMarkers[index + 1];
-            const strokeColor = itemHasError(item) ? COLORS.danger : COLORS.textPrimary;
-            return (
-              <View key={index}>
-                <CustomMarker key={`marker-${index}`} item={item} throws={laneMarkers} />
-                {nextItem && <Polyline
-                  key={`polyline-${index}`}
-                  coordinates={[item, nextItem]}
-                  strokeColor={strokeColor}
-                  strokeWidth={2} />}
-              </View>);
-          })}
-
-          {/* {for showing circle around the basket} */}
-          {lane.completed && <Circle
-            center={laneMarkers[laneMarkers.length - 1]}
-            radius={5}
-            fillColor={Color(COLORS.success).lighten(1).rgb().toString()} />}
-          <Polygon
-            fillColor={Color(COLORS.primary).lighten(0.5).rgb().toString()}
-            coordinates={createSquareInMetersFromCoordinate(laneMarkers[0])} />
-            </MapView>
-        <View style={styles.resultsContainer}>
-          {!lane.completed && <Text style={{fontWeight: 'bold', alignSelf: 'center'}}>This lane is still uncompleted!</Text>}
-
-          {laneMarkers.map((item, index) => {
-            const nextItem = laneMarkers[index + 1];
-            if (lane.completed && nextItem || !lane.completed) {
+      <ScrollView>
+        <View style={{flexDirection: 'column', flex: 0}}>
+          <MapView
+            ref={(ref) => {this.mapView = ref;}}
+            onLayout={() => this.zoomToMarkers()}
+            style={{height: 300, width: '100%'}}
+            provider={PROVIDER_GOOGLE}
+            minZoomLevel={10}
+            maxZoomLevel={20}
+            region={{
+              latitude: lane.startLocation.latitude,
+              longitude: lane.startLocation.longitude,
+              latitudeDelta: 1,
+              longitudeDelta: 1,
+            }}>
+            {laneMarkers.map((item, index) => {
+              const nextItem = laneMarkers[index + 1];
+              const strokeColor = itemHasError(item) ? COLORS.danger : COLORS.textPrimary;
               return (
-                <Text key={index} style={styles.result}>
-                      {index + 1}. <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(item, nextItem)}</Text> m
+                <View key={index}>
+                  <CustomMarker key={`marker-${index}`} item={item} throws={laneMarkers} />
+                  {nextItem && <Polyline
+                    key={`polyline-${index}`}
+                    coordinates={[item, nextItem]}
+                    strokeColor={strokeColor}
+                    strokeWidth={2} />}
+                </View>);
+            })}
+
+            {/* {for showing circle around the basket} */}
+            {lane.completed && <Circle
+              center={laneMarkers[laneMarkers.length - 1]}
+              radius={5}
+              fillColor={Color(COLORS.success).lighten(1).rgb().toString()} />}
+            <Polygon
+              fillColor={Color(COLORS.primary).lighten(0.5).rgb().toString()}
+              coordinates={createSquareInMetersFromCoordinate(laneMarkers[0])} />
+          </MapView>
+          <View style={styles.resultsContainer}>
+            {!lane.completed && <Text style={{fontWeight: 'bold', alignSelf: 'center'}}>This lane is still uncompleted!</Text>}
+
+            {laneMarkers.map((item, index) => {
+              const nextItem = laneMarkers[index + 1];
+              if (lane.completed && nextItem || !lane.completed) {
+                return (
+                  <Text key={index} style={styles.result}>
+                    {index + 1}. <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(item, nextItem)}</Text> m
               </Text>
-              );
-            }
-          })}
-        </View>
-        <View style={styles.viewGridStyle}>
+                );
+              }
+            })}
+          </View>
+          <View style={styles.viewGridStyle}>
             <Grid style={styles.gridStyle}>
-                <Row style={styles.rowStyle}>
-                    <Col>
-                        <Text>Lane:</Text>
-                    </Col>
-                    <Col>
-                        <Text style={styles.boldResult}>{index + 1}</Text>
-                    </Col>
-                </Row>
-                <Row style={styles.rowStyle}>
-                    <Col>
-                        <Text>Total throws:</Text>
-                    </Col>
-                    <Col>
-                        <Text style={styles.boldResult}>{lane.totalThrows}</Text>
-                    </Col>
-                </Row>
-                <Row style={styles.rowStyle}>
-                    <Col>
-                        <Text>Par:</Text>
-                    </Col>
-                    <Col>
-                        <Text style={styles.boldResult}>{lane.par}</Text>
-                    </Col>
-                </Row>
-                <Row style={styles.rowStyle}>
-                    <Col>
-                        <Text>Score:</Text>
-                    </Col>
-                    <Col>
-                        <Text style={styles.boldResult}>{lane.totalThrows - lane.par}</Text>
-                    </Col>
-                </Row>
-                {lane.completed && <Row style={styles.rowStyle}>
-                    <Col>
-                        <Text>Total time:</Text>
-                    </Col>
-                    <Col>
-                        {<Text style={styles.boldResult}>{time.getFormattedMinutes(lane.endLocation.timestamp - lane.startLocation.timestamp)}</Text>}
-                    </Col>
-                </Row>}
-                {lane.completed && <Row style={styles.rowStyle}>
-                    <Col>
-                        <Text>Distance covered:</Text>
-                    </Col>
-                    <Col>
-                        <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(lane.startLocation, lane.endLocation)} meters</Text>
-                    </Col>
-                </Row>}
+              <Row style={styles.rowStyle}>
+                <Col>
+                  <Text>Lane:</Text>
+                </Col>
+                <Col>
+                  <Text style={styles.boldResult}>{index + 1}</Text>
+                </Col>
+              </Row>
+              <Row style={styles.rowStyle}>
+                <Col>
+                  <Text>Total throws:</Text>
+                </Col>
+                <Col>
+                  <Text style={styles.boldResult}>{lane.totalThrows}</Text>
+                </Col>
+              </Row>
+              <Row style={styles.rowStyle}>
+                <Col>
+                  <Text>Par:</Text>
+                </Col>
+                <Col>
+                  <Text style={styles.boldResult}>{lane.par}</Text>
+                </Col>
+              </Row>
+              <Row style={styles.rowStyle}>
+                <Col>
+                  <Text>Score:</Text>
+                </Col>
+                <Col>
+                  <Text style={styles.boldResult}>{lane.totalThrows - lane.par}</Text>
+                </Col>
+              </Row>
+              {lane.completed && <Row style={styles.rowStyle}>
+                <Col>
+                  <Text>Total time:</Text>
+                </Col>
+                <Col>
+                  {<Text style={styles.boldResult}>{time.getFormattedMinutes(lane.endLocation.timestamp - lane.startLocation.timestamp)}</Text>}
+                </Col>
+              </Row>}
+              {lane.completed && <Row style={styles.rowStyle}>
+                <Col>
+                  <Text>Distance covered:</Text>
+                </Col>
+                <Col>
+                  <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(lane.startLocation, lane.endLocation)} meters</Text>
+                </Col>
+              </Row>}
 
             </Grid>
+          </View>
         </View>
-        </View>
-       </ScrollView>
+      </ScrollView>
     );
   }
 }
@@ -238,10 +237,10 @@ const styles = StyleSheet.create({
     paddingLeft: 20
   },
   gridStyle: {
-      flex: 1,
-      paddingBottom: 20
+    flex: 1,
+    paddingBottom: 20
   },
   viewGridStyle: {
-      width: '100%'
+    width: '100%'
   }
 });

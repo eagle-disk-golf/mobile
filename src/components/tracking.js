@@ -320,7 +320,7 @@ handleTrackThrow() {
         'Are you sure you want to end the current game?',
         [
           {text: 'Yes, end game', onPress: () => this.endCourse()},
-          {text: 'Cancel', onPress: () => console.log('cancel')}
+          {text: 'Cancel'}
         ]);
     }
   }

@@ -33,7 +33,7 @@ class Panel extends Component {
   }
 
   scrollToPanel(event) {
-    // console.log(event.nativeEvent, 'press panel event');
+
   }
 
   toggle(event) {
@@ -54,7 +54,6 @@ class Panel extends Component {
 
       if (!expanded) {
         onItemSelected({nativeEvent, contentHeight: finalValue, titleHeight: this.state.minHeight});
-        // console.log(nativeEvent, finalValue, 'event and final vale[');
       }
 
       this.setState({

@@ -4,7 +4,6 @@ import SummaryDetailLane from '../components/summary-detail-lane';
 
 export default class SummaryDetailLaneScreen extends Component {
   static navigationOptions = ({navigation}) => {
-    console.log(navigation.state, 'navigation');
     const {index} = navigation.state.params;
     return {
       title: `Lane: ${index + 1}`

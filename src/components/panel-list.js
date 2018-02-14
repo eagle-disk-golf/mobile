@@ -42,7 +42,6 @@ export default class PanelList extends Component {
             const panelEndPosition = panelFrameOffsetY + window.height + event.contentHeight;
             const containerEndPosition = window.height + containerHeight;
 
-            console.log(panelFrameOffsetY, 'panelfrmaoffset');
             if (panelEndPosition < containerEndPosition) {
               scrollList.scrollTo({y: panelFrameOffsetY});
             } else {
@@ -57,13 +56,10 @@ export default class PanelList extends Component {
           const panelEndPosition = panelFrameOffsetY + window.height + event.contentHeight;
           const containerEndPosition = window.height + containerHeight;
 
-          console.log(panelFrameOffsetY, 'panelfrmaoffset');
           if (panelEndPosition < containerEndPosition) {
             scrollList.scrollTo({y: panelFrameOffsetY});
-            console.log('does not go ove');
            } else {
             scrollList.scrollToEnd();
-            console.log('goes over');
             // scrollList.scrollTo({y: panelFrameOffsetY - (panelEndPosition - containerEndPosition)});
           }
         });
@@ -72,10 +68,8 @@ export default class PanelList extends Component {
   }
 
   render() {
-    const {lanes, navigation} = this.props;
-    console.log(navigation, 'navigaiont');
+    const {lanes} = this.props;
     const isInitialized = lanes && (lanes.length > 0);
-    console.log(isInitialized, 'isInitialized');
     return (
       <ScrollView removeClippedSubviews={false} ref='scrollList' style={styles.container}>
         <View renderToHardwareTextureAndroid={true} collapsable={false} ref='scrollListContainer' onLayout={() => {}}>

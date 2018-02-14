@@ -70,7 +70,6 @@ export default class SummaryDetail extends Component {
   }
 
   render() {
-    console.log(this.props, 'props');
     const {lanes, loading} = this.state;
     return (
       <View>
