@@ -20,8 +20,8 @@ import time from '../services/time';
 import {toArray, reverseArray} from '../helpers/data';
 
 const CustomListItem = ({item, index, onPress, onLongPress}) => {
-    const timeStamp = item && item.startLocation ? item.startLocation.timestamp : null;
-    const completed = item && item.completed;
+  const timeStamp = item && item.startLocation ? item.startLocation.timestamp : null;
+  const completed = item && item.completed;
 
   return <ListItem style={globalStyles.bgDefault} key={index} onPress={onPress} onLongPress={onLongPress}>
     <Body>
@@ -72,29 +72,44 @@ export default class Summary extends Component {
     // That's why on the first time, we just fetch the latest courses from the firebase (offset determines this), and after that we start fetching the courses
     // before the last courseId we received
     if (!hasFetchedOnce) {
-      firebase.database().ref(DB_NAMES.courses).orderByKey().limitToLast(offset).once('value').then(snapshot => {
-        const value = toArray(snapshot.val());
-        const dataset = reverseArray(value);
-        this.setState({
-          dataset,
-          lastCourseId: value[0].courseId,
-          hasFetchedOnce: true,
-          canLoadMore: value.length === offset,
-          refreshing: false
-        }, this.hideLoader());
-      });
+      firebase.database()
+        .ref(DB_NAMES.courses)
+        .orderByKey()
+        .limitToLast(offset)
+        .once('value')
+        .then(snapshot => {
+          const value = toArray(snapshot.val());
+          const dataset = reverseArray(value);
+          this.setState({
+            dataset,
+            lastCourseId: value[0].courseId,
+            hasFetchedOnce: true,
+            canLoadMore: value.length === offset,
+            refreshing: false
+          }, this.hideLoader());
+        }).catch(_ => {
+          this.showAlert({title: 'Whoops', content: 'Cannot fetch latest games'});
+        });
     } else {
-      firebase.database().ref(DB_NAMES.courses).orderByKey().endAt(lastCourseId).limitToLast(offset).once('value').then(snapshot => {
-        const value = toArray(snapshot.val());
-        const dataset = [...this.state.dataset, ...reverseArray(value).slice(1)];
+      firebase.database()
+        .ref(DB_NAMES.courses)
+        .orderByKey()
+        .endAt(lastCourseId)
+        .limitToLast(offset)
+        .once('value')
+        .then(snapshot => {
+          const value = toArray(snapshot.val());
+          const dataset = [...this.state.dataset, ...reverseArray(value).slice(1)];
 
-        this.setState({
-          dataset,
-          lastCourseId: value[0].courseId,
-          canLoadMore: value.length == offset,
-          refreshing: false
-        }, this.hideLoader());
-      });
+          this.setState({
+            dataset,
+            lastCourseId: value[0].courseId,
+            canLoadMore: value.length == offset,
+            refreshing: false
+          }, this.hideLoader());
+        }).catch(_ => {
+          this.showAlert({title: 'Whoops', content: 'Cannot fetch latest games'});
+        });
     }
   }
 
@@ -123,9 +138,15 @@ export default class Summary extends Component {
         {text: 'Cancel'}
       ]);
   }
+  showAlert(alert) {
+    Alert.alert(
+      alert.title,
+      alert.content,
+      [{text: 'Okay'}]
+    );
+  }
 
   deleteItem(item) {
-    console.log(item, 'item to delte');
     const {dataset} = this.state;
 
     this.setState({refreshing: true});
@@ -134,6 +155,7 @@ export default class Summary extends Component {
       this.setState({refreshing: false, dataset: filteredState});
       console.log(res, 'deleted');
     }).catch(er => {
+      this.showAlert({title: 'Whoops', content: 'Error occured when trying to delete this game'});
       console.warn(er);
     });
   }
