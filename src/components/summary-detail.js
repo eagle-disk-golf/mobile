@@ -7,7 +7,7 @@
 */
 
 import React, {Component} from 'react';
-import {View, StyleSheet,  ScrollView, TouchableOpacity} from 'react-native';
+import {View, StyleSheet,  ScrollView, TouchableOpacity, Alert} from 'react-native';
 import {Spinner, Text} from 'native-base';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
@@ -15,13 +15,14 @@ import firebase, {DB_NAMES} from '../services/firebase';
 import {toArray} from '../helpers/data';
 
 const titleHeight = 60;
-const TitleComponent = ({item, index, testi}) => {
+const TitleComponent = ({item, index, onPress}) => {
   const score = (item.totalThrows + item.penalty) - item.par;
   const scoreWithSign = score < 0 ? score.toString() : `+${score}`;
   const scoreColor = score > 0 ? COLORS.danger : COLORS.success;
 
+
   return (
-    <TouchableOpacity onPress={testi}>
+    <TouchableOpacity onPress={onPress}>
       <View style={[styles.titleContainer]}>
         <View style={[styles.titleItemContainer, styles.borderRight]}>
           <Text>{index + 1}</Text>
@@ -95,7 +96,7 @@ export default class SummaryDetail extends Component {
             </View>
 
             {loading && <Spinner color="green" />}
-            {!loading && lanes && lanes.map((lane, index) => <TitleComponent key={index} index={index} item={lane} testi={() => this.props.navigation.navigate('SummaryDetailLane', {lane, index})} />)}
+            {!loading && lanes && lanes.map((lane, index) => <TitleComponent key={index} index={index} item={lane} onPress={() => this.props.navigation.navigate('SummaryDetailLane', {lane, index})} />)}
           </View>
         </ScrollView>
       </View>

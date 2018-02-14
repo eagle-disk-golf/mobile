@@ -10,14 +10,13 @@
 import React, {Component} from 'react';
 import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import Color from 'color';
-import MapView, { PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle } from 'react-native-maps';
-import { Container, Header, Content } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid';
-import { COLORS } from '../res/styles/constants';
+import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle} from 'react-native-maps';
+import {Col, Row, Grid} from 'react-native-easy-grid';
+import {COLORS} from '../res/styles/constants';
 import time from '../services/time';
 import {getDistanceInMetersBetweenCoordinates, createSquareInMetersFromCoordinate} from '../helpers/geolocation';
 
-const itemHasError = item => !!item.isLost || !!item.isMando || !!item.isOverbound;
+const itemHasError = item => item && !!item.isLost || item && !!item.isMando || item && !!item.isOverbound;
 
 const MARKERS = {
   isMando: index => ({
@@ -53,7 +52,7 @@ const MARKERS = {
 };
 
 const getThrowMarker = (item, throws) => {
-  const error = item.isLost ? 'isLost' : item.isOverbound ? 'isOverbound' : item.isMando ? 'isMando' : null;
+  const error = item && item.isLost ? 'isLost' : item && item.isOverbound ? 'isOverbound' : item && item.isMando ? 'isMando' : null;
   const index = throws.indexOf(item);
   const isFirst = index === 0;
   const isLast = index === throws.length - 1;
@@ -63,15 +62,18 @@ const getThrowMarker = (item, throws) => {
 };
 
 const CustomMarker = ({item, throws}) => {
-  const marker = getThrowMarker(item, throws);
+  if (item) {
+    const marker = getThrowMarker(item, throws);
+    return (
+      <Marker
+        pinColor={marker.color}
+        coordinate={{latitude: item.latitude, longitude: item.longitude}}
+        title={marker.title}
+        description={marker.description} />
+    );
+  }
 
-  return (
-    <Marker
-      pinColor={marker.color}
-      coordinate={{latitude: item.latitude, longitude: item.longitude}}
-      title={marker.title}
-      description={marker.description} />
-  );
+  return null;
 };
 
 export default class SummaryDetailLane extends Component {
@@ -93,7 +95,7 @@ export default class SummaryDetailLane extends Component {
   render() {
     console.log(this.props, 'props');
     const {lane, index} = this.props.navigation.state.params;
-    const laneMarkers = [...lane.throws, lane.endLocation];
+    const laneMarkers = lane && lane.completed && lane.endLocation ? [...lane.throws,  lane.endLocation] : lane.throws;
 
     return (
         <ScrollView>
@@ -126,18 +128,20 @@ export default class SummaryDetailLane extends Component {
           })}
 
           {/* {for showing circle around the basket} */}
-          <Circle
+          {lane.completed && <Circle
             center={laneMarkers[laneMarkers.length - 1]}
             radius={5}
-            fillColor={Color(COLORS.success).lighten(1).rgb().toString()} />
+            fillColor={Color(COLORS.success).lighten(1).rgb().toString()} />}
           <Polygon
             fillColor={Color(COLORS.primary).lighten(0.5).rgb().toString()}
             coordinates={createSquareInMetersFromCoordinate(laneMarkers[0])} />
             </MapView>
         <View style={styles.resultsContainer}>
+          {!lane.completed && <Text style={{fontWeight: 'bold', alignSelf: 'center'}}>This lane is still uncompleted!</Text>}
+
           {laneMarkers.map((item, index) => {
             const nextItem = laneMarkers[index + 1];
-            if (nextItem) {
+            if (lane.completed && nextItem || !lane.completed) {
               return (
                 <Text key={index} style={styles.result}>
                       {index + 1}. <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(item, nextItem)}</Text> m
@@ -180,22 +184,23 @@ export default class SummaryDetailLane extends Component {
                         <Text style={styles.boldResult}>{lane.totalThrows - lane.par}</Text>
                     </Col>
                 </Row>
-                <Row style={styles.rowStyle}>
+                {lane.completed && <Row style={styles.rowStyle}>
                     <Col>
                         <Text>Total time:</Text>
                     </Col>
                     <Col>
-                        <Text style={styles.boldResult}>{time.getFormattedMinutes(lane.endLocation.timestamp - lane.startLocation.timestamp)}</Text>
+                        {<Text style={styles.boldResult}>{time.getFormattedMinutes(lane.endLocation.timestamp - lane.startLocation.timestamp)}</Text>}
                     </Col>
-                </Row>
-                <Row style={styles.rowStyle}>
+                </Row>}
+                {lane.completed && <Row style={styles.rowStyle}>
                     <Col>
                         <Text>Distance covered:</Text>
                     </Col>
                     <Col>
                         <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(lane.startLocation, lane.endLocation)} meters</Text>
                     </Col>
-                </Row>
+                </Row>}
+
             </Grid>
         </View>
         </View>

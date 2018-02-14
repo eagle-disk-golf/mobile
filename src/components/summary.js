@@ -19,13 +19,15 @@ import firebase, {DB_NAMES} from '../services/firebase';
 import time from '../services/time';
 import {toArray, reverseArray} from '../helpers/data';
 
-const CustomListItem = ({ item, index, onPress, onLongPress }) => {
+const CustomListItem = ({item, index, onPress, onLongPress}) => {
     const timeStamp = item && item.startLocation ? item.startLocation.timestamp : null;
+    const completed = item && item.completed;
 
   return <ListItem style={globalStyles.bgDefault} key={index} onPress={onPress} onLongPress={onLongPress}>
-      <Body>
-          <Text>{timeStamp ? `${time.getFormattedDate(timeStamp)} ${time.getFormattedTime(timeStamp)}` : ''}</Text>
-      <Text note>{item && item.address && item.address.formatted_address}</Text>
+    <Body>
+      <Text>{timeStamp ? `${time.getFormattedDate(timeStamp)} ${time.getFormattedTime(timeStamp)}` : ''}</Text>
+      {completed && <Text note>{item && item.address && item.address.formatted_address}</Text>}
+      {!completed && <Text>Active course</Text>}
     </Body>
     <Right>
       <ArrowForwardIcon />
