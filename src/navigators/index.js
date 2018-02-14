@@ -11,6 +11,7 @@ import React, {Component} from 'react';
 import {View} from 'react-native';
 import {StackNavigator, TabNavigator} from 'react-navigation';
 import Icon from '../components/icon';
+import Color from 'color';
 
 //App colors
 import {COLORS} from '../res/styles/constants';
@@ -32,14 +33,16 @@ const TabIcon = ({name, isFocused}) => {
 
 const TabBarOptions = {
   showIcon: true,
-  activeTintColor: '#003337',
-  inactiveTintColor: 'lightgray',
+  activeTintColor: COLORS.textPrimary,
+  // inactiveTintColor: 'lightgray',
+  inactiveTintColor: Color(COLORS.textPrimary).fade(0.8),
   style: {
-    backgroundColor: '#F8FDFF',
+    backgroundColor: COLORS.white,
     elevation: 0,
     borderBottomWidth: 0.5,
     borderTopWidth: 0.0,
-    borderColor: '#c1bfbf'
+    borderColor: Color(COLORS.textPrimary).fade(0.8)
+
   },
   labelStyle: {
     margin: 0,

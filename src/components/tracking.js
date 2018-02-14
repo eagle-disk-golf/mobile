@@ -359,7 +359,7 @@ handleTrackThrow() {
       {name: 'over-bound', flag: 'isOverBound', text: 'Over bound', icon: 'remove-circle', iconColor: COLORS.success, penalty: 1},
       {name: 'lost', flag: 'isLost', text: 'Lost', icon: 'eye-off', iconColor: COLORS.primary, penalty: 1},
       {name: 'mando', flag: 'isMando', text: 'Mando', icon: 'redo', iconColor: COLORS.warning, penalty: 1},
-      {name: 'cancel', text: 'Cancel', icon: 'close', iconColor: '#25de5b'}
+      {name: 'cancel', text: 'Cancel', icon: 'close', iconColor: COLORS.danger}
     ];
     const DESTRUCTIVE_INDEX = 3;
     const CANCEL_INDEX = 3;
@@ -528,6 +528,6 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   grid: {
-    backgroundColor: '#F8FDFF'
+    backgroundColor: COLORS.white
   }
 });

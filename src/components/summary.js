@@ -182,11 +182,8 @@ const ArrowForwardIcon = () => <Icon size={20} name="ios-arrow-forward" />;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 10
-    // backgroundColor: '#fff'
   },
   header: {
-    // backgroundColor: '#fff,
     marginVertical: 20
   },
   list: {

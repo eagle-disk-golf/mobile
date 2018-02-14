@@ -1,16 +1,15 @@
 ﻿import React, {Component} from 'react';
-import {TouchableOpacity, StyleSheet, ImageBackground, View} from 'react-native';
-import {Text, Card, CardItem } from 'native-base';
-import {Col, Row, Grid} from 'react-native-easy-grid';
+import {TouchableOpacity, StyleSheet, ImageBackground} from 'react-native';
+import {Text, Card} from 'native-base';
+import {Row, Grid} from 'react-native-easy-grid';
 import {globalStyles} from '../res/styles';
+import {COLORS} from '../res/styles/constants';
 
 // Other way to import components/variables/etc
 // import styles from '../res/styles'
 
 export default class MainButton extends Component {
   render() {
-  const resizeMode = 'stretch';
-
     return (
       <Grid style={[globalStyles.bgDefault]}>
         <Row size={50}>
@@ -42,7 +41,7 @@ const style = StyleSheet.create({
     marginLeft: 5,
     marginRight: 5,
     borderWidth: 2,
-    borderColor: '#000000',
+    borderColor: COLORS.textPrimary,
     margin: 0,
     padding: 2
   },
