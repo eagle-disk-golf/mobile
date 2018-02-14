@@ -22,10 +22,8 @@ import SummaryScreen from '../screens/summary-screen';
 import TestScreen from '../screens/test';
 
 import HeaderLeft from '../components/header/header-left';
-import HeaderRight from '../components/header/header-right';
 
 import SummaryDetailScreen from '../screens/summary-detail-screen';
-import SummaryDetail from '../components/summary-detail';
 import SummaryDetailLaneScreen from '../screens/summary-detail-lane-screen';
 import {isIos} from '../helpers/platform';
 
@@ -33,14 +31,6 @@ const TabIcon = ({name, isFocused}) => {
   const iconColor = isFocused ? null : 'lightgray';
   return <Icon size={20} name={name} style={{color: iconColor}} />;
 };
-
-// Nesting StackNavigator for Summary details
-// const SummaryNavigator = StackNavigator({
-//   Summary: {screen: SummaryScreen},
-//   SummaryDetail: {
-//     screen: SummaryDetailScreen,
-//   }
-// }, {headerMode: 'none'});
 
 const TabBarOptions = {
   showIcon: true,
@@ -88,14 +78,6 @@ const MainTabNavigator = TabNavigator({
     tabBarPosition: 'top',
     tabBarOptions: TabBarOptions,
   });
-// Nesting tabnavigator inside of stacknavi to make the header appear
-
-// const MainNavigation = StackNavigator({
-//   MainTabs: {
-//     screen: MainTabNavigator,
-//   },
-// }, {headerMode: 'none'});
-
 
 // Wrap main navigator inside screen element so header can receive navigation props
 class MainNavigationScreen extends Component {
@@ -132,12 +114,6 @@ const defaultNavigationOptions = {
 export const RootNavigator = StackNavigator({
   MainNavigation: {
     screen: MainNavigationScreen,
-    navigationOptions: {
-      ...defaultNavigationOptions
-    }
-  },
-  Test: {
-    screen: TestScreen,
     navigationOptions: {
       ...defaultNavigationOptions
     }
