@@ -5,7 +5,7 @@ import Icon from './icon';
 import InfiniteListView from './infinite-list-view';
 import {globalStyles} from '../res/styles';
 import firebase, {DB_NAMES} from '../services/firebase';
-import time from '../services/time';
+import time from '../helpers/time';
 import {toArray, reverseArray} from '../helpers/data';
 
 const CustomListItem = ({item, index, onPress, onLongPress}) => {

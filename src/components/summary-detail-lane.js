@@ -13,7 +13,7 @@ import Color from 'color';
 import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle} from 'react-native-maps';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import {COLORS} from '../res/styles/constants';
-import time from '../services/time';
+import time from '../helpers/time';
 import {getDistanceInMetersBetweenCoordinates, createSquareInMetersFromCoordinate} from '../helpers/geolocation';
 
 const itemHasError = item => item && !!item.isLost || item && !!item.isMando || item && !!item.isOverbound;
