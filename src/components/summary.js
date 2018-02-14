@@ -142,7 +142,6 @@ export default class Summary extends Component {
     firebase.database().ref(DB_NAMES.courses + item.courseId).remove().then(res => {
       const filteredState = dataset.filter((val) => val.courseId !== item.courseId);
       this.setState({refreshing: false, dataset: filteredState});
-      console.log(res, 'deleted');
     }).catch(er => {
       this.showAlert({title: 'Whoops', content: 'Error occured when trying to delete this game'});
       console.warn(er);
