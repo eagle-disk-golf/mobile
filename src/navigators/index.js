@@ -8,9 +8,8 @@
 */
 
 import React, {Component} from 'react';
-import {} from 'native-base';
-import {Platform, View} from 'react-native';
-import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
+import {View} from 'react-native';
+import {StackNavigator, TabNavigator} from 'react-navigation';
 import Icon from '../components/icon';
 
 //App colors
@@ -19,7 +18,6 @@ import {COLORS} from '../res/styles/constants';
 import MainScreen from '../screens/main-screen';
 import TrackingScreen from '../screens/tracking-screen';
 import SummaryScreen from '../screens/summary-screen';
-import TestScreen from '../screens/test';
 
 import HeaderLeft from '../components/header/header-left';
 
