@@ -1,13 +1,4 @@
-﻿/*
-  KIDE
-  File created: 5.2.2018
-  Made by: Jenni
-  History:
-  12.02.2018: Topi: Added information box
-  13.02.2018: Topi: Added styling and native base grid box, import time
-*/
-
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import Color from 'color';
 import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle} from 'react-native-maps';
@@ -15,6 +6,18 @@ import {Col, Row, Grid} from 'react-native-easy-grid';
 import {COLORS} from '../res/styles/constants';
 import time from '../helpers/time';
 import {getDistanceInMetersBetweenCoordinates, createSquareInMetersFromCoordinate} from '../helpers/geolocation';
+
+const getOverallDistance = throws => {
+  let distance = 0;
+  throws.map((item, index) => {
+    const nextThrow = throws[index + 1];
+    if (nextThrow) {
+      distance += getDistanceInMetersBetweenCoordinates(item, nextThrow);
+    }
+  });
+
+  return distance;
+};
 
 const itemHasError = item => item && !!item.isLost || item && !!item.isMando || item && !!item.isOverbound;
 
@@ -201,7 +204,8 @@ export default class SummaryDetailLane extends Component {
                   <Text>Distance covered:</Text>
                 </Col>
                 <Col>
-                  <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(lane.startLocation, lane.endLocation)} meters</Text>
+                  {/* <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(lane.startLocation, lane.endLocation)} meters</Text> */}
+                  <Text style={styles.boldResult}>{`${getOverallDistance(laneMarkers)} meters`}</Text>
                 </Col>
               </Row>}
 
