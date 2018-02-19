@@ -74,6 +74,8 @@ env.js
 
 .vs/*
 
-.vs\mobile\v15\.suo
 
-.vs/mobile/v15/.suo
+.vs\mobile\v15\*
+.vs/mobile/v15/*
+
+
