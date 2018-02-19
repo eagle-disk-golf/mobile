@@ -28,7 +28,8 @@ export default class FadeInView extends Component {
   }
 
     /**
-      * If nextProps.visible is true and
+      * If nextProps.visible is true fade in comes in, if not fade out comes in.
+      * @componentWillReceiveProps
       */
   componentWillReceiveProps(nextProps) {
     if (!!nextProps.visible && (nextProps.visible !== this.props.visible)) {
@@ -38,6 +39,10 @@ export default class FadeInView extends Component {
     }
   }
 
+    /**
+     * Fade in duration set as props.
+     * @fadeIn
+     */
   fadeIn() {
     const {fadeInDuration = 300} = this.props;
 
@@ -49,6 +54,10 @@ export default class FadeInView extends Component {
     ).start();
   }
 
+    /**
+     * Fade out duration set as props.
+     * @fadeOut
+     */
   fadeOut() {
     const {fadeOutDuration = 300} = this.props;
 
@@ -60,6 +69,11 @@ export default class FadeInView extends Component {
     ).start();
   }
 
+    /**
+     * Render function that takes opacity and styles as variables.
+     * Returns an animated view.
+     * @render
+     */
   render() {
     const {opacity} = this.state;
     const styles = stylesToArray(this.props.style);

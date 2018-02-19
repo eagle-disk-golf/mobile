@@ -1,11 +1,17 @@
 ﻿import React, {Component} from 'react';
-import {StyleSheet, ScrollView, View, Text, Dimensions, Platform, findNodeHandle, TouchableOpacity} from 'react-native';
+import { StyleSheet, ScrollView, View, Text, Dimensions, Platform, findNodeHandle, TouchableOpacity } from 'react-native';
+/** https://docs.nativebase.io/Components.html#Spinner */
 import {Spinner} from 'native-base';
+/** https://www.npmjs.com/package/react-native-maps */
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import Panel from './panel';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
-import {getDistanceInMetersBetweenCoordinates} from '../helpers/geolocation';
+import { getDistanceInMetersBetweenCoordinates } from '../helpers/geolocation';
+
+/**
+ * This is not used.
+ */
 
 const isAndroid = Platform.OS === 'android';
 

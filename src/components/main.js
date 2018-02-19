@@ -1,6 +1,8 @@
 ﻿import React, {Component} from 'react';
-import {TouchableOpacity, StyleSheet, ImageBackground} from 'react-native';
-import {Text, Card} from 'native-base';
+import { TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
+/** https://docs.nativebase.io/Components.html#card-def-headref */
+import { Text, Card } from 'native-base';
+/** https://github.com/GeekyAnts/react-native-easy-grid */
 import {Row, Grid} from 'react-native-easy-grid';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
@@ -9,6 +11,15 @@ import {COLORS} from '../res/styles/constants';
 // import styles from '../res/styles'
 
 export default class MainButton extends Component {
+    /**
+     * Render function that makes the home screen with cards and navigation.
+     * @Grid
+     * @Row
+     * @Card
+     * @TouchableOpacity
+     * @ImageBackground
+     * @Text
+     */
   render() {
     return (
       <Grid style={[globalStyles.bgDefault]}>
@@ -33,6 +44,9 @@ export default class MainButton extends Component {
   }
 }
 
+/**
+ * Style settings
+ */
 const style = StyleSheet.create({
   touch: {
     flex: 1,
