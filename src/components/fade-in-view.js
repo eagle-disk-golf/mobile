@@ -3,6 +3,10 @@ import {Animated} from 'react-native';
 import {stylesToArray} from '../helpers/components';
 
 export default class FadeInView extends Component {
+    /**
+      * Fade in animation
+      * @constructor
+      */
   constructor(props) {
     super(props);
     this.state = {
@@ -10,6 +14,11 @@ export default class FadeInView extends Component {
     };
   }
 
+    /**
+      * If visible is true, componentDidMount does fadeIn, if not it does fadeOut.
+      * componentDidMount is invoked immediately after a component is mounted.
+      * @componentDidMount
+      */
   componentDidMount() {
     if (!!this.props.visible) {
       this.fadeIn();
@@ -18,6 +27,9 @@ export default class FadeInView extends Component {
     }
   }
 
+    /**
+      * If nextProps.visible is true and
+      */
   componentWillReceiveProps(nextProps) {
     if (!!nextProps.visible && (nextProps.visible !== this.props.visible)) {
       this.fadeIn();
