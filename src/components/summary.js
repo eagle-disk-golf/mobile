@@ -1,13 +1,34 @@
 ﻿import React, {Component} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
+/** https://docs.nativebase.io/Components.html#list-def-headref */
 import {Text, ListItem, Body, Right} from 'native-base';
 import Icon from './icon';
 import InfiniteListView from './infinite-list-view';
 import {globalStyles} from '../res/styles';
 import firebase, {DB_NAMES} from '../services/firebase';
 import time from '../helpers/time';
-import {toArray, reverseArray} from '../helpers/data';
+import { toArray, reverseArray } from '../helpers/data';
 
+/**
+ * CustomListItem function that takes item, index, onPress and onLongPress as parameters.
+ * timeStamp is database's startLocation's timestamp if found.
+ * completed marks the item completed.
+ * Returns ListItem with a timestamp that includes date and time. Text note either includes address or information about active course.
+ * Right side is filled with an arrow. You can short or long press the item.
+ * @CustomListItem
+ * @ListItem
+ * @Body
+ * @Text
+ * @ArrowForwardIcon
+ * @Right
+ * @globalStyles
+ * @timeStamp
+ * @getFormattedDate
+ * @getFormattedTime
+ * @item
+ * @timeStamp
+ * @completed
+ */
 const CustomListItem = ({item, index, onPress, onLongPress}) => {
   const timeStamp = item && item.startLocation ? item.startLocation.timestamp : null;
   const completed = item && item.completed;
@@ -25,6 +46,11 @@ const CustomListItem = ({item, index, onPress, onLongPress}) => {
 };
 
 export default class Summary extends Component {
+    /**
+     * Constructor with props fetching the data from the database. ES6 binding to fetchGames.
+     * @constructor
+     * @fetchGames
+     */
   constructor(props) {
     super(props);
 
@@ -41,26 +67,51 @@ export default class Summary extends Component {
     this.fetchGames = this.fetchGames.bind(this);
   }
 
+    /**
+     * Show animation loader.
+     * @showLoader
+     */
   showLoader() {
     this.setState({loading: true});
   }
 
+    /**
+     * Hide animation loader.
+     * @hideLoader
+     */
   hideLoader() {
     this.setState({loading: false});
   }
 
+    /**
+     * Possibility to load more items to list.
+     * @canLoad
+     */
   canLoad() {
     return this.state.canLoadMore;
   }
 
+    /**
+     * fetchGames function that shows loading animation first.
+     * If there has not been any fetching done, a database fetch activates.
+     * @fetchGames
+     * @offset
+     * @hasFetchedOnce
+     * @lastCourseId
+     * @firebase
+     * @value
+     * @dataset
+     */
   fetchGames() {
     const {offset, hasFetchedOnce, lastCourseId} = this.state;
     this.showLoader();
 
-    // When fetching first time, we don't have any course id's that we need in order to implement infinite scroll (fetching courses between id's)
-    // That's why on the first time, we just fetch the latest courses from the firebase (offset determines this), and after that we start fetching the courses
-    // before the last courseId we received
-    if (!hasFetchedOnce) {
+    /**
+     * When fetching first time, we don't have any course id's that we need in order to implement infinite scroll (fetching courses between id's)
+     * That's why on the first time, we just fetch the latest courses from the firebase (offset determines this), and after that we start fetching the courses
+     * before the last courseId we received.
+     */
+      if (!hasFetchedOnce) {
       firebase.database()
         .ref(DB_NAMES.courses)
         .orderByKey()
@@ -102,6 +153,11 @@ export default class Summary extends Component {
     }
   }
 
+    /**
+     * refreshGames function that checks if the list is not loading it refreshes the state with these values.
+     * @loading
+     * @refreshGames
+     */
   refreshGames() {
     const {loading} = this.state;
 
@@ -114,10 +170,20 @@ export default class Summary extends Component {
     }
   }
 
+    /**
+     * Invokes fetchGames when loaded.
+     * @componentDidMount
+     */
   componentDidMount() {
     this.fetchGames();
   }
 
+    /**
+     * Alert that prompts you to delete an item.
+     * @confirmDelete
+     * @deleteItem
+     * @Alert
+     */
   confirmDelete(item) {
     Alert.alert(
       'Delete game',
@@ -127,6 +193,12 @@ export default class Summary extends Component {
         {text: 'Cancel'}
       ]);
   }
+
+    /**
+     * Shows an alert with title and content.
+     * @showAlert
+     * @Alert
+     */
   showAlert(alert) {
     Alert.alert(
       alert.title,
@@ -135,6 +207,13 @@ export default class Summary extends Component {
     );
   }
 
+    /**
+     * Function that deletes an item from the list and the database with a prompt.
+     * @deleteItem
+     * @dataset
+     * @refreshing
+     * @firebase
+     */
   deleteItem(item) {
     const {dataset} = this.state;
 
@@ -148,7 +227,19 @@ export default class Summary extends Component {
     });
   }
 
-
+    /**
+     * Render function that returns the latest games from the database as a list view.
+     * Uses infinite list view and onPress you get the details, onLongPress you can delete the item.
+     * @loading
+     * @dataset
+     * @refreshing
+     * @navigation
+     * @return
+     * @View
+     * @Text
+     * @InfiniteListView
+     * @CustomListItem
+     */
   render() {
     const {loading, dataset, refreshing} = this.state;
     const {navigation} = this.props;
@@ -177,8 +268,15 @@ export default class Summary extends Component {
   }
 }
 
+/**
+ * ArrowForwardIcon on the right side of the list view.
+ * @ArrowForwardIcon
+ */
 const ArrowForwardIcon = () => <Icon size={20} name="ios-arrow-forward" />;
 
+/**
+ * StyleSheet
+ */
 const styles = StyleSheet.create({
   container: {
     flex: 1,
