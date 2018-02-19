@@ -1,29 +1,53 @@
 ﻿import React, {Component} from 'react';
-import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+/** https://docs.nativebase.io/Components.html#Spinner */
 import {Spinner, Text} from 'native-base';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
 import firebase, {DB_NAMES} from '../services/firebase';
 import {toArray} from '../helpers/data';
 
+/**
+ * titleHeight sets the height of the title bar.
+ * TitleComponent function takes item, index and onPress as parameters.
+ * Inside of the function it sets score variable as (totalThrows + penalty) - par.
+ * scoreWithSign takes in a string if score is less than 0. Otherwise shows "+score".
+ * scoreColor shows danger color if score is bigger than 0. Otherwise shows success color.
+ * Returns
+
+
+noot finiisheeed
+
+
+
+ * @Titlecomponent
+ * @item
+ * @index
+ * @onPress
+ * @score
+ * @totalThrows
+ * @penalty
+ * @par
+ * @scoreWithSign
+ * @scoreColor
+ */
 const titleHeight = 60;
 const TitleComponent = ({item, index, onPress}) => {
-  const score = (item.totalThrows + item.penalty) - item.par;
-  const scoreWithSign = score < 0 ? score.toString() : `+${score}`;
-  const scoreColor = score > 0 ? COLORS.danger : COLORS.success;
+const score = (item.totalThrows + item.penalty) - item.par;
+const scoreWithSign = score < 0 ? score.toString() : `+${score}`;
+const scoreColor = score > 0 ? COLORS.danger : COLORS.success;
+    
+return (
+  <TouchableOpacity onPress={onPress}>
+    <View style={[styles.titleContainer]}>
+      <View style={[styles.titleItemContainer, styles.borderRight]}>
+        <Text>{index + 1}</Text>
+      </View>
 
-
-  return (
-    <TouchableOpacity onPress={onPress}>
-      <View style={[styles.titleContainer]}>
-        <View style={[styles.titleItemContainer, styles.borderRight]}>
-          <Text>{index + 1}</Text>
-        </View>
-
-        <View style={[styles.titleItemContainer, styles.borderRight]}>
-          <Text>{item.throws.length}</Text>
-          <Text style={styles.penalty}> {item.penalty ? `+${item.penalty}` : ''}</Text>
-        </View>
+      <View style={[styles.titleItemContainer, styles.borderRight]}>
+        <Text>{item.throws.length}</Text>
+        <Text style={styles.penalty}> {item.penalty ? `+${item.penalty}` : ''}</Text>
+      </View>
 
         <View style={[styles.titleItemContainer, styles.borderRight]}>
           <Text>{item.par}</Text>
