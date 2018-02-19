@@ -3,6 +3,10 @@ import {StyleSheet, View, TouchableHighlight, Animated} from 'react-native'; //S
 import {COLORS} from '../res/styles/constants';
 
 class Panel extends Component {
+    /**
+     * This is not used.
+     * @constructor
+     */
   constructor(props) {
     super(props);
 
@@ -85,7 +89,6 @@ class Panel extends Component {
       minHeight: event.nativeEvent.layout.height
     });
   }
-
 
   render() {
     const {animation, expanded, shouldPanelOpen, canRenderChildren} = this.state;
