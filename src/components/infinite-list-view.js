@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ListView, FlatList, ActivityIndicator} from 'react-native';
+import {FlatList, ActivityIndicator} from 'react-native';
 
 export default class InfiniteListView extends Component {
 

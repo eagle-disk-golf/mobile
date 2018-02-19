@@ -1,5 +1,4 @@
 import Geolocation from 'react-native-geolocation-service';
-import {isAndroid} from '../helpers/platform';
 // if physical android device, set => gps location mode: battery saving
 const options = {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000};
 

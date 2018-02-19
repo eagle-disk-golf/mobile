@@ -1,16 +1,7 @@
-/*
-  KIDE
-  File created: 30.11.2017
-  Made by: Jenni
-  History:
-  12.12.2017 Riku: Transparent borderBottom for item
-  29.1.2018 Oskari: Styling
-
-*/
-
 import React, {Component} from 'react';
 import {StyleSheet} from 'react-native';
 import {Text, Thumbnail, Item} from 'native-base';
+import {COLORS} from '../../res/styles/constants';
 
 export default class HeaderLeft extends Component {
   render() {
@@ -38,7 +29,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginLeft: 20,
-    color: '#003337',
+    color: COLORS.textPrimary,
     fontFamily: 'Roboto'
   },
 });

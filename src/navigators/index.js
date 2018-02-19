@@ -8,10 +8,10 @@
 */
 
 import React, {Component} from 'react';
-import {} from 'native-base';
-import {Platform, View} from 'react-native';
-import {DrawerNavigator, StackNavigator, TabNavigator} from 'react-navigation';
+import {View} from 'react-native';
+import {StackNavigator, TabNavigator} from 'react-navigation';
 import Icon from '../components/icon';
+import Color from 'color';
 
 //App colors
 import {COLORS} from '../res/styles/constants';
@@ -19,13 +19,10 @@ import {COLORS} from '../res/styles/constants';
 import MainScreen from '../screens/main-screen';
 import TrackingScreen from '../screens/tracking-screen';
 import SummaryScreen from '../screens/summary-screen';
-import TestScreen from '../screens/test';
 
 import HeaderLeft from '../components/header/header-left';
-import HeaderRight from '../components/header/header-right';
 
 import SummaryDetailScreen from '../screens/summary-detail-screen';
-import SummaryDetail from '../components/summary-detail';
 import SummaryDetailLaneScreen from '../screens/summary-detail-lane-screen';
 import {isIos} from '../helpers/platform';
 
@@ -34,24 +31,18 @@ const TabIcon = ({name, isFocused}) => {
   return <Icon size={20} name={name} style={{color: iconColor}} />;
 };
 
-// Nesting StackNavigator for Summary details
-// const SummaryNavigator = StackNavigator({
-//   Summary: {screen: SummaryScreen},
-//   SummaryDetail: {
-//     screen: SummaryDetailScreen,
-//   }
-// }, {headerMode: 'none'});
-
 const TabBarOptions = {
   showIcon: true,
-  activeTintColor: '#003337',
-  inactiveTintColor: 'lightgray',
+  activeTintColor: COLORS.textPrimary,
+  // inactiveTintColor: 'lightgray',
+  inactiveTintColor: Color(COLORS.textPrimary).fade(0.8),
   style: {
-    backgroundColor: '#F8FDFF',
+    backgroundColor: COLORS.white,
     elevation: 0,
     borderBottomWidth: 0.5,
     borderTopWidth: 0.0,
-    borderColor: '#c1bfbf'
+    borderColor: Color(COLORS.textPrimary).fade(0.8)
+
   },
   labelStyle: {
     margin: 0,
@@ -88,14 +79,6 @@ const MainTabNavigator = TabNavigator({
     tabBarPosition: 'top',
     tabBarOptions: TabBarOptions,
   });
-// Nesting tabnavigator inside of stacknavi to make the header appear
-
-// const MainNavigation = StackNavigator({
-//   MainTabs: {
-//     screen: MainTabNavigator,
-//   },
-// }, {headerMode: 'none'});
-
 
 // Wrap main navigator inside screen element so header can receive navigation props
 class MainNavigationScreen extends Component {
@@ -132,12 +115,6 @@ const defaultNavigationOptions = {
 export const RootNavigator = StackNavigator({
   MainNavigation: {
     screen: MainNavigationScreen,
-    navigationOptions: {
-      ...defaultNavigationOptions
-    }
-  },
-  Test: {
-    screen: TestScreen,
     navigationOptions: {
       ...defaultNavigationOptions
     }

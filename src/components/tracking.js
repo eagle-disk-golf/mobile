@@ -2,12 +2,12 @@
  eslint max-len: 0
 */
 import React, {Component} from 'react';
-import {View, StyleSheet, Alert, PermissionsAndroid, Platform} from 'react-native';
+import {View, StyleSheet, Alert, PermissionsAndroid} from 'react-native';
 import {Text, Button, Toast, ActionSheet, Spinner} from 'native-base';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import Icon from './icon';
 import FadeInView from './fade-in-view';
-import NewCourseModal from './new-course-modal';
+// import NewCourseModal from './new-course-modal';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
 
@@ -15,13 +15,6 @@ import firebase, {DB_NAMES} from '../services/firebase';
 import geolocation from '../services/geolocation';
 import {getAddressByCoordinates} from '../services/geocoding';
 import {isAndroid} from '../helpers/platform';
-
-
-// const requestLocationPermissionOnAndroid = new Promise((resolve, reject) => {
-
-// });
-
-
 
 import {LANE, COURSE} from '../constants/tracking';
 
@@ -237,9 +230,8 @@ handleTrackThrow() {
 
           this.setState({course: {...this.state.course, address}});
           firebase.database().ref().update(addressUpdate);
-        }).catch(er => {
-          this.displayError(er);
-          console.log(er);
+        }).catch(_ => {
+          // console.warn(er);
         });
       }
     }).catch((error) => {
@@ -275,7 +267,6 @@ handleTrackThrow() {
     }).catch((error) => {
       this.displayError(error);
       this.hideLoader();
-      // console.warn(error);
     });
   }
 
@@ -329,7 +320,7 @@ handleTrackThrow() {
         'Are you sure you want to end the current game?',
         [
           {text: 'Yes, end game', onPress: () => this.endCourse()},
-          {text: 'Cancel', onPress: () => console.log('cancel')}
+          {text: 'Cancel'}
         ]);
     }
   }
@@ -368,7 +359,7 @@ handleTrackThrow() {
       {name: 'over-bound', flag: 'isOverBound', text: 'Over bound', icon: 'remove-circle', iconColor: COLORS.success, penalty: 1},
       {name: 'lost', flag: 'isLost', text: 'Lost', icon: 'eye-off', iconColor: COLORS.primary, penalty: 1},
       {name: 'mando', flag: 'isMando', text: 'Mando', icon: 'redo', iconColor: COLORS.warning, penalty: 1},
-      {name: 'cancel', text: 'Cancel', icon: 'close', iconColor: '#25de5b'}
+      {name: 'cancel', text: 'Cancel', icon: 'close', iconColor: COLORS.danger}
     ];
     const DESTRUCTIVE_INDEX = 3;
     const CANCEL_INDEX = 3;
@@ -470,8 +461,8 @@ handleTrackThrow() {
             </FadeInView>
 
             <Button style={[
-                           globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical, styles.border,
-                           isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
+              globalStyles.buttonRounded, globalStyles.bgPrimary, globalStyles.centerVertical, styles.border,
+              isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
               {!loading && <Text style={[globalStyles.textPrimary]}>{!isCourseActive ? 'Start' : isLaneActive ? 'Throw' : 'Continue'}</Text>}
               {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
               {
@@ -486,12 +477,12 @@ handleTrackThrow() {
             </FadeInView>}
 
           </Row>
-            {isCourseActive && !isLaneActive && <FadeInView style={[styles.fadeInView, {position: 'absolute', bottom: 20, left: 0, right: 0}]} visible={true}>
-              <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.border, styles.shadow, {alignSelf: 'center'}]} onPress={this.handleEndCourse}>
-                {/* <Text>Quit</Text> */}
-                <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />
-              </Button>
-            </FadeInView>}
+          {isCourseActive && !isLaneActive && <FadeInView style={[styles.fadeInView, {position: 'absolute', bottom: 20, left: 0, right: 0}]} visible={true}>
+            <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.border, styles.shadow, {alignSelf: 'center'}]} onPress={this.handleEndCourse}>
+              {/* <Text>Quit</Text> */}
+              <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />
+            </Button>
+          </FadeInView>}
         </Col>
       </Grid>
     );
@@ -536,7 +527,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto',
     fontSize: 20
   },
-    grid: {
-        backgroundColor: '#F8FDFF'
-    }
+  grid: {
+    backgroundColor: COLORS.white
+  }
 });

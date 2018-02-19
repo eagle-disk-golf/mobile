@@ -1,31 +1,22 @@
-﻿/*
-  KIDE
-  File created: 23.10.2017
-  Made by: Riku
-  History:
-  23.11.2017 Topi: List and ListItem added
-  30.11.2017 Topi: Styling
-  12.12.2017 Riku: Use custom icon component
-  12.02.2018 Topi: Added clock timestamp to listed items
-*/
-
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {Text, ListItem, Body, Right} from 'native-base';
 import Icon from './icon';
 import InfiniteListView from './infinite-list-view';
 import {globalStyles} from '../res/styles';
 import firebase, {DB_NAMES} from '../services/firebase';
-import time from '../services/time';
+import time from '../helpers/time';
 import {toArray, reverseArray} from '../helpers/data';
 
-const CustomListItem = ({ item, index, onPress, onLongPress }) => {
-    const timeStamp = item && item.startLocation ? item.startLocation.timestamp : null;
+const CustomListItem = ({item, index, onPress, onLongPress}) => {
+  const timeStamp = item && item.startLocation ? item.startLocation.timestamp : null;
+  const completed = item && item.completed;
 
   return <ListItem style={globalStyles.bgDefault} key={index} onPress={onPress} onLongPress={onLongPress}>
-      <Body>
-          <Text>{timeStamp ? `${time.getFormattedDate(timeStamp)} ${time.getFormattedTime(timeStamp)}` : ''}</Text>
-      <Text note>{item && item.address && item.address.formatted_address}</Text>
+    <Body>
+      <Text>{timeStamp ? `${time.getFormattedDate(timeStamp)} ${time.getFormattedTime(timeStamp)}` : ''}</Text>
+      {completed && <Text note>{item && item.address && item.address.formatted_address}</Text>}
+      {!completed && <Text>Active course</Text>}
     </Body>
     <Right>
       <ArrowForwardIcon />
@@ -70,29 +61,44 @@ export default class Summary extends Component {
     // That's why on the first time, we just fetch the latest courses from the firebase (offset determines this), and after that we start fetching the courses
     // before the last courseId we received
     if (!hasFetchedOnce) {
-      firebase.database().ref(DB_NAMES.courses).orderByKey().limitToLast(offset).once('value').then(snapshot => {
-        const value = toArray(snapshot.val());
-        const dataset = reverseArray(value);
-        this.setState({
-          dataset,
-          lastCourseId: value[0].courseId,
-          hasFetchedOnce: true,
-          canLoadMore: value.length === offset,
-          refreshing: false
-        }, this.hideLoader());
-      });
+      firebase.database()
+        .ref(DB_NAMES.courses)
+        .orderByKey()
+        .limitToLast(offset)
+        .once('value')
+        .then(snapshot => {
+          const value = toArray(snapshot.val());
+          const dataset = reverseArray(value);
+          this.setState({
+            dataset,
+            lastCourseId: value[0].courseId,
+            hasFetchedOnce: true,
+            canLoadMore: value.length === offset,
+            refreshing: false
+          }, this.hideLoader());
+        }).catch(_ => {
+          this.showAlert({title: 'Whoops', content: 'Cannot fetch latest games'});
+        });
     } else {
-      firebase.database().ref(DB_NAMES.courses).orderByKey().endAt(lastCourseId).limitToLast(offset).once('value').then(snapshot => {
-        const value = toArray(snapshot.val());
-        const dataset = [...this.state.dataset, ...reverseArray(value).slice(1)];
+      firebase.database()
+        .ref(DB_NAMES.courses)
+        .orderByKey()
+        .endAt(lastCourseId)
+        .limitToLast(offset)
+        .once('value')
+        .then(snapshot => {
+          const value = toArray(snapshot.val());
+          const dataset = [...this.state.dataset, ...reverseArray(value).slice(1)];
 
-        this.setState({
-          dataset,
-          lastCourseId: value[0].courseId,
-          canLoadMore: value.length == offset,
-          refreshing: false
-        }, this.hideLoader());
-      });
+          this.setState({
+            dataset,
+            lastCourseId: value[0].courseId,
+            canLoadMore: value.length == offset,
+            refreshing: false
+          }, this.hideLoader());
+        }).catch(_ => {
+          this.showAlert({title: 'Whoops', content: 'Cannot fetch latest games'});
+        });
     }
   }
 
@@ -121,17 +127,23 @@ export default class Summary extends Component {
         {text: 'Cancel'}
       ]);
   }
+  showAlert(alert) {
+    Alert.alert(
+      alert.title,
+      alert.content,
+      [{text: 'Okay'}]
+    );
+  }
 
   deleteItem(item) {
-    console.log(item, 'item to delte');
     const {dataset} = this.state;
 
     this.setState({refreshing: true});
     firebase.database().ref(DB_NAMES.courses + item.courseId).remove().then(res => {
       const filteredState = dataset.filter((val) => val.courseId !== item.courseId);
       this.setState({refreshing: false, dataset: filteredState});
-      console.log(res, 'deleted');
     }).catch(er => {
+      this.showAlert({title: 'Whoops', content: 'Error occured when trying to delete this game'});
       console.warn(er);
     });
   }
@@ -147,8 +159,12 @@ export default class Summary extends Component {
 
         <InfiniteListView
           data={dataset}
-          renderRow={({item, index}) => <CustomListItem index={index} item={item} onPress={() => navigation.navigate('SummaryDetail', item)} onLongPress={() => this.confirmDelete(item)} />}
-          w
+          renderRow={({item, index}) =>
+            <CustomListItem
+              index={index}
+              item={item}
+              onPress={() => navigation.navigate('SummaryDetail', item)}
+              onLongPress={() => this.confirmDelete(item)} />}
           canLoad={this.canLoad()}
           isLoading={loading}
           onLoad={this.fetchGames}
@@ -166,11 +182,8 @@ const ArrowForwardIcon = () => <Icon size={20} name="ios-arrow-forward" />;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // padding: 10
-    // backgroundColor: '#fff'
   },
   header: {
-    // backgroundColor: '#fff,
     marginVertical: 20
   },
   list: {

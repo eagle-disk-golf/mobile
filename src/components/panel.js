@@ -1,5 +1,6 @@
 ﻿import React, {Component} from 'react';
-import {StyleSheet, Text, View, Image, TouchableHighlight, Animated} from 'react-native'; //Step 1
+import {StyleSheet, View, TouchableHighlight, Animated} from 'react-native'; //Step 1
+import {COLORS} from '../res/styles/constants';
 
 class Panel extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class Panel extends Component {
   }
 
   scrollToPanel(event) {
-    // console.log(event.nativeEvent, 'press panel event');
+
   }
 
   toggle(event) {
@@ -54,7 +55,6 @@ class Panel extends Component {
 
       if (!expanded) {
         onItemSelected({nativeEvent, contentHeight: finalValue, titleHeight: this.state.minHeight});
-        // console.log(nativeEvent, finalValue, 'event and final vale[');
       }
 
       this.setState({
@@ -125,8 +125,7 @@ export default Panel;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff',
-    // margin: 10,
+    backgroundColor: COLORS.white,
     overflow: 'hidden'
   },
   titleContainer: {
@@ -136,7 +135,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     flex: 1,
     padding: 20,
-    color: '#2a2f43',
+    color: COLORS.primary,
     fontWeight: 'bold'
   },
   button: {

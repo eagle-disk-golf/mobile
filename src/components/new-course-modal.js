@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     marginBottom: '10%'
   },
   button: {
-    color: '#fff'
+    color: COLORS.white
   },
   cancelButton: {
     marginTop: '40%'
