@@ -1,13 +1,4 @@
-/*
-  KIDE
-  File created: 30.11.2017
-  Made by: Jenni
-  History:
-  12.12.2017 Riku: Use custom icon component
-
-*/
-
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import Icon from '../icon';
 
 //App colors

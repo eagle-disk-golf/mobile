@@ -1,12 +1,25 @@
 ﻿import React, {Component} from 'react';
 import {View, StyleSheet, Text, ScrollView} from 'react-native';
 import Color from 'color';
-import MapView, {PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle} from 'react-native-maps';
+/** https://www.npmjs.com/package/react-native-maps */
+import MapView, { PROVIDER_GOOGLE, Marker, Polyline, Polygon, Circle } from 'react-native-maps';
+/** https://github.com/GeekyAnts/react-native-easy-grid */
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import {COLORS} from '../res/styles/constants';
 import time from '../helpers/time';
 import {getDistanceInMetersBetweenCoordinates, createSquareInMetersFromCoordinate} from '../helpers/geolocation';
 
+/**
+ * getOverallDistance gets throws as a parameter and the function makes distance variable as 0.
+ * The function then maps throws with item and index as parameters and makes a function.
+ * nextThrow is throw index + 1. If there is a nextThrow, the function gets added to distance.
+ * Returns the sum of distance.
+ * @getOverallDistance
+ * @distance
+ * @throws
+ * @nextThrow
+ * @getDistanceInMetersBetweenCoordinates
+ */
 const getOverallDistance = throws => {
   let distance = 0;
   throws.map((item, index) => {
@@ -19,8 +32,26 @@ const getOverallDistance = throws => {
   return distance;
 };
 
+/**
+ * Error variable. Item is from the database and isLost, isMando or isOverbound.
+ * @itemHasError
+ * @item
+ * @isLost
+ * @isMando
+ * @isOverbound
+ */
 const itemHasError = item => item && !!item.isLost || item && !!item.isMando || item && !!item.isOverbound;
 
+/**
+ * Markers variable. Markers on the map. Sets the color, description and title for the markers.
+ * @Markers
+ * @isMando
+ * @isLost
+ * @isOverbound
+ * @isFirst
+ * @isLast
+ * @normal
+ */
 const MARKERS = {
   isMando: index => ({
     color: COLORS.danger,
@@ -54,6 +85,23 @@ const MARKERS = {
   })
 };
 
+/**
+ * getThrowMarker function takes error variable and checks if isLost is true, if not then isOverbound, if not then isMando, if not then null.
+ * Variable index returns the index of item in throws.
+ * Variable isFirst is 0, isLast is last index.
+ * markerStyle variable returns the correct marker from above.
+ * Returns Markers array with styles and correct lane index.
+ * @getThrowMarker
+ * @isLost
+ * @isOverbound
+ * @isMando
+ * @item
+ * @throws
+ * @index
+ * @isFirst
+ * @isLast
+ * @markerStyle
+ */
 const getThrowMarker = (item, throws) => {
   const error = item && item.isLost ?
     'isLost' : item && item.isOverbound ?
@@ -68,6 +116,15 @@ const getThrowMarker = (item, throws) => {
   return MARKERS[markerStyle](index);
 };
 
+/**
+ * CustomMarker variable makes a function with item and throws as parameters.
+ * If there is an item, marker variable gets made as getThrowMarker with item and throws as parameters. If not, returns null.
+ * Returns Marker component with pinColor, coordinates, title and description.
+ * @CustomMarker
+ * @item
+ * @Marker
+ * @getThrowMarker
+ */
 const CustomMarker = ({item, throws}) => {
   if (item) {
     const marker = getThrowMarker(item, throws);
@@ -84,6 +141,10 @@ const CustomMarker = ({item, throws}) => {
 };
 
 export default class SummaryDetailLane extends Component {
+    /**
+     * Lane object.
+     * @constructor
+     */
   constructor(props) {
     super(props);
     this.state = {
@@ -91,18 +152,47 @@ export default class SummaryDetailLane extends Component {
     };
   }
 
+    /**
+     * Zooms to markers and fits them on the screen.
+     * If called fitToElements immediately, the map won't zoom in for some reason
+     * this usually happnes only on the first time the map is opened.
+     * @zoomToMarkers
+     * @setTimeout
+     * @mapView
+     * @fitToElements
+     */
   zoomToMarkers() {
-    // if called fitToElements immediatly, the map wont zoom in for some reason
-    // this usually happens only on the first time map is opened
     setTimeout(() => {
       this.mapView.fitToElements(true);
     }, 100);
   }
 
+    /**
+
+
+        W I P
+
+
+     * Render function 
+     * @render
+     * @lane
+     * @index
+     * @laneMarkers
+     * @return
+     * @ScrollView
+     * @View
+     * @MapView
+     * @Polygon
+     * @CustomMarker
+     * @Polyline
+     * @Grid
+     * @Row
+     * @Col
+     * @Text
+     */
   render() {
     const {lane, index} = this.props.navigation.state.params;
     const laneMarkers = lane && lane.completed && lane.endLocation ? [...lane.throws, lane.endLocation] : lane.throws;
-
     /* eslint max-len: 0 */
     return (
       <ScrollView>
