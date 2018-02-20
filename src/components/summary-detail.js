@@ -13,13 +13,7 @@ import {toArray} from '../helpers/data';
  * Inside of the function it sets score variable as (totalThrows + penalty) - par.
  * scoreWithSign takes in a string if score is less than 0. Otherwise shows "+score".
  * scoreColor shows danger color if score is bigger than 0. Otherwise shows success color.
- * Returns
-
-
-noot finiisheeed
-
-
-
+ * Returns a TouchableOpacity item which shows info from a game that you can click.
  * @Titlecomponent
  * @item
  * @index
@@ -62,6 +56,10 @@ return (
 };
 
 export default class SummaryDetail extends Component {
+    /**
+     * Makes an array for lanes and loading false.
+     * @constructor
+     */
   constructor(props) {
     super(props);
     this.state = {
@@ -70,15 +68,32 @@ export default class SummaryDetail extends Component {
     };
   }
 
+    /**
+     * Course variable check, if navigation props is not found then returns an empty object.
+     * @componentDidMount
+     * @fetchData
+     */
   componentDidMount() {
     const course = this.props.navigation.state.params || {};
     this.fetchData(course);
   }
 
+    /**
+     * Sets the state to true.
+     * @showLoader
+     */
   showLoader() {this.setState({loading: true});}
 
+    /**
+     * Sets the state to false.
+     * @hideLoader
+     */
   hideLoader() {this.setState({loading: false});}
 
+    /**
+     * Shows the loading animation. Loads the database information. Hides the loading animation.
+     * @fetchData
+     */
   fetchData(course) {
     this.showLoader();
 
@@ -93,6 +108,20 @@ export default class SummaryDetail extends Component {
     });
   }
 
+    /**
+     * Rendering function sets the default variables for lanes and loading first.
+     * Returns a ScrollView component with a table-like view.
+     * If it is loading from the database it shows a Spinner, if not it shows game information
+     * and onPress you can proceed to more detailed view.
+     * @render
+     * @return
+     * @View
+     * @ScrollView
+     * @View
+     * @Text
+     * @TitleComponent
+     * @Spinner
+     */
   render() {
     const {lanes, loading} = this.state;
     return (
@@ -128,6 +157,9 @@ export default class SummaryDetail extends Component {
   }
 }
 
+/**
+ * Variables and stylesheet.
+ */
 const borderWidth = 0.5;
 /* eslint object-shorthand: 0 */
 const styles = StyleSheet.create({
