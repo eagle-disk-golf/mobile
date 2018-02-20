@@ -1,8 +1,13 @@
 ﻿import React, {Component} from 'react';
-import {Text, View, Button, Modal, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import { Text, View, Button, Modal, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+/** https://docs.nativebase.io/Components.html#Form */
 import {Form, Item, Input} from 'native-base';
 import {COLORS} from '../res/styles/constants';
 
+/**
+ * This is not used.
+ * Modal that takes a name of a place as an input from an user.
+ */
 export default class NewCourseModal extends Component {
   constructor(props) {
     super(props);

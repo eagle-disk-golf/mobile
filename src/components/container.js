@@ -5,10 +5,8 @@ import {stylesToArray} from '../helpers/components';
 
 export default class ContainerComponent extends Component {
 /**
- * Represents a book.
- * @constructor
- * @param {string} title - The title of the book.
- * @param {string} author - The author of the book.
+ * Not used anywhere (CHECK!).
+ * This should be deleted with caution.
  */
   render() {
     const {style} = this.props;
