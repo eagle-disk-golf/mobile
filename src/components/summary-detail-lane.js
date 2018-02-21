@@ -110,9 +110,9 @@ const CustomMarker = ({item, throws}) => {
 };
 
 export default class SummaryDetailLane extends Component {
-    /**
-     * Lane object.
-     */
+  /**
+   * Lane object.
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -120,30 +120,34 @@ export default class SummaryDetailLane extends Component {
     };
   }
 
-    /**
-     * Zooms to markers and fits them on the screen.
-     * If called fitToElements immediately, the map won't zoom in for some reason
-     * this usually happnes only on the first time the map is opened.
-     */
+  /**
+   * Zooms to markers and fits them on the screen.
+   * If called fitToElements immediately, the map won't zoom in for some reason
+   * this usually happnes only on the first time the map is opened.
+   */
   zoomToMarkers() {
     setTimeout(() => {
       this.mapView.fitToElements(true);
     }, 100);
   }
 
-    /**
-
-
-        W I P
-
-
-     * Render function
-     */
+  /**
+   * Render function with lane and index variable as navigation parameters.
+   * laneMarkers variable checks if lane is completed and endLocation coordinates, if not returns throws array.
+   */
   render() {
     const {lane, index} = this.props.navigation.state.params;
     const laneMarkers = lane && lane.completed && lane.endLocation ? [...lane.throws, lane.endLocation] : lane.throws;
     /* eslint max-len: 0 */
     return (
+      /**
+       * ScrollView enables scrolling when items get over the screen's view.
+       * MapView renders Google Maps with provided parameters.
+       * https://github.com/react-community/react-native-maps
+       * Function maps laneMarkers with item and index parameters and it has nextItem and strokeColor as variables.
+       * They make the custom markers on the map based on the throw coordinates which are drawed with colors
+       * coming from the information about the throw. First, last, error etc.
+       */
       <ScrollView>
         <View style={{flexDirection: 'column', flex: 0}}>
           <MapView
@@ -162,6 +166,9 @@ export default class SummaryDetailLane extends Component {
             {laneMarkers.map((item, index) => {
               const nextItem = laneMarkers[index + 1];
               const strokeColor = itemHasError(item) ? COLORS.danger : COLORS.textPrimary;
+              /**
+               * Returns a marker with a line on the map to the next throw.
+               */
               return (
                 <View key={index}>
                   <CustomMarker key={`marker-${index}`} item={item} throws={laneMarkers} />
@@ -173,29 +180,46 @@ export default class SummaryDetailLane extends Component {
                 </View>);
             })}
 
-            {/* {for showing circle around the basket} */}
+            {/**
+              * For showing circle around the basket.
+              */}
             {lane.completed && <Circle
               center={laneMarkers[laneMarkers.length - 1]}
               radius={5}
               fillColor={Color(COLORS.success).lighten(1).rgb().toString()} />}
+            {/**
+             * For showing a square tee.
+             */}
             <Polygon
               fillColor={Color(COLORS.primary).lighten(0.5).rgb().toString()}
               coordinates={createSquareInMetersFromCoordinate(laneMarkers[0])} />
-          </MapView>
+                </MapView>
+          {/**
+            * If lane is not completed showing this message.
+            */}
           <View style={styles.resultsContainer}>
             {!lane.completed && <Text style={{fontWeight: 'bold', alignSelf: 'center'}}>This lane is still uncompleted!</Text>}
-
+            {/**
+              * laneMarkers array gets mapped and gets calculated the distance to the next throw item.
+              * nextItem variable is laneMarkers array's next item
+              * Returns a Text component with lane number and distance in meters.
+              */}
             {laneMarkers.map((item, index) => {
               const nextItem = laneMarkers[index + 1];
               if (lane.completed && nextItem || !lane.completed) {
                 return (
                   <Text key={index} style={styles.result}>
                     {index + 1}. <Text style={styles.boldResult}>{getDistanceInMetersBetweenCoordinates(item, nextItem)}</Text> m
-              </Text>
+                  </Text>
                 );
               }
             })}
-          </View>
+         </View>
+
+          {/**
+            * https://github.com/GeekyAnts/react-native-easy-grid
+            * Easy Grid view that shows information from the database.
+            */}
           <View style={styles.viewGridStyle}>
             <Grid style={styles.gridStyle}>
               <Row style={styles.rowStyle}>
@@ -256,6 +280,9 @@ export default class SummaryDetailLane extends Component {
   }
 }
 
+/**
+ * Stylesheet.
+ */
 const styles = StyleSheet.create({
   resultsContainer: {
     padding: 20,

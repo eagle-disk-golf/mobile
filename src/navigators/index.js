@@ -1,13 +1,4 @@
-/*
-  KIDE
-  File created: beginning
-  Made by: Riku
-  History: Topi - 30.11.2017 - Added StackNavigation for SummaryScreen
-  History: Riku - 12.12.2017 - Use custom icon, formatting
-  History: Oskari - 29.1.2018 - Styling
-*/
-
-import React, {Component} from 'react';
+﻿import React, {Component} from 'react';
 import {View} from 'react-native';
 import {StackNavigator, TabNavigator} from 'react-navigation';
 import Icon from '../components/icon';
