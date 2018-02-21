@@ -5,7 +5,6 @@ import {COLORS} from '../res/styles/constants';
 class Panel extends Component {
     /**
      * This is not used.
-     * @constructor
      */
   constructor(props) {
     super(props);

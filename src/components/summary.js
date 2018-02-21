@@ -15,19 +15,6 @@ import { toArray, reverseArray } from '../helpers/data';
  * completed marks the item completed.
  * Returns ListItem with a timestamp that includes date and time. Text note either includes address or information about active course.
  * Right side is filled with an arrow. You can short or long press the item.
- * @CustomListItem
- * @ListItem
- * @Body
- * @Text
- * @ArrowForwardIcon
- * @Right
- * @globalStyles
- * @timeStamp
- * @getFormattedDate
- * @getFormattedTime
- * @item
- * @timeStamp
- * @completed
  */
 const CustomListItem = ({item, index, onPress, onLongPress}) => {
   const timeStamp = item && item.startLocation ? item.startLocation.timestamp : null;
@@ -48,8 +35,6 @@ const CustomListItem = ({item, index, onPress, onLongPress}) => {
 export default class Summary extends Component {
     /**
      * Constructor with props fetching the data from the database. ES6 binding to fetchGames.
-     * @constructor
-     * @fetchGames
      */
   constructor(props) {
     super(props);
@@ -69,7 +54,6 @@ export default class Summary extends Component {
 
     /**
      * Show animation loader.
-     * @showLoader
      */
   showLoader() {
     this.setState({loading: true});
@@ -77,7 +61,6 @@ export default class Summary extends Component {
 
     /**
      * Hide animation loader.
-     * @hideLoader
      */
   hideLoader() {
     this.setState({loading: false});
@@ -85,7 +68,6 @@ export default class Summary extends Component {
 
     /**
      * Possibility to load more items to list.
-     * @canLoad
      */
   canLoad() {
     return this.state.canLoadMore;
@@ -94,13 +76,6 @@ export default class Summary extends Component {
     /**
      * fetchGames function that shows loading animation first.
      * If there has not been any fetching done, a database fetch activates.
-     * @fetchGames
-     * @offset
-     * @hasFetchedOnce
-     * @lastCourseId
-     * @firebase
-     * @value
-     * @dataset
      */
   fetchGames() {
     const {offset, hasFetchedOnce, lastCourseId} = this.state;
@@ -155,8 +130,6 @@ export default class Summary extends Component {
 
     /**
      * refreshGames function that checks if the list is not loading it refreshes the state with these values.
-     * @loading
-     * @refreshGames
      */
   refreshGames() {
     const {loading} = this.state;
@@ -172,7 +145,6 @@ export default class Summary extends Component {
 
     /**
      * Invokes fetchGames when loaded.
-     * @componentDidMount
      */
   componentDidMount() {
     this.fetchGames();
@@ -180,9 +152,6 @@ export default class Summary extends Component {
 
     /**
      * Alert that prompts you to delete an item.
-     * @confirmDelete
-     * @deleteItem
-     * @Alert
      */
   confirmDelete(item) {
     Alert.alert(
@@ -196,8 +165,6 @@ export default class Summary extends Component {
 
     /**
      * Shows an alert with title and content.
-     * @showAlert
-     * @Alert
      */
   showAlert(alert) {
     Alert.alert(
@@ -209,10 +176,6 @@ export default class Summary extends Component {
 
     /**
      * Function that deletes an item from the list and the database with a prompt.
-     * @deleteItem
-     * @dataset
-     * @refreshing
-     * @firebase
      */
   deleteItem(item) {
     const {dataset} = this.state;
@@ -230,15 +193,6 @@ export default class Summary extends Component {
     /**
      * Render function that returns the latest games from the database as a list view.
      * Uses infinite list view and onPress you get the details, onLongPress you can delete the item.
-     * @loading
-     * @dataset
-     * @refreshing
-     * @navigation
-     * @return
-     * @View
-     * @Text
-     * @InfiniteListView
-     * @CustomListItem
      */
   render() {
     const {loading, dataset, refreshing} = this.state;
@@ -270,7 +224,6 @@ export default class Summary extends Component {
 
 /**
  * ArrowForwardIcon on the right side of the list view.
- * @ArrowForwardIcon
  */
 const ArrowForwardIcon = () => <Icon size={20} name="ios-arrow-forward" />;
 

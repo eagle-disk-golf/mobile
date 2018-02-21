@@ -13,12 +13,6 @@ import {COLORS} from '../res/styles/constants';
 export default class MainButton extends Component {
     /**
      * Render function that makes the home screen with cards and navigation.
-     * @Grid
-     * @Row
-     * @Card
-     * @TouchableOpacity
-     * @ImageBackground
-     * @Text
      */
   render() {
     return (

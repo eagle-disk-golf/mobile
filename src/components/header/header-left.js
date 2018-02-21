@@ -7,10 +7,6 @@ import {COLORS} from '../../res/styles/constants';
 export default class HeaderLeft extends Component {
     /**
      * Render function that renders the logo image and Eagle Disc Golf text.
-     * @render
-     * @Item
-     * @Thumbnail
-     * @Text
      */
   render() {
     return (

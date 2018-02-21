@@ -8,7 +8,6 @@ export default class CustomIcon extends Component {
     /**
      * Render function that takes styles and custom icons as variables.
      * Returns custom icons.
-     * @render
      */
   render() {
     const stylesArr = stylesToArray(this.props.style);
@@ -21,8 +20,6 @@ export default class CustomIcon extends Component {
 
 /**
  * Custom padding for iOS devices.
- * @paddingTop
- * @icon
  */
 const styleHelper = StyleSheet.create({
   icon: {

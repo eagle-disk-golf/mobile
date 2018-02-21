@@ -12,7 +12,6 @@ import { getDistanceInMetersBetweenCoordinates } from '../helpers/geolocation';
 /**
  * This is not used.
  */
-
 const isAndroid = Platform.OS === 'android';
 
 const titleHeight = 60;

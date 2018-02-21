@@ -13,8 +13,6 @@ export default class InfiniteListView extends Component {
 
     /**
      * Called once when the scroll position gets within onEndReachedThreshold of the rendered content.
-     * @constructor
-     * @onEndReached
      */
   constructor(props) {
     super(props);
@@ -23,7 +21,6 @@ export default class InfiniteListView extends Component {
 
     /**
      * Called if canLoad is true and loading is done.
-     * @onEndReached
      */
   onEndReached() {
     if (this.props.canLoad && !this.props.isLoading) {
@@ -33,8 +30,6 @@ export default class InfiniteListView extends Component {
 
     /**
      * If loading an activity indicator is showing with these styles and animations, otherwise return null.
-     * @ActivityIndicator
-     * @renderLoader
      */
   renderLoader = () => {
     if (this.props.isLoading) {
@@ -47,8 +42,6 @@ export default class InfiniteListView extends Component {
 
     /**
      * Renders a FlatList with props.
-     * @FlatList
-     * @render
      */
   render() {
     return (

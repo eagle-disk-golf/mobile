@@ -14,11 +14,6 @@ import {getDistanceInMetersBetweenCoordinates, createSquareInMetersFromCoordinat
  * The function then maps throws with item and index as parameters and makes a function.
  * nextThrow is throw index + 1. If there is a nextThrow, the function gets added to distance.
  * Returns the sum of distance.
- * @getOverallDistance
- * @distance
- * @throws
- * @nextThrow
- * @getDistanceInMetersBetweenCoordinates
  */
 const getOverallDistance = throws => {
   let distance = 0;
@@ -34,23 +29,11 @@ const getOverallDistance = throws => {
 
 /**
  * Error variable. Item is from the database and isLost, isMando or isOverbound.
- * @itemHasError
- * @item
- * @isLost
- * @isMando
- * @isOverbound
  */
 const itemHasError = item => item && !!item.isLost || item && !!item.isMando || item && !!item.isOverbound;
 
 /**
  * Markers variable. Markers on the map. Sets the color, description and title for the markers.
- * @Markers
- * @isMando
- * @isLost
- * @isOverbound
- * @isFirst
- * @isLast
- * @normal
  */
 const MARKERS = {
   isMando: index => ({
@@ -91,16 +74,6 @@ const MARKERS = {
  * Variable isFirst is 0, isLast is last index.
  * markerStyle variable returns the correct marker from above.
  * Returns Markers array with styles and correct lane index.
- * @getThrowMarker
- * @isLost
- * @isOverbound
- * @isMando
- * @item
- * @throws
- * @index
- * @isFirst
- * @isLast
- * @markerStyle
  */
 const getThrowMarker = (item, throws) => {
   const error = item && item.isLost ?
@@ -120,10 +93,6 @@ const getThrowMarker = (item, throws) => {
  * CustomMarker variable makes a function with item and throws as parameters.
  * If there is an item, marker variable gets made as getThrowMarker with item and throws as parameters. If not, returns null.
  * Returns Marker component with pinColor, coordinates, title and description.
- * @CustomMarker
- * @item
- * @Marker
- * @getThrowMarker
  */
 const CustomMarker = ({item, throws}) => {
   if (item) {
@@ -143,7 +112,6 @@ const CustomMarker = ({item, throws}) => {
 export default class SummaryDetailLane extends Component {
     /**
      * Lane object.
-     * @constructor
      */
   constructor(props) {
     super(props);
@@ -156,10 +124,6 @@ export default class SummaryDetailLane extends Component {
      * Zooms to markers and fits them on the screen.
      * If called fitToElements immediately, the map won't zoom in for some reason
      * this usually happnes only on the first time the map is opened.
-     * @zoomToMarkers
-     * @setTimeout
-     * @mapView
-     * @fitToElements
      */
   zoomToMarkers() {
     setTimeout(() => {
@@ -173,22 +137,7 @@ export default class SummaryDetailLane extends Component {
         W I P
 
 
-     * Render function 
-     * @render
-     * @lane
-     * @index
-     * @laneMarkers
-     * @return
-     * @ScrollView
-     * @View
-     * @MapView
-     * @Polygon
-     * @CustomMarker
-     * @Polyline
-     * @Grid
-     * @Row
-     * @Col
-     * @Text
+     * Render function
      */
   render() {
     const {lane, index} = this.props.navigation.state.params;

@@ -14,16 +14,6 @@ import {toArray} from '../helpers/data';
  * scoreWithSign takes in a string if score is less than 0. Otherwise shows "+score".
  * scoreColor shows danger color if score is bigger than 0. Otherwise shows success color.
  * Returns a TouchableOpacity item which shows info from a game that you can click.
- * @Titlecomponent
- * @item
- * @index
- * @onPress
- * @score
- * @totalThrows
- * @penalty
- * @par
- * @scoreWithSign
- * @scoreColor
  */
 const titleHeight = 60;
 const TitleComponent = ({item, index, onPress}) => {
@@ -58,7 +48,6 @@ return (
 export default class SummaryDetail extends Component {
     /**
      * Makes an array for lanes and loading false.
-     * @constructor
      */
   constructor(props) {
     super(props);
@@ -70,8 +59,6 @@ export default class SummaryDetail extends Component {
 
     /**
      * Course variable check, if navigation props is not found then returns an empty object.
-     * @componentDidMount
-     * @fetchData
      */
   componentDidMount() {
     const course = this.props.navigation.state.params || {};
@@ -80,19 +67,16 @@ export default class SummaryDetail extends Component {
 
     /**
      * Sets the state to true.
-     * @showLoader
      */
   showLoader() {this.setState({loading: true});}
 
     /**
      * Sets the state to false.
-     * @hideLoader
      */
   hideLoader() {this.setState({loading: false});}
 
     /**
      * Shows the loading animation. Loads the database information. Hides the loading animation.
-     * @fetchData
      */
   fetchData(course) {
     this.showLoader();
@@ -113,14 +97,6 @@ export default class SummaryDetail extends Component {
      * Returns a ScrollView component with a table-like view.
      * If it is loading from the database it shows a Spinner, if not it shows game information
      * and onPress you can proceed to more detailed view.
-     * @render
-     * @return
-     * @View
-     * @ScrollView
-     * @View
-     * @Text
-     * @TitleComponent
-     * @Spinner
      */
   render() {
     const {lanes, loading} = this.state;
