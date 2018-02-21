@@ -1,27 +1,29 @@
 ﻿import React, {Component} from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
+/** https://reactnavigation.org/ */
 import {StackNavigator, TabNavigator} from 'react-navigation';
 import Icon from '../components/icon';
 import Color from 'color';
-
-//App colors
 import {COLORS} from '../res/styles/constants';
-
 import MainScreen from '../screens/main-screen';
 import TrackingScreen from '../screens/tracking-screen';
 import SummaryScreen from '../screens/summary-screen';
-
 import HeaderLeft from '../components/header/header-left';
-
 import SummaryDetailScreen from '../screens/summary-detail-screen';
 import SummaryDetailLaneScreen from '../screens/summary-detail-lane-screen';
 import {isIos} from '../helpers/platform';
 
+/**
+ * TabIcon variable function checks if it is focused, if not changes color to lightgray and returns an Icon.
+ */
 const TabIcon = ({name, isFocused}) => {
   const iconColor = isFocused ? null : 'lightgray';
   return <Icon size={20} name={name} style={{color: iconColor}} />;
 };
 
+/**
+ * TabBarOptions stylesheet.
+ */
 const TabBarOptions = {
   showIcon: true,
   activeTintColor: COLORS.textPrimary,
@@ -33,7 +35,6 @@ const TabBarOptions = {
     borderBottomWidth: 0.5,
     borderTopWidth: 0.0,
     borderColor: Color(COLORS.textPrimary).fade(0.8)
-
   },
   labelStyle: {
     margin: 0,
@@ -44,6 +45,9 @@ const TabBarOptions = {
   }
 };
 
+/**
+ * TabNavigator routes with icons.
+ */
 const MainTabNavigator = TabNavigator({
   Main: {
     screen: MainScreen,
@@ -71,7 +75,7 @@ const MainTabNavigator = TabNavigator({
     tabBarOptions: TabBarOptions,
   });
 
-// Wrap main navigator inside screen element so header can receive navigation props
+/** Wrap main navigator inside screen element so header can receive navigation props. */
 class MainNavigationScreen extends Component {
   static navigationOptions = ({navigation}) => {
     return {
@@ -103,6 +107,7 @@ const defaultNavigationOptions = {
   headerTintColor: COLORS.textPrimary
 };
 
+//** WIP */
 export const RootNavigator = StackNavigator({
   MainNavigation: {
     screen: MainNavigationScreen,

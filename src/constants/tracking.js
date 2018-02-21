@@ -1,4 +1,4 @@
-export const COURSE = {
+﻿export const COURSE = {
   lanes: {},
   completed: false,
   courseId: null,
