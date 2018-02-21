@@ -6,6 +6,7 @@ import {View, StyleSheet, Alert, PermissionsAndroid} from 'react-native';
 import {Text, Button, Toast, ActionSheet, Spinner} from 'native-base';
 import {Col, Row, Grid} from 'react-native-easy-grid';
 import Icon from './icon';
+import ModalSelector from 'react-native-modal-selector';
 import FadeInView from './fade-in-view';
 // import NewCourseModal from './new-course-modal';
 import {globalStyles} from '../res/styles';
@@ -17,6 +18,16 @@ import {getAddressByCoordinates} from '../services/geocoding';
 import {isAndroid} from '../helpers/platform';
 
 import {LANE, COURSE} from '../constants/tracking';
+
+const getParSelectorData = () => {
+  let data = [];
+
+  for (let i = 0; i < 10; i++) {
+    data.push({key: i, label: `${i}`});
+  }
+
+  return data;
+};
 
 const newEmptyCourse = _ => {return {...COURSE, lanes: {}};};
 const newEmptyLane = _ => {return {...LANE};};
@@ -252,7 +263,6 @@ handleTrackThrow() {
       // update the currentLane by adding current throw into the throws array
       const lane = {
         ...currentLane,
-        par: 3,
         // add location to array
         throws: [...currentLane.throws, geolocation],
         totalThrows: currentLane.totalThrows + 1,
@@ -418,7 +428,6 @@ handleTrackThrow() {
     // const isGameActive = isCourseActive || isLaneActive;
     const laneNumber = Object.keys(course.lanes).length;
 
-
     const toggleTransparentText = (isVisible, styleClass) => isVisible ? styleClass : {color: 'transparent'};
 
     if (!initialized) { return <View style={[globalStyles.container]}>
@@ -438,16 +447,28 @@ handleTrackThrow() {
             </FadeInView>}
 
             {isCourseActive && <FadeInView visible={isCourseActive || isLaneActive}>
-              <View style={[globalStyles.centerContent, {marginBottom: 40}]}>
-                <Text style={[toggleTransparentText(isCourseActive, globalStyles.textPrimary), globalStyles.verticalMargin]}>
+              <View style={[globalStyles.centerContent, {marginBottom: 40, flexDirection: 'column', alignContent: 'space-between'}]}>
+                <Text style={[toggleTransparentText(isCourseActive, globalStyles.textPrimary)]}>
                   Lane number: {laneNumber}
                 </Text>
-                <Text style={[toggleTransparentText(isCourseActive && isLaneActive, globalStyles.textPrimary), globalStyles.verticalMargin]}>
+                <Text style={[toggleTransparentText(isCourseActive && isLaneActive, globalStyles.textPrimary)]}>
                   Throws: {lane.totalThrows + lane.penalty}
                 </Text>
                 <FadeInView visible={faultyThrow.show}>
                   <Text style={[globalStyles.textWarning]}>+{faultyThrow && faultyThrow.penalty}</Text>
                 </FadeInView>
+
+                {isLaneActive && <ModalSelector
+                  data={getParSelectorData()}
+                  initValue={`Par: ${this.state.lane.par}`}
+                  onChange={(option) => this.setState({lane: {...this.state.lane, par: option.key}})}
+                  animationType='fade'>
+                  <View>
+                    <Text>
+                      Par {this.state.lane.par} <Icon size={15} name='ios-arrow-down' />
+                    </Text>
+                  </View>
+                </ModalSelector>}
               </View>
             </FadeInView>}
           </Row>
