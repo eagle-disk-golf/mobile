@@ -439,7 +439,7 @@ handleTrackThrow() {
       <Grid style={styles.grid}>
         <Col>
 
-          <Row style={[globalStyles.centerBottom, globalStyles.centerHorizontal]} size={35}>
+          <Row style={[globalStyles.centerHorizontal, globalStyles.centerContent]} size={35}>
             {!isCourseActive && <FadeInView style={[globalStyles.centerContent]} visible={!isCourseActive && !isLaneActive}>
               <View style={[globalStyles.centerContent, {marginBottom: 40}]}>
                 <Text style={[globalStyles.textPrimary]}>You're at the Tee, ready to start a new game?</Text>
@@ -447,22 +447,27 @@ handleTrackThrow() {
             </FadeInView>}
 
             {isCourseActive && <FadeInView visible={isCourseActive || isLaneActive}>
-              <View style={[globalStyles.centerContent, {marginBottom: 40, flexDirection: 'column', alignContent: 'space-between'}]}>
-                <Text style={[toggleTransparentText(isCourseActive, globalStyles.textPrimary)]}>
+              <View style={[globalStyles.centerContent]}>
+                <Text style={[toggleTransparentText(isCourseActive, globalStyles.textPrimary), styles.textMarginBottom]}>
                   Lane number: {laneNumber}
                 </Text>
-                <Text style={[toggleTransparentText(isCourseActive && isLaneActive, globalStyles.textPrimary)]}>
-                  Throws: {lane.totalThrows + lane.penalty}
-                </Text>
-                <FadeInView visible={faultyThrow.show}>
-                  <Text style={[globalStyles.textWarning]}>+{faultyThrow && faultyThrow.penalty}</Text>
-                </FadeInView>
+                <View style={[{alignItems: 'center', width: '100%'}]}>
+                  <Text style={[toggleTransparentText(isCourseActive && isLaneActive, globalStyles.textPrimary), styles.textMarginBottom]}>
+                    Throws: {lane.totalThrows + lane.penalty}
+                  </Text>
+                  <FadeInView style={[{position: 'absolute', right: -5}, styles.textMarginBottom]} visible={faultyThrow.show}>
+                    <Text style={[globalStyles.textWarning]}>+{faultyThrow && faultyThrow.penalty}</Text>
+                  </FadeInView>
+                </View>
+
 
                 {isLaneActive && <ModalSelector
+                  style={[styles.textMarginBottom]}
                   data={getParSelectorData()}
                   initValue={`Par: ${this.state.lane.par}`}
                   onChange={(option) => this.setState({lane: {...this.state.lane, par: option.key}})}
-                  animationType='fade'>
+                  animationType='fade'
+                  cancelText='Cancel'>
                   <View>
                     <Text>
                       Par {this.state.lane.par} <Icon size={15} name='ios-arrow-down' />
@@ -512,6 +517,9 @@ handleTrackThrow() {
 
 
 const styles = StyleSheet.create({
+  textMarginBottom: {
+    marginBottom: 10
+  },
   fadeinView: {
     width: 50,
     height: 50
