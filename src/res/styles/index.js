@@ -1,7 +1,7 @@
 ﻿import {StyleSheet} from 'react-native';
 import {COLORS, MARGINS} from './constants';
 
-// text styling
+/* Text styling **/
 const text = StyleSheet.create({
   textDefault: {
     color: COLORS.white
@@ -13,13 +13,13 @@ const text = StyleSheet.create({
     color: COLORS.accent
   },
   textInfo: {
-    // color: COLORS.info
+  /* Color: COLORS.info **/
   },
   textWarning: {
     color: COLORS.alert
   },
   textDanger: {
-    // color: COLORS.warning
+  /* Color: COLORS.warning **/
   },
   fontDefault: {
    fontFamily: 'Roboto'
@@ -35,7 +35,7 @@ const text = StyleSheet.create({
   }
 });
 
-// background
+/* Background **/
 const background = StyleSheet.create({
   bgDefault: {
     backgroundColor: COLORS.white
@@ -47,13 +47,13 @@ const background = StyleSheet.create({
     backgroundColor: COLORS.accent
   },
   bgInfo: {
-    // backgroundColor: COLORS.info
+  /* backgroundColor: COLORS.info **/
   },
   bgWarning: {
     backgroundColor: COLORS.alert
   },
   bgDanger: {
-    // backgroundColor: COLORS.warning
+  /* backgroundColor: COLORS.warning **/
   },
   bgTransparent: {
     backgroundColor: 'transparent'
@@ -61,7 +61,7 @@ const background = StyleSheet.create({
 });
 
 
-// helper classes
+/* Helper classes **/
 const helpers = StyleSheet.create({
   container: {
     flex: 1,
@@ -99,6 +99,7 @@ const helpers = StyleSheet.create({
   },
 });
 
+/* Layout **/
 const layout = StyleSheet.create({
   verticalMargin: {
     marginTop: MARGINS.marginXs,

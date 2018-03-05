@@ -1,4 +1,4 @@
-// TODO: define color palette
+﻿// Color palette
 export const COLORS = {
   white: '#F8FDFF',
   primary: '#43A6B5',

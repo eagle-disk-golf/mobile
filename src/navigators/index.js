@@ -94,7 +94,7 @@ class MainNavigationScreen extends Component {
 
 MainNavigationScreen.router = MainTabNavigator.router;
 
-// higher header on ios
+// Higher header on ios
 const getHeaderHeight = () => isIos ? 100 : 85;
 const defaultNavigationOptions = {
   headerStyle: {
@@ -107,7 +107,7 @@ const defaultNavigationOptions = {
   headerTintColor: COLORS.textPrimary
 };
 
-//** WIP */
+//** https://reactnavigation.org/docs/stack-navigator.html */
 export const RootNavigator = StackNavigator({
   MainNavigation: {
     screen: MainNavigationScreen,

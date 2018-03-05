@@ -7,9 +7,6 @@ import {Row, Grid} from 'react-native-easy-grid';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
 
-// Other way to import components/variables/etc
-// import styles from '../res/styles'
-
 export default class MainButton extends Component {
     /**
      * Render function that makes the home screen with cards and navigation.
