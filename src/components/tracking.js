@@ -10,7 +10,6 @@ import FadeInView from './fade-in-view';
 // import NewCourseModal from './new-course-modal';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
-import {PermissionsAndroid} from 'react-native';
 import firebase, {DB_NAMES} from '../services/firebase';
 import geolocation from '../services/geolocation';
 import {getAddressByCoordinates} from '../services/geocoding';

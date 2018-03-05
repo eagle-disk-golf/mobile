@@ -1,4 +1,4 @@
-﻿import React, {Component} from 'react';
+import React, {Component} from 'react';
 import { TouchableOpacity, StyleSheet, ImageBackground } from 'react-native';
 /** https://docs.nativebase.io/Components.html#card-def-headref */
 import { Text, Card } from 'native-base';
@@ -25,7 +25,7 @@ export default class MainButton extends Component {
       <Grid style={[globalStyles.bgDefault]}>
         <Row size={50}>
         <Card style={style.card}>
-            <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Tracking')}>
+            <TouchableOpacity style={[style.touch]} onPress={() => this.props.navigation.navigate('Test')}>
               <ImageBackground source={require('../res/images/new_game_card.png')} style={[style.image]} resizeMode='stretch'/>
               <Text style={[globalStyles.textDark, style.text]}>NEW GAME</Text>
             </TouchableOpacity>

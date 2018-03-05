@@ -6,7 +6,7 @@ import {COLORS} from '../../res/styles/constants';
 export default class HeaderLeft extends Component {
   render() {
     return (
-      <Item onPress={() => this.props.navigation.navigate('Test')} style={styles.container}>
+      <Item onPress={() => this.props.navigation.navigate('Gpsdemo')} style={styles.container}>
         <Thumbnail style={styles.headerImage} source={require('../../res/images/newgame_card.png')} />
         <Text style={styles.title}>Eagle{'\n'}Disc{'\n'}Golf</Text>
       </Item>

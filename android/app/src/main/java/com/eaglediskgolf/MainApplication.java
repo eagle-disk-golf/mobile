@@ -10,7 +10,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
-
+import com.mustansirzia.fused.FusedLocationPackage;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,10 +25,12 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
           new ReactNativeConfigPackage(),
           new MapsPackage(),
-          new RNFusedLocationPackage()
+          new RNFusedLocationPackage(),
+          new FusedLocationPackage (),
+          new MainReactPackage()
+          
       );
     }
 
