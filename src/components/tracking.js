@@ -8,7 +8,6 @@ import {Col, Row, Grid} from 'react-native-easy-grid';
 import Icon from './icon';
 import ModalSelector from 'react-native-modal-selector';
 import FadeInView from './fade-in-view';
-// import NewCourseModal from './new-course-modal';
 import {globalStyles} from '../res/styles';
 import {COLORS} from '../res/styles/constants';
 
@@ -492,9 +491,6 @@ handleTrackThrow() {
               isCourseActive ? styles.shadow : {}, {width: 200, height: 200}]} onPress={this.handleTrackThrow}>
               {!loading && <Text style={[globalStyles.textPrimary]}>{!isCourseActive ? 'Start' : isLaneActive ? 'Throw' : 'Continue'}</Text>}
               {!!loading && <FadeInView visible={true}><Spinner color="green" /></FadeInView>}
-              {
-                /* <NewCourseModal onSuccess={(text) => this.handleStartNewCourse(text)} visible={newCourseModalVisible} placeholderText={address ? address : previousCourseName} /> */
-              }
             </Button>
 
             {isCourseActive && isLaneActive && <FadeInView fadeOutDuration={100} style={[styles.fadeinView, {position: 'absolute', bottom: 20, right: 20}]} visible={true}>
