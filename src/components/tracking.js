@@ -440,25 +440,26 @@ handleTrackThrow() {
         <Col>
 
           <Row style={[globalStyles.centerHorizontal, globalStyles.centerContent]} size={35}>
-            {!isCourseActive && <FadeInView style={[globalStyles.centerContent]} visible={!isCourseActive && !isLaneActive}>
-              <View style={[globalStyles.centerContent, {marginBottom: 40}]}>
-                <Text style={[globalStyles.textPrimary]}>You're at the Tee, ready to start a new game?</Text>
+            {!isCourseActive && <FadeInView style={[globalStyles.centerContent]} visible>
+              <View style={[globalStyles.centerContent]}>
+                <Text style={[globalStyles.textPrimary]}>You're at the tee, ready to start a new game?</Text>
               </View>
             </FadeInView>}
 
-            {isCourseActive && <FadeInView visible={isCourseActive || isLaneActive}>
+            {isCourseActive && <FadeInView visible>
               <View style={[globalStyles.centerContent]}>
-                <Text style={[toggleTransparentText(isCourseActive, globalStyles.textPrimary), styles.textMarginBottom]}>
+                {!isLaneActive && <Text style={styles.textMarginBottom}>You're at the next tee, continue game?</Text>}
+                <Text style={[styles.textMarginBottom]}>
                   Lane number: {laneNumber}
                 </Text>
-                <View style={[{alignItems: 'center', width: '100%'}]}>
-                  <Text style={[toggleTransparentText(isCourseActive && isLaneActive, globalStyles.textPrimary), styles.textMarginBottom]}>
+                {isLaneActive && <View style={[{alignItems: 'center', width: '100%'}]}>
+                  <Text style={[styles.textMarginBottom]}>
                     Throws: {lane.totalThrows + lane.penalty}
                   </Text>
                   <FadeInView style={[{position: 'absolute', right: -5}, styles.textMarginBottom]} visible={faultyThrow.show}>
                     <Text style={[globalStyles.textWarning]}>+{faultyThrow && faultyThrow.penalty}</Text>
                   </FadeInView>
-                </View>
+                </View>}
 
 
                 {isLaneActive && <ModalSelector
