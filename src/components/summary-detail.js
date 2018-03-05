@@ -20,7 +20,7 @@ const TitleComponent = ({item, index, onPress}) => {
 const score = (item.totalThrows + item.penalty) - item.par;
 const scoreWithSign = score < 0 ? score.toString() : `+${score}`;
 const scoreColor = score > 0 ? COLORS.danger : COLORS.success;
-    
+
 return (
   <TouchableOpacity onPress={onPress}>
     <View style={[styles.titleContainer]}>
@@ -28,9 +28,9 @@ return (
         <Text>{index + 1}</Text>
       </View>
 
-      <View style={[styles.titleItemContainer, styles.borderRight]}>
+      <View style={[styles.titleItemContainer, styles.borderRight, {flexDirection: 'row'}]}>
         <Text>{item.throws.length}</Text>
-        <Text style={styles.penalty}> {item.penalty ? `+${item.penalty}` : ''}</Text>
+        <Text style={globalStyles.textDanger}> {item.penalty ? `+${item.penalty}` : ''}</Text>
       </View>
 
         <View style={[styles.titleItemContainer, styles.borderRight]}>
@@ -165,16 +165,9 @@ const styles = StyleSheet.create({
   titleItemContainer: {
     flex: 1,
     height: '100%',
-    // flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-  },
-  penalty: {
-    position: 'absolute',
-    top: 20,
-    right: 15,
-    color: COLORS.danger
   },
   borderLeft: {
     borderLeftColor: 'black',
@@ -187,7 +180,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap'
   },
   result: {
-    // backgroundColor: 'orange',
     width: '33%',
     paddingTop: 20,
     paddingBottom: 20

@@ -19,7 +19,7 @@ const text = StyleSheet.create({
     color: COLORS.alert
   },
   textDanger: {
-    // color: COLORS.warning
+    color: COLORS.danger
   },
   fontDefault: {
    fontFamily: 'Roboto'
