@@ -1,6 +1,4 @@
-/*
- eslint max-len: 0
-*/
+/* eslint max-len: 0 */
 import React, {Component} from 'react';
 import {View, StyleSheet, Alert, PermissionsAndroid} from 'react-native';
 import {Text, Button, Toast, ActionSheet, Spinner} from 'native-base';
@@ -18,6 +16,7 @@ import {isAndroid} from '../helpers/platform';
 
 import {LANE, COURSE} from '../constants/tracking';
 
+// creates data for par-input selector
 const getParSelectorData = () => {
   let data = [];
 
@@ -31,13 +30,11 @@ const getParSelectorData = () => {
 const newEmptyCourse = _ => {return {...COURSE, lanes: {}};};
 const newEmptyLane = _ => {return {...LANE};};
 
-
-/*
-  return the node param (session, round or lane) if it is already referenced in firebase.
-  if the node param is only initialized (missing id's) it will create new reference to the firebase database
-  and return that node
+/**
+  * Return the node param (session, round or lane) if it is already referenced in firebase.
+  * If the node param is only initialized (missing id's) it will create new reference to the firebase database
+  * and return that node
 */
-
 const getOrCreateNodeWithIdFromFirebase = (node, idField, table) => {
   // check if session exists
   return new Promise((resolve, reject) => {
@@ -49,16 +46,15 @@ const getOrCreateNodeWithIdFromFirebase = (node, idField, table) => {
       const nodeId = firebase.database().ref(table).push().key;
       let newNode = {...node};
       newNode[idField] = nodeId;
-      // const node = {...node, attribute: };
       resolve(newNode);
     } else {
-      // send out error object
+      // return error
       reject({message: `Cannot get ${idField}`});
     }
   });
 };
 
-
+// get new or current course (with id reference in firebase)
 const getOrCreateCourseWithId = (node) => getOrCreateNodeWithIdFromFirebase(node, 'courseId', DB_NAMES.courses);
 const getOrCreateLaneWithId = (node) => getOrCreateNodeWithIdFromFirebase(node, 'laneId', DB_NAMES.lanes);
 
@@ -94,8 +90,6 @@ export default class Tracking extends Component {
         this.requestPermissionToReadLocation();
       }, 1000);
     }
-
-
     // THis was used the fetch the latest game from firebase and check if the previous game was
     // completed. Because we don't actually have users in the database everyone will be playing the same game
 
@@ -126,6 +120,10 @@ export default class Tracking extends Component {
     // });
   }
 
+  /**
+  * ANDROID ONLY
+  * request permission to read location data
+  */
   requestPermissionToReadLocation(callback = null) {
     const self = this;
     async function req() {
@@ -158,31 +156,38 @@ export default class Tracking extends Component {
     }).catch(er => this.displayError(er));
   }
 
-showLoader() {
-  this.setState({loading: true});
-}
-hideLoader() {
-  this.setState({loading: false});
-}
+  showLoader() {
+    this.setState({loading: true});
+  }
+  hideLoader() {
+    this.setState({loading: false});
+  }
 
-displayError(error) {
-  Alert.alert(
-    'Whoops',
-    error.message,
-    [
-      {text: 'Okay'},
-    ]);
-}
+  /**
+   * Display error on screen
+   * @param {error} error (error-object)
+   */
+  displayError(error) {
+    Alert.alert(
+      'Whoops',
+      error.message,
+      [
+        {text: 'Okay'},
+      ]);
+  }
 
-handleTrackThrow() {
-  const {isLaneActive, androidLocationPermission, androidLocationPermissionRequested} = this.state;
+  /**
+   * Handles tracking button presses.
+  */
+  handleTrackThrow() {
+    const {isLaneActive, androidLocationPermission, androidLocationPermissionRequested} = this.state;
     if (isAndroid && !androidLocationPermission && !androidLocationPermissionRequested) {
       // request permission from user
-      // run this function again to
       this.requestPermissionToReadLocation();
       return;
     }
 
+    // either start new or continue previous lane
     if (isLaneActive) {
       this.continueLane();
     } else this.startNewLane();
@@ -194,13 +199,18 @@ handleTrackThrow() {
     // use javascript Promise the handle all the async functions
     this.showLoader();
     const promises = [getOrCreateCourseWithId(this.state.course), getOrCreateLaneWithId(this.state.lane), geolocation.getCurrentPosition()];
-    // after we have received all our values
+    /**
+     * Resolved promises contain
+     * [0] course-object (with id reference to firebase)
+     * [1] lane-object (with id reference to firebase)
+     * [2] geolocation-object
+     */
     Promise.all(promises).then(values => {
       const initialCourse = values[0];
       const initialLane = values[1];
       const geolocation = values[2];
 
-        // create new lane
+      // Create a new lane object. This will stored to firebase later
       const lane = {
         ...initialLane,
         // id from firebase
@@ -214,6 +224,7 @@ handleTrackThrow() {
         isActive: true
       };
 
+      // add reference to this new laneId to the current course
       let lanesById = initialCourse.lanes ? initialCourse.lanes : {};
       lanesById[lane.laneId] = true;
       const course = {
@@ -222,17 +233,21 @@ handleTrackThrow() {
         startLocation: geolocation
       };
 
-      // set this lane to state and push to firebase
+      // add updated lane and course to state
+      this.setState({lane, course, isCourseActive: true, isLaneActive: true});
+
       let updates = {};
       updates[DB_NAMES.lanes + lane.laneId] = lane;
       updates[DB_NAMES.courses + course.courseId] = course;
 
-      this.setState({lane, course, isCourseActive: true, isLaneActive: true});
+      // update firebase
       firebase.database().ref().update(updates);
       this.hideLoader();
 
       if (!isCourseActive) {
         // fetch location and update it to course asynchronoysly
+        // if user has no internet connection this will fail but because this is not
+        // critical feature to play the game, discard errors silently
         getAddressByCoordinates(geolocation).then(val => {
           const address = val && val.results && val.results[0] ? val.results[0] : null;
           let addressUpdate = {};
@@ -254,6 +269,12 @@ handleTrackThrow() {
     // lane is started
     this.showLoader();
     const promises = [getOrCreateLaneWithId(this.state.lane), geolocation.getCurrentPosition()];
+
+    /**
+     * Resolved promises contain
+     * [0] lane-object (with id reference to firebase)
+     * [1] geolocation-object
+     */
     Promise.all(promises).then(values => {
       // const previousLane = this.state.lane;
       const currentLane = values[0];
@@ -271,6 +292,7 @@ handleTrackThrow() {
 
       let updates = {};
       updates[DB_NAMES.lanes + lane.laneId] = lane;
+      // update firebase
       firebase.database().ref().update(updates);
       this.hideLoader();
     }).catch((error) => {
@@ -279,13 +301,20 @@ handleTrackThrow() {
     });
   }
 
-  // when ending round, is the user at the basket or not??
+  /**
+   * Handle lane end when user has scored and is at the basket
+   */
   handleEndLane() {
-    // dont end if no throws
+    // dont end if user has no throws
     if (this.state.lane.throws.length) {
       this.showLoader();
+
       const promises = [getOrCreateLaneWithId(this.state.lane), geolocation.getCurrentPosition()];
-      // hole is started
+      /**
+       * Resolved promises contain
+       * [0] lane-object (with id reference to firebase)
+       * [1] geolocation-object
+       */
       Promise.all(promises).then(values => {
         const currentLane = values[0];
         const geolocation = values[1];
@@ -305,6 +334,7 @@ handleTrackThrow() {
 
         let updates = {};
         updates[DB_NAMES.lanes + completedLane.laneId] = completedLane;
+        // update firebase
         firebase.database().ref().update(updates);
         this.hideLoader();
       }).catch((error) => {
@@ -320,6 +350,10 @@ handleTrackThrow() {
     }
   }
 
+  /**
+   * Handle game ending click
+   * User must confirm game ending first
+   */
   handleEndCourse() {
     // confirm ending
     const {isCourseActive} = this.state;
@@ -334,10 +368,18 @@ handleTrackThrow() {
     }
   }
 
+  /**
+   * Handle game ending (update to firebase)
+   */
   endCourse() {
     this.showLoader();
     const promises = [getOrCreateCourseWithId(this.state.course), geolocation.getCurrentPosition()];
-    // hole is started
+
+    /**
+     * Resolved promises contain
+     * [0] course-object (with id reference to firebase)
+     * [1] geolocation-object
+     */
     Promise.all(promises).then(values => {
       const currentCourse = values[0];
       const geolocation = values[1];
@@ -348,12 +390,13 @@ handleTrackThrow() {
         endLocation: geolocation
       };
 
+      // update state
       this.setState({course: newEmptyCourse(), isCourseActive: false});
       this.hideLoader();
 
       let updates = {};
       updates[DB_NAMES.courses + currentCourse.courseId] = updatedCourse;
-
+      // update firebase
       firebase.database().ref().update(updates);
     }).catch((error) => {
       this.hideLoader();
@@ -361,6 +404,13 @@ handleTrackThrow() {
     });
   }
 
+  /**
+   * Handle faulty throw selection
+   * User will be displayed with actionSheet which has three option
+   * 1. Over-bound
+   * 2. Lost
+   * 3. Mando
+   */
   handleSelectFaultyThrow() {
     const {isCourseActive, isLaneActive} = this.state;
 
@@ -373,28 +423,35 @@ handleTrackThrow() {
     const DESTRUCTIVE_INDEX = 3;
     const CANCEL_INDEX = 3;
 
-
     if (isCourseActive && isLaneActive) {
       ActionSheet.show(
         {
           options: BUTTONS,
-        cancelButtonIndex: CANCEL_INDEX,
-        destructiveButtonIndex: DESTRUCTIVE_INDEX,
-        title: 'Select right option'
-      },
-      buttonIndex => {
-        const pressedButton = BUTTONS[buttonIndex];
-        // for some reason, buttonIndex is NOT a number but a string
-        if (pressedButton.name !== 'cancel') {
-          this.setFaultyThrow(BUTTONS[buttonIndex]);
-          this.flashFaultyThrowError(BUTTONS[buttonIndex]);
-        }
-      });
+          cancelButtonIndex: CANCEL_INDEX,
+          destructiveButtonIndex: DESTRUCTIVE_INDEX,
+          title: 'Select right option'
+        },
+        buttonIndex => {
+          // get the pressed button
+          // for some weird reason android and iOS have different type for buttonIndex (number, string)
+          const pressedButton = BUTTONS[buttonIndex];
+          if (pressedButton.name !== 'cancel') {
+            this.setFaultyThrow(BUTTONS[buttonIndex]);
+            this.flashFaultyThrowError(BUTTONS[buttonIndex]);
+          }
+        });
     }
   }
 
+  /**
+   * Handle saving faulty throw to the firebase
+   */
   setFaultyThrow(faultyThrow) {
     const promises = [getOrCreateLaneWithId(this.state.lane)];
+    /**
+     * Resolved promises contain
+     * [0] lane-object (with id reference to firebase)
+     */
     Promise.all(promises).then(resolvedValues => {
       const currentLane = resolvedValues[0];
 
@@ -408,12 +465,19 @@ handleTrackThrow() {
         throws
       };
 
+      // update state
       this.setState({lane});
 
+      // update firebase
       firebase.database().ref(DB_NAMES.lanes + lane.laneId).set(lane);
     });
   }
 
+  /**
+   * Show error (usually +1) on screen
+   * @param {faultyThrow}   object (error-object)
+   * @param {duration}      number (determines how long the error will be displayed)
+   */
   flashFaultyThrowError(faultyThrow, duration = 1000) {
     this.setState({faultyThrow: {...faultyThrow, show: true}});
     setTimeout(() => {
@@ -421,17 +485,14 @@ handleTrackThrow() {
     }, duration);
   }
 
-
   render() {
     const {lane, course, isLaneActive, isCourseActive, loading, initialized, faultyThrow} = this.state;
-    // const isGameActive = isCourseActive || isLaneActive;
     const laneNumber = Object.keys(course.lanes).length;
 
-    const toggleTransparentText = (isVisible, styleClass) => isVisible ? styleClass : {color: 'transparent'};
-
-    if (!initialized) { return <View style={[globalStyles.container]}>
-      <Spinner color='green' />
-    </View>;
+    if (!initialized) {
+      return <View style={[globalStyles.container]}>
+        <Spinner color='green' />
+      </View>;
     };
 
     return (
@@ -502,7 +563,6 @@ handleTrackThrow() {
           </Row>
           {isCourseActive && !isLaneActive && <FadeInView style={[styles.fadeInView, {position: 'absolute', bottom: 20, left: 0, right: 0}]} visible={true}>
             <Button style={[globalStyles.buttonRounded, globalStyles.bgSuccess, styles.smallButtons, styles.border, styles.shadow, {alignSelf: 'center'}]} onPress={this.handleEndCourse}>
-              {/* <Text>Quit</Text> */}
               <Icon size={30} style={[globalStyles.textDefault, globalStyles.bgTransparent, {paddingTop: 3, paddingBottom: 0}]} name='ios-close' />
             </Button>
           </FadeInView>}
@@ -511,7 +571,6 @@ handleTrackThrow() {
     );
   }
 }
-
 
 const styles = StyleSheet.create({
   textMarginBottom: {
@@ -539,7 +598,6 @@ const styles = StyleSheet.create({
   errorButton: {
     width: 50,
     height: 50,
-
   },
   shadow: {
     shadowColor: 'black',
