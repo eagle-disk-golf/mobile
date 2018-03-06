@@ -4,6 +4,9 @@ import {Text} from 'native-base';
 import Container from '../components/container';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
+/**
+ * This component is currently not used.
+ */
 export default class Test extends Component {
   render() {
     return (

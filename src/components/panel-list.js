@@ -10,7 +10,7 @@ import {COLORS} from '../res/styles/constants';
 import { getDistanceInMetersBetweenCoordinates } from '../helpers/geolocation';
 
 /**
- * This is not used.
+ * This component is currently not used.
  */
 const isAndroid = Platform.OS === 'android';
 

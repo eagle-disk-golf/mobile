@@ -11,7 +11,6 @@ export const COLORS = {
   danger: '#A61919',
   success: '#0E8C5A',
   disabled: '#7B8081',
-
 };
 
 export const MARGINS = {

@@ -1,10 +1,10 @@
 ﻿import React, {Component} from 'react';
-import {StyleSheet, View, TouchableHighlight, Animated} from 'react-native'; //Step 1
+import {StyleSheet, View, TouchableHighlight, Animated} from 'react-native';
 import {COLORS} from '../res/styles/constants';
 
 class Panel extends Component {
     /**
-     * This is not used.
+     * This component is currently not used.
      */
   constructor(props) {
     super(props);
