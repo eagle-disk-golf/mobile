@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">EagleDiskGolf</string>
+    <string name="account_type">com.eaglediskgolf.account</string>
+    <string name="content_authority">com.eaglediskgolf.authority</string>
 </resources>

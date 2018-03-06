@@ -3958,6 +3958,10 @@ react-native-maps@^0.19.0:
   version "0.19.0"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.19.0.tgz#ce94fad1cf360e335cb4338a68c95f791e869074"
 
+react-native-mauron85-background-geolocation@^0.5.0-alpha.7:
+  version "0.5.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/react-native-mauron85-background-geolocation/-/react-native-mauron85-background-geolocation-0.5.0-alpha.7.tgz#c684a759cd6ada9f9b465109987c57c9e308e603"
+
 react-native-modal-selector@0.0.24:
   version "0.0.24"
   resolved "https://registry.yarnpkg.com/react-native-modal-selector/-/react-native-modal-selector-0.0.24.tgz#d5aa886b6782a4a3566452399deb21a8da7ae2a1"
