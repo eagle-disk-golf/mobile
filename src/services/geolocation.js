@@ -1,7 +1,7 @@
 ﻿/** https://www.npmjs.com/package/react-native-geolocation-service */
 import Geolocation from 'react-native-geolocation-service';
 /** if physical android device, set => gps location mode: battery saving */
-const options = {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000};
+const options = {enableHighAccuracy: true, timeout: 10000, maximumAge: 0};
 
 /** Promise that returns flattened position object. */
 const getCurrentPosition = _ => new Promise((resolve, reject) => {
