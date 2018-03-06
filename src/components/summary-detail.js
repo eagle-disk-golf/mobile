@@ -1,5 +1,5 @@
 ﻿import React, {Component} from 'react';
-import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
 /** https://docs.nativebase.io/Components.html#Spinner */
 import {Spinner, Text} from 'native-base';
 import {globalStyles} from '../res/styles';
@@ -20,7 +20,7 @@ const TitleComponent = ({item, index, onPress}) => {
 const score = (item.totalThrows + item.penalty) - item.par;
 const scoreWithSign = score < 0 ? score.toString() : `+${score}`;
 const scoreColor = score > 0 ? COLORS.danger : COLORS.success;
-    
+
 return (
   <TouchableOpacity onPress={onPress}>
     <View style={[styles.titleContainer]}>
